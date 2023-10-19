@@ -1,0 +1,7 @@
+**/*.md
+**/*.min.css
+**/.temp/
+**/dist/
+**/docs_html/
+**/.cache/
+node_modules

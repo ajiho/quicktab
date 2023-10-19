@@ -1,0 +1,55 @@
+{
+  "name": "quicktab",
+  "version": "0.0.1",
+  "description": "Simply configure to obtain a multi tab tab",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/ajiho/bootstrap-quicktab.git"
+  },
+  "keywords": [],
+  "homepage": "https://gitee.com/ajiho/bootstrap-quicktab",
+  "author": "ajiho",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.23.2",
+    "@babel/preset-env": "^7.23.2",
+    "@eslint/js": "^8.47.0",
+    "@rollup/plugin-babel": "^6.0.4",
+    "@rollup/plugin-commonjs": "^25.0.7",
+    "@rollup/plugin-node-resolve": "^15.2.3",
+    "@rollup/plugin-terser": "^0.4.4",
+    "@ronilaukkarinen/gulp-stylelint": "^14.1.1",
+    "autoprefixer": "^10.4.15",
+    "del": "^7.1.0",
+    "eslint": "^8.47.0",
+    "eslint-plugin-compat": "^4.1.4",
+    "fs-extra": "^11.1.1",
+    "globals": "^13.21.0",
+    "gulp": "^4.0.2",
+    "gulp-clean-css": "^4.3.0",
+    "gulp-eslint-new": "^1.8.3",
+    "gulp-filter": "^8.0.0",
+    "gulp-header": "^2.0.9",
+    "gulp-postcss": "^9.0.1",
+    "gulp-rename": "^2.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-shell": "^0.8.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "jquery": "^3.7.0",
+    "node-css-mqpacker": "^9.0.0",
+    "postcss": "^8.4.21",
+    "rollup": "^4.1.4",
+    "sass": "^1.69.3",
+    "stylelint": "^15.11.0",
+    "stylelint-config-twbs-bootstrap": "^11.0.1"
+  },
+  "dependencies": {
+    "bootstrap-5.3.0-alpha1": "npm:bootstrap@^5.3.0-alpha1",
+    "bootstrap-icons": "^1.10.3",
+    "jquery": "^3.6.3"
+  }
+}

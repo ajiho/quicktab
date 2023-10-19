@@ -1,0 +1,136 @@
+.quicktab {
+  display: flex;
+  flex-direction: column;
+  height: 222px;
+  background-color: var(--bs-body-bg);
+}
+
+/*  面板移除样式 */
+.quicktab .outing {
+  position: absolute !important;
+  transform: translateY(101%);
+}
+
+/* 去除所有的圆角 */
+.quicktab .nav-pills .nav-link {
+  border-radius: 0;
+}
+
+.quicktab .nav-pills .nav-link .qt-close {
+  position: absolute;
+  top: -3px;
+  right: -1px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.quicktab .nav-pills .nav-link .qt-close:hover {
+  color: #f00;
+}
+
+.quicktab .nav-pills .nav-link.show-on-hover .qt-close {
+  display: none;
+}
+
+.quicktab .nav-pills .nav-link.show-on-hover:hover .qt-close {
+  display: inline-block;
+}
+
+
+.quicktab li.flex-grow-1 {
+  width: 0;
+}
+
+/* 必须添加该样式否则滚动条会超出 */
+.quicktab div.flex-grow-1 {
+  overflow: hidden;
+}
+
+
+.quicktab li.flex-grow-1 .scroll-area {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  height: 100%;
+  overflow: scroll;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+
+/* 谷歌浏览器 */
+.quicktab li.flex-grow-1 .scroll-area::-webkit-scrollbar {
+  display: none;
+}
+
+/* 中间的tab设置一个最大的宽度超出部分显示省略号 */
+.quicktab li.flex-grow-1 .nav-link {
+  min-width: 0;
+  max-width: 180px;
+  padding-right: 20px;
+  padding-left: 20px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* 给图标按钮设置一个固定宽度，否则滚动到指定tab位置时不精确 */
+.quicktab .iconbtn {
+  width: 48px;
+}
+
+.quicktab .show {
+  opacity: 1;
+}
+
+.quicktab .hide {
+  opacity: 0;
+  transition: opacity 800ms;
+}
+
+.quicktab.qt-fullscreen {
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  z-index: 99999 !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.quicktab-contextmenu {
+  position: fixed;
+  z-index: 999999 !important;
+  display: none;
+  width: 100px;
+  background: #fff;
+}
+
+
+.quicktab.quicktab-contextmenu iframe {
+  pointer-events: none;
+}
+
+.quicktab.more-menu-pen iframe {
+  pointer-events: none;
+}
+
+@media (max-width: 400.98px) {
+
+  .quicktab .left-scroll-li {
+    display: none !important;
+  }
+
+  .quicktab .refresh-li {
+    display: none !important;
+  }
+
+  .quicktab .right-scroll-li {
+    display: none !important;
+  }
+
+
+}
