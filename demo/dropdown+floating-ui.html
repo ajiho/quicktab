@@ -5,22 +5,9 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Floating UI Tutorial</title>
+    <title>dropdown+floating-ui</title>
+    <link rel="stylesheet" href="../dist/css/quicktab.css">
     <style>
-        #tooltip {
-            display: none;
-            width: max-content;
-            position: absolute;
-            top: 0;
-            left: 0;
-            background: #222;
-            color: white;
-            font-weight: bold;
-            padding: 5px;
-            border-radius: 4px;
-            font-size: 90%;
-        }
-
         #arrow {
             position: absolute;
             background: #222;
@@ -28,50 +15,31 @@
             height: 8px;
             transform: rotate(45deg);
         }
+
+        #tooltip {
+            display: none;
+        }
     </style>
 </head>
 <body>
 
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-
 <button id="button" aria-describedby="tooltip">
-    按钮
+    My button
 </button>
-<div id="tooltip" role="tooltip">长文本的提示内容
-    <div id="arrow"></div>
-</div>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
+
+
+<ul class="quicktab-dropdown-menu" id="tooltip">
+    <li>
+        <span>刷新长文本测试刷新长文本测试</span>
+    </li>
+    <li>
+        <span>关闭其它</span>
+    </li>
+    <li>
+        <span>关闭所有</span>
+    </li>
+</ul>
+
 
 <script src="quickevent.min.js"></script>
 <script type="module">
@@ -81,14 +49,12 @@
         flip,
         shift,
         offset,
-        arrow,
-        autoUpdate
+        arrow
     } from 'https://cdn.jsdelivr.net/npm/@floating-ui/dom@1.5.3/+esm';
 
     const button = document.querySelector('#button');
     const tooltip = document.querySelector('#tooltip');
     const arrowElement = document.querySelector('#arrow');
-
 
 
     function update() {
@@ -99,7 +65,7 @@
                 offset(6),//offset(6)必须放在数组最前面，官方文档提示
                 flip(),
                 shift({padding: 10}),
-                arrow({element: arrowElement})
+                // arrow({element: arrowElement})
             ],
         }).then(({x, y, placement, middlewareData}) => {
             Object.assign(tooltip.style, {
@@ -108,22 +74,22 @@
             });
 
             //访问数据
-            const {x: arrowX, y: arrowY} = middlewareData.arrow;
+            // const {x: arrowX, y: arrowY} = middlewareData.arrow;
 
-            const staticSide = {
-                top: 'bottom',
-                right: 'left',
-                bottom: 'top',
-                left: 'right',
-            }[placement.split('-')[0]];
+            // const staticSide = {
+            //     top: 'bottom',
+            //     right: 'left',
+            //     bottom: 'top',
+            //     left: 'right',
+            // }[placement.split('-')[0]];
 
-            Object.assign(arrowElement.style, {
-                left: arrowX != null ? `${arrowX}px` : '',
-                top: arrowY != null ? `${arrowY}px` : '',
-                right: '',
-                bottom: '',
-                [staticSide]: '-4px',
-            });
+            // Object.assign(arrowElement.style, {
+            //     left: arrowX != null ? `${arrowX}px` : '',
+            //     top: arrowY != null ? `${arrowY}px` : '',
+            //     right: '',
+            //     bottom: '',
+            //     [staticSide]: '-4px',
+            // });
 
         });
     }
@@ -138,21 +104,27 @@
     }
 
 
-    const cleanup = autoUpdate(
-        button,
-        tooltip,
-        update
-    );
+    function tooltipIsShow() {
+        return window.getComputedStyle(tooltip).display === 'none'
+    }
 
 
     //触发事件
     quickevent(document).on('click', function (event) {
+
         const target = event.target;
         if (target.closest('#button')) {//是点击触发按钮
             // 你的触发事件代码
-            if (getComputedStyle(tooltip).display === 'none') {
+            if (tooltipIsShow()) {
                 showTooltip();
             } else {
+                hideTooltip();
+            }
+        } else if (target.closest('#tooltip')) {
+            hideTooltip();
+        } else {
+
+            if (!tooltipIsShow()) {
                 hideTooltip();
             }
         }

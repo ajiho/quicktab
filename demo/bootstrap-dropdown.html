@@ -5,11 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Title</title>
     <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
+    <style>
+        .dropdown-menu{
+            display: block;
+        }
+    </style>
 </head>
 <body>
 
 
+
+
 <div class="container">
+
+    <ul class="dropdown-menu shadow-sm" >
+        <li><a class="dropdown-item" href="#">Action</a></li>
+        <li><a class="dropdown-item" href="#">Another action</a></li>
+        <li><a class="dropdown-item" href="#">Something else here</a></li>
+    </ul>
+
     <ul class="nav nav-pills" style="border: 1px solid red">
         <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="#">Active</a>
@@ -21,7 +35,7 @@
             <a class="nav-link" href="#">Link</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+            <a class="nav-link disabled" aria-disabled="true">Disabledq</a>
         </li>
     </ul>
 </div>
