@@ -1,5 +1,5 @@
 import gulp from 'gulp';
-import buildpath from "../build.path.mjs";
+import buildpath from "../path.mjs";
 import gulpStylelint from "@ronilaukkarinen/gulp-stylelint";
 import stylelintConfig from "../config/stylelint.common.config.mjs";
 

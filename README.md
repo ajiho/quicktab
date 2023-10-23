@@ -3,6 +3,8 @@
 通过简单配置即可得到一个强大的选项卡。
 
 
+npm run build -- --include=event  --include=exports/global --include=exports/amd  --filename="xevent.js" --amd
+
 
 ## 特性
 

@@ -22,7 +22,7 @@
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
-    "@ronilaukkarinen/gulp-stylelint": "^14.1.1",
+    "@ronilaukkarinen/gulp-stylelint": "^14.1.2",
     "autoprefixer": "^10.4.15",
     "del": "^7.1.0",
     "eslint": "^8.47.0",
@@ -39,7 +39,6 @@
     "gulp-sass": "^5.1.0",
     "gulp-shell": "^0.8.0",
     "gulp-sourcemaps": "^3.0.0",
-    "jquery": "^3.7.0",
     "node-css-mqpacker": "^9.0.0",
     "postcss": "^8.4.21",
     "rollup": "^4.1.4",
@@ -48,8 +47,7 @@
     "stylelint-config-twbs-bootstrap": "^11.0.1"
   },
   "dependencies": {
-    "bootstrap-5.3.0-alpha1": "npm:bootstrap@^5.3.0-alpha1",
-    "bootstrap-icons": "^1.10.3",
-    "jquery": "^3.6.3"
+    "@floating-ui/dom": "^1.5.3",
+    "bootstrap": "^5.3.2"
   }
 }

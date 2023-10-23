@@ -1,5 +1,5 @@
-import {getBanner} from "../build.utils.mjs";
-import buildpath from "../build.path.mjs";
+import {getBanner} from "../utils.mjs";
+import buildpath from "../path.mjs";
 
 export default {
     banner: getBanner(),

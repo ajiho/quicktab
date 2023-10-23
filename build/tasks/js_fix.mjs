@@ -1,5 +1,5 @@
 import gulp from "gulp";
-import buildpath from "../build.path.mjs";
+import buildpath from "../path.mjs";
 import gulpESLintNew from "gulp-eslint-new";
 import eslintConfig from "../config/eslint.common.config.mjs";
 

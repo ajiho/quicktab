@@ -2,8 +2,8 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import babel from '@rollup/plugin-babel';
-import buildpath from "./build.path.mjs";
-import outputCommonConfig from './config/rollup.output.common.config.mjs'
+import buildpath from "./build/path.mjs";
+import outputCommonConfig from './build/config/rollup.output.common.config.mjs'
 
 
 export default {

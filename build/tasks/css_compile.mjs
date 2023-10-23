@@ -1,10 +1,10 @@
-import buildpath from "../build.path.mjs";
+import buildpath from "../path.mjs";
 import gulp from "gulp";
 import * as dartSass from 'sass'
 import gulpSass from 'gulp-sass';
 const sass = gulpSass(dartSass);
 import header from "gulp-header";
-import {getBanner} from "../build.utils.mjs";
+import {getBanner} from "../utils.mjs";
 import postcss from "gulp-postcss";
 import autoprefixer from "autoprefixer";
 import cmq from "node-css-mqpacker";

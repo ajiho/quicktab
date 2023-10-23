@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        #tooltip {
+            display: none;
+            width: max-content;
+            position: absolute;
+            top: 0;
+            left: 0;
+            background: #222;
+            color: white;
+            font-weight: bold;
+            padding: 5px;
+            border-radius: 4px;
+            font-size: 90%;
+        }
+    </style>
+</head>
+<body>
+
+<button id="button" aria-describedby="tooltip">我是一个按钮</button>
+<div id="tooltip" role="tooltip">我是一个悬浮的工具提示</div>
+
+<script type="module">
+
+    import {computePosition} from "https://cdn.skypack.dev/@floating-ui/dom";
+
+    const button = document.querySelector("#button");
+    const tooltip = document.querySelector("#tooltip");
+
+    function update() {
+        computePosition(button, tooltip, {placement: 'top-start'}).then(({x, y}) => {
+            Object.assign(tooltip.style, {
+                left: `${x}px`,
+                top: `${y}px`,
+            });
+        });
+    }
+
+    function showTooltip() {
+        tooltip.style.display = 'block';
+        update();
+    }
+
+    function hideTooltip() {
+        tooltip.style.display = '';
+    }
+
+
+    [
+        ['mouseenter', showTooltip],
+        ['mouseleave', hideTooltip],
+        ['focus', showTooltip],
+        ['blur', hideTooltip],
+    ].forEach(([event, listener]) => {
+        button.addEventListener(event, listener);
+    });
+
+
+</script>
+
+</body>
+</html>

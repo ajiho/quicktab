@@ -1,4 +1,5 @@
 /* global bootstrap */
+import {on} from 'jquery/src/event';
 
 
 import CONST from './constants'
@@ -23,16 +24,19 @@ class Quicktab {
 
         //初始化
         this._init();
+
+
     }
 
 
     _init() {
         const self = this;
 
+        on(document.querySelector('.box1'), 'click', function () {
+            console.log('www')
+        });
+
     }
-
-
-
 
 
 }
