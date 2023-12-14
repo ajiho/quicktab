@@ -32,48 +32,58 @@
 </head>
 <body>
 
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
+<!--p{往下拖看提示是否会自动更新位置$}*20-->
+
+<p>往下拖看提示是否会自动更新位置1</p>
+<p>往下拖看提示是否会自动更新位置2</p>
+<p>往下拖看提示是否会自动更新位置3</p>
+<p>往下拖看提示是否会自动更新位置4</p>
+<p>往下拖看提示是否会自动更新位置5</p>
+<p>往下拖看提示是否会自动更新位置6</p>
+<p>往下拖看提示是否会自动更新位置7</p>
+<p>往下拖看提示是否会自动更新位置8</p>
+<p>往下拖看提示是否会自动更新位置9</p>
+<p>往下拖看提示是否会自动更新位置10</p>
+<p>往下拖看提示是否会自动更新位置11</p>
+<p>往下拖看提示是否会自动更新位置12</p>
+<p>往下拖看提示是否会自动更新位置13</p>
+<p>往下拖看提示是否会自动更新位置14</p>
+<p>往下拖看提示是否会自动更新位置15</p>
+<p>往下拖看提示是否会自动更新位置16</p>
+<p>往下拖看提示是否会自动更新位置17</p>
+<p>往下拖看提示是否会自动更新位置18</p>
+<p>往下拖看提示是否会自动更新位置19</p>
+<p>往下拖看提示是否会自动更新位置20</p>
 
 <button id="button" aria-describedby="tooltip">
-    按钮
+    点我弹出提示
 </button>
 <div id="tooltip" role="tooltip">长文本的提示内容
     <div id="arrow"></div>
 </div>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
-<p>lorem</p>
 
-<script src="quickevent.min.js"></script>
+<p>往下拖看提示是否会自动更新位置1</p>
+<p>往下拖看提示是否会自动更新位置2</p>
+<p>往下拖看提示是否会自动更新位置3</p>
+<p>往下拖看提示是否会自动更新位置4</p>
+<p>往下拖看提示是否会自动更新位置5</p>
+<p>往下拖看提示是否会自动更新位置6</p>
+<p>往下拖看提示是否会自动更新位置7</p>
+<p>往下拖看提示是否会自动更新位置8</p>
+<p>往下拖看提示是否会自动更新位置9</p>
+<p>往下拖看提示是否会自动更新位置10</p>
+<p>往下拖看提示是否会自动更新位置11</p>
+<p>往下拖看提示是否会自动更新位置12</p>
+<p>往下拖看提示是否会自动更新位置13</p>
+<p>往下拖看提示是否会自动更新位置14</p>
+<p>往下拖看提示是否会自动更新位置15</p>
+<p>往下拖看提示是否会自动更新位置16</p>
+<p>往下拖看提示是否会自动更新位置17</p>
+<p>往下拖看提示是否会自动更新位置18</p>
+<p>往下拖看提示是否会自动更新位置19</p>
+<p>往下拖看提示是否会自动更新位置20</p>
+
+<script src="quickevent.js"></script>
 <script type="module">
 
     import {
@@ -88,7 +98,6 @@
     const button = document.querySelector('#button');
     const tooltip = document.querySelector('#tooltip');
     const arrowElement = document.querySelector('#arrow');
-
 
 
     function update() {
@@ -138,6 +147,7 @@
     }
 
 
+    // 改函数在dom从窗口删除时调用
     const cleanup = autoUpdate(
         button,
         tooltip,

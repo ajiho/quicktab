@@ -1,29 +1,54 @@
-@charset "UTF-8";
 /*!
- * quicktab v0.0.1 (https://gitee.com/ajiho/bootstrap-quicktab)
+ * quicktab v0.0.1 (https://gitee.com/ajiho/quicktab)
  * Copyright 2023-2023 ajiho
  * license MIT (https://gitee.com/ajiho/quicktab/blob/master/LICENSE)
  */
 .quicktab {
   display: flex;
   flex-direction: column;
-  /*  面板容器占满剩余高度  */
+  height: 222px;
 }
 .quicktab *,
 .quicktab ::after,
 .quicktab ::before {
   box-sizing: border-box;
 }
+.quicktab.reverse {
+  flex-direction: column-reverse;
+}
+.quicktab.contextmenu-open iframe, .quicktab.dropdown-open iframe {
+  pointer-events: none;
+}
 .quicktab .tab-bar {
   display: flex;
   flex-shrink: 0;
+  min-height: 38px;
   padding-left: 0;
   margin: 0;
   list-style: none;
   border: 1px solid #dee2e6;
+  border-right: none;
 }
-.quicktab .tab-bar.order-bottom {
+.quicktab .tab-bar li {
+  border-right: 1px solid #dee2e6;
+}
+.quicktab .tab-bar li.order-1 {
+  order: 1;
+}
+.quicktab .tab-bar li.order-2 {
   order: 2;
+}
+.quicktab .tab-bar li.order-3 {
+  order: 3;
+}
+.quicktab .tab-bar li.order-4 {
+  order: 4;
+}
+.quicktab .tab-bar li.order-5 {
+  order: 5;
+}
+.quicktab .tab-bar li.order-6 {
+  order: 6;
 }
 .quicktab .tab-bar li button {
   display: flex;
@@ -36,17 +61,14 @@
   font-size: 16px;
   color: #212529;
   cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
   background: #fff;
   border: 0;
   border-radius: 0;
   outline: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
-}
-.quicktab .tab-bar li button.tab-control-prev, .quicktab .tab-bar li button.tab-control-refresh {
-  border-right: 1px solid #dee2e6;
-}
-.quicktab .tab-bar li button.tab-control-next, .quicktab .tab-bar li button.tab-control-more, .quicktab .tab-bar li button.tab-control-full {
-  border-left: 1px solid #dee2e6;
 }
 .quicktab .tab-bar li.scroll {
   display: flex;
@@ -100,6 +122,13 @@
   color: #fff;
   background-color: #ff5722;
 }
+.quicktab .tab-bar li:not(.scroll) button:hover {
+  color: #212529;
+  background-color: #f8f9fa;
+}
+.quicktab .tab-bar li:not(.scroll) button:active {
+  background-color: #383f45;
+}
 .quicktab .tab-body {
   position: relative;
   flex-grow: 1;
@@ -123,10 +152,7 @@
 }
 .quicktab .tab-body .tab-body-item .mask {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
 }
 .quicktab .tab-body .tab-body-item .mask .mask-inner {
   display: flex;
@@ -136,38 +162,50 @@
   height: 100%;
   background-color: #fff;
 }
-.quicktab-dropdown-menu {
-  display: inline-block;
-  width: 9rem;
+
+.quicktab-list-group {
+  position: fixed;
+  display: none;
+  width: 120px;
+  max-height: 280px;
   padding: 0;
   margin: 0;
   overflow: hidden;
+  overflow-y: auto;
   list-style: none;
-  border-radius: 0.375rem;
+  background-color: #fff;
+  border-radius: 0;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
-.quicktab-dropdown-menu li {
+.quicktab-list-group li {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
-  font-size: 1rem;
+  padding: 6px 12px;
+  font-size: 14px;
   font-weight: 400;
   color: #212529;
   cursor: pointer;
   -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
-.quicktab-dropdown-menu li:hover, .quicktab-dropdown-menu li:focus {
-  color: #212529;
+.quicktab-list-group li.separator {
+  height: 0;
+  padding: 0;
+  margin: 0.35em 0;
+  overflow: hidden;
+  border-top: 1px solid #e6e6e6;
+}
+.quicktab-list-group li:hover, .quicktab-list-group li:focus {
+  color: #7431fa;
   background-color: #f8f9fa;
 }
-.quicktab-dropdown-menu li.active, .quicktab-dropdown-menu li:active {
+.quicktab-list-group li.active, .quicktab-list-group li:active {
   color: #fff;
   background-color: #7431fa;
 }
-.quicktab-dropdown-menu li > span {
+.quicktab-list-group li > span {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -216,18 +254,4 @@
   }
 }
 
-@media (max-width: 400.98px) {
-  .quicktab .tab-control-refresh {
-    display: none !important;
-  }
-  .quicktab .tab-control-prev {
-    display: none !important;
-  }
-  .quicktab .tab-control-next {
-    display: none !important;
-  }
-  .quicktab .tab-control-full {
-    display: none !important;
-  }
-}
 /*# sourceMappingURL=quicktab.css.map */

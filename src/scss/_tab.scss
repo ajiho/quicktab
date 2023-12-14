@@ -1,0 +1,188 @@
+@use 'sass:color';
+
+.quicktab {
+  *,
+  ::after,
+  ::before {
+    box-sizing: border-box;
+  }
+
+  display: flex;
+  flex-direction: column;
+  height: 222px;
+
+  // 加上该类名可以让tab-bar排到底部
+  &.reverse {
+    flex-direction: column-reverse;
+  }
+
+  // 用于解决鼠标点击到iframe上点击事件丢失问题，会导致右键菜单或者下拉菜单点击任意区域自动消息的逻辑失效问题
+  &.contextmenu-open iframe,
+  &.dropdown-open iframe {
+    pointer-events: none;
+  }
+
+  // 工具栏
+  .tab-bar {
+    display: flex;
+    flex-shrink: 0;
+
+    // 加高度是避免那些操作按钮都不启用的情况没有高度只有一条线的问题
+    min-height: 38px;
+    padding-left: 0;
+    margin: 0;
+    list-style: none;
+    border: 1px solid #dee2e6;
+    border-right: none;
+
+    li {
+      border-right: 1px solid #dee2e6;
+
+      @for $i from 1 through 6 {
+        &.order-#{$i} {
+          order: $i;
+        }
+      }
+
+      button {
+        display: flex;
+        flex-shrink: 0;
+        flex-wrap: nowrap;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        padding: 8px 16px;
+        font-size: 16px;
+        color: #212529;
+        cursor: pointer;
+        user-select: none;
+        background: #fff;
+        border: 0;
+        border-radius: 0;
+        outline: none;
+        transition:
+          color 0.15s ease-in-out,
+          background-color 0.15s ease-in-out;
+      }
+
+      // 可滚动的li
+      &.scroll {
+        display: flex;
+        flex-grow: 1;
+        overflow: auto;
+
+        &::-webkit-scrollbar {
+          display: none;
+        }
+
+        button {
+          position: relative;
+          max-width: 180px;
+          border-right: 1px solid #dee2e6;
+
+          &::after {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 1px;
+            content: '';
+            background-color: #7431fa;
+            border-radius: 0;
+            transition: all 0.3s;
+          }
+
+          &:hover {
+            color: #7431fa;
+
+            &::after {
+              width: 100%;
+            }
+          }
+
+          &.active {
+            color: #7431fa;
+
+            &::after {
+              width: 100%;
+            }
+          }
+
+          span {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+
+          svg {
+            flex-shrink: 0;
+            margin-left: 8px;
+            font-size: 12px;
+            color: #c2c2c2;
+            border-radius: 50%;
+
+            &:hover {
+              color: #fff;
+              background-color: #ff5722;
+            }
+          }
+        }
+      }
+
+      // 不带滚动的li
+      &:not(.scroll) {
+        button {
+          &:hover {
+            color: #212529;
+            background-color: #f8f9fa;
+          }
+
+          &:active {
+            background-color: color.adjust($color: #212529, $lightness: 10%);
+          }
+        }
+      }
+    }
+  }
+
+  // 面板容器
+  .tab-body {
+    position: relative;
+    flex-grow: 1;
+    overflow: hidden;
+
+    .tab-body-item {
+      position: absolute;
+      top: -200%;
+      width: 100%;
+      height: 100%;
+
+      &.active {
+        position: unset;
+        left: unset;
+      }
+
+      iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+      }
+
+      // 遮罩层
+      .mask {
+        position: absolute;
+        inset: 0;
+
+        .mask-inner {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 100%;
+          height: 100%;
+          background-color: #fff;
+        }
+      }
+    }
+  }
+}

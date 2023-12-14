@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>单击和双击测试(看看是否要实装到quicktab上去)</title>
+</head>
+<body>
+<button id="myElement" data-target=".tab1>1 span">单击和双击测试</button>
+
+<ul>
+    <li class="aa">1</li>
+    <li>2</li>
+</ul>
+
+
+<!--<script src="./quickevent.min.js"></script>-->
+<script src="./quickevent.js"></script>
+
+<script>
+
+
+
+    // console.log(quickevent('.aa').siblings())
+
+
+    // const element = document.querySelector('button[data-target=".tab1>1 span"]');
+    // console.log(element); // 输出匹配到的元素
+
+    var delay = 200, clicks = 0, timer = null;
+
+
+
+    quickevent(document).on('click', '#myElement', function(e) {
+        clicks++;  // 增加单击计数器
+        if (clicks === 1) {  // 如果是第一次单击
+            timer = setTimeout(function() {
+                // 执行单击操作
+                console.log('单击事件');
+                clicks = 0;  // 重置单击计数器
+            }, delay);
+        } else {  // 如果是第二次单击
+            clearTimeout(timer);  // 清除定时器
+            // 执行双击操作
+            console.log('双击事件');
+            clicks = 0;  // 重置单击计数器
+        }
+    });
+</script>
+
+</body>
+</html>

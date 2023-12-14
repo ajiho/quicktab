@@ -2,27 +2,44 @@ import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import terser from '@rollup/plugin-terser';
 import babel from '@rollup/plugin-babel';
-import buildpath from "./build/path.mjs";
-import outputCommonConfig from './build/config/rollup.output.common.config.mjs'
+import stripBanner from 'rollup-plugin-strip-banner';
 
+import { getBanner } from "./build/banner.mjs"
+
+
+
+
+const commonConfig = {
+    banner: getBanner(),
+    format: 'umd',
+    name: 'Quicktab',
+    sourcemap: true
+};
+
+
+let file = 'dist/js/quicktab.js';
 
 export default {
-    input: buildpath.js.input,
+    input: 'src/quicktab.js',
     output: [
         {
-            ...outputCommonConfig,
-            file: buildpath.js.file,
+            ...commonConfig,
+            file: file,
         },
         {
-            ...outputCommonConfig,
-            file: buildpath.js.file.replace(/\.js$/, '.min.js'), // 压缩版本的输出路径
-            plugins: [terser({compress: {drop_console: false}})],
+            ...commonConfig,
+            file: file.replace(/\.js$/, '.min.js'), // 压缩版本的输出路径
+            plugins: [terser()],
         }
     ],
     external: ['jquery'],
     plugins: [
         resolve(),
         commonjs(),
+        stripBanner({
+            include: '**/*.js',
+            exclude: 'node_modules/**/*'
+        }),
         babel({
             //排除node_modules下的文件，其它都处理
             exclude: 'node_modules/**',
@@ -31,7 +48,6 @@ export default {
             //将辅助函数内联到每个使用它们的模块
             babelHelpers: 'bundled'
         }),
-
 
     ]
 };

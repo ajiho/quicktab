@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>测试对象冻结</title>
+</head>
+<body>
+
+<script>
+    var obj = {
+        name: '张三',
+        age: 18,
+        address: '上海市'
+    }
+    obj.__proto__.habit = '运动'
+
+    // 冻结对象
+    Object.freeze(obj)
+
+    // 不能添加新属性
+    obj.sex = '男'
+    console.log(obj)    // {name: "张三", age: 18, address: "上海市"}
+
+    // 不能删除原有属性
+    delete obj.age
+    console.log(obj)    // {name: "张三", age: 18, address: "上海市"}
+
+    // 不能修改已有属性的值
+    obj.name = '李四'
+    console.log(obj)    // {name: "张三", age: 18, address: "上海市"}
+
+    // 不能修改原型
+    obj.__proto__ = '随便什么值'
+    console.log(obj.__proto__)  // {habit: "运动", constructor: ƒ, __defineGetter__: ƒ, __defineSetter__: ƒ, hasOwnProperty: ƒ, …}
+
+    // 不能修改已有属性的可枚举性、可配置性、可写性
+    Object.defineProperty(obj,'address',{ // TypeError: Cannot redefine property: address
+        enumerable: false,
+        configurable: false,
+        writable: true
+    })
+</script>
+
+</body>
+</html>

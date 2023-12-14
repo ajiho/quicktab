@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>测试对象冻结</title>
+</head>
+<body>
+
+<script>
+    class MyClass {
+        constructor() {
+            this.version = '0.0.1';
+            this.var1 = {
+                name: '张三',
+                age: 18,
+                address: '上海市'
+            };
+
+            this._var2 = {
+                name: '王五',
+                age: 28,
+                address: '北京市'
+            };
+            Object.defineProperty(this, 'var2', {
+                configurable: false,
+                enumerable: true,
+                get: function () {
+                    return this._var2;
+                },
+                set: function (value) {
+                    // this._var2 = value;
+                    console.log(value)
+                }
+            });
+
+
+            // Object.freeze(this);
+
+
+            //深冻结
+            deepFreeze(this)
+        }
+
+        // 其他方法
+    }
+
+    const obj = new MyClass();
+    // obj.version = '0.0.2'
+    //
+    // console.log(obj.version)
+
+
+    //修改var1
+    // obj.var1.name = 'lisi'
+    // console.log(obj.var1);
+
+    obj.var3 = true;
+    console.log(obj)
+
+    function deepFreeze(obj) {
+        // 获取所有属性
+        const propNames = Object.getOwnPropertyNames(obj)
+
+        // 遍历
+        propNames.forEach(item => {
+            const prop = obj[item]
+            // 如果某个属性的属性值是对象，则递归调用
+            if (prop instanceof Object) {
+                deepFreeze(prop)
+            }
+        })
+        // 冻结自身
+        return Object.freeze(obj)
+    }
+
+
+    //深冻结
+    function deepFreeze2(obj) {
+        // 首先冻结当前对象
+        Object.freeze(obj);
+
+        // 递归冻结嵌套的对象
+        for (let key in obj) {
+            if (typeof obj[key] === 'object' && !Object.isFrozen(obj[key])) {
+                deepFreeze(obj[key]);
+            }
+        }
+
+        return obj;
+    }
+
+</script>
+
+</body>
+</html>

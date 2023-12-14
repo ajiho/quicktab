@@ -1,7 +1,6 @@
 import js from "@eslint/js";
 import globals from "globals";
-// 用来根据.browserslistrc检测语法是否超出范围
-import compat from "eslint-plugin-compat";
+
 
 export default [
     //继承eslint的推荐规则
@@ -29,5 +28,10 @@ export default [
             //临时关闭未使用变量报错
             "no-unused-vars": 0
         }
+    },
+    // eslint flat类型的配置 已经不支持.eslintignore这个配置文件,只支持从eslint.config.mjs或者cli上指定--ignore-pattern配置忽略文件
+    //https://github.com/eslint/eslint/issues/17831
+    {
+        ignores: ["src/utils/query/*"]
     }
 ];
