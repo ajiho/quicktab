@@ -1,14 +1,13 @@
 import { execa } from 'execa';
 import fs from 'fs-extra'
 import chalk from 'chalk';
-import {deleteSync} from 'del'
 
-const path = '.cache/jquery'
+const path = '.temp/jquery'
 const node_modules_path = path + '/node_modules'
-const filename = "index.js"
+const filename = "event.js"
 
 const copyForm = `${path}/dist/${filename}`
-const output = 'src/utils/query'
+const output = 'src/utils'
 const copyTo = `${output}/${filename}`
 
 try {
@@ -35,14 +34,14 @@ try {
     }
 
 
-    //定制jQuery，只要event和traversing这两个部分，打包成功后会在dist目录下生成打包后的文件
+    //定制jQuery,只是需要单纯用到jquery的事件委托，目前没有比这个更好用的开源库,但是定制后的jquery体积还是很大。等到时候有更好的替代品再替换
     await execa('npm', [
         'run',
         'build',
         '--',
         '--esm',
         '--include=event',
-        '--include=traversing',
+        '--include=attributes',
         `--filename="${filename}"`
     ], {
         cwd: "./" + path,
@@ -51,11 +50,8 @@ try {
 
 
 
-    //清空目录
-    deleteSync(output)
-
     //先复制
-    fs.copySync(copyForm,copyTo);
+    fs.copySync(copyForm, copyTo);
 
 
 

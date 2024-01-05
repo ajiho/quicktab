@@ -1,6 +1,6 @@
 import { glob } from "glob";
 import fs from "fs-extra";
-import {getBanner} from "./banner.mjs"
+import { getBanner } from "./banner.mjs"
 
 
 //调用方式： node banner-builder.mjs glob通配符
@@ -14,12 +14,12 @@ const cssfiles = await glob(directoryPattern)
 
 cssfiles.forEach((filePath) => {
 
-    fs.readFile(filePath, 'utf8', (err, data) => {
+  fs.readFile(filePath, 'utf8', (err, data) => {
 
-        //写入文件
-        fs.writeFile(filePath, `${getBanner()}${data}`, 'utf8');
+    //写入文件
+    fs.writeFile(filePath, `${getBanner()}${data}`, 'utf8');
 
-      });
+  });
 
 
 });

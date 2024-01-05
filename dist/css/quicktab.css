@@ -7,16 +7,14 @@
   display: flex;
   flex-direction: column;
   height: 222px;
+  background-color: #fff;
 }
 .quicktab *,
 .quicktab ::after,
 .quicktab ::before {
   box-sizing: border-box;
 }
-.quicktab.reverse {
-  flex-direction: column-reverse;
-}
-.quicktab.contextmenu-open iframe, .quicktab.dropdown-open iframe {
+.quicktab.pen iframe {
   pointer-events: none;
 }
 .quicktab .tab-bar {
@@ -26,29 +24,16 @@
   padding-left: 0;
   margin: 0;
   list-style: none;
-  border: 1px solid #dee2e6;
+  background-color: inherit;
+  border: 1px solid #f5f5f5;
   border-right: none;
 }
+.quicktab .tab-bar.hide {
+  display: none;
+}
 .quicktab .tab-bar li {
-  border-right: 1px solid #dee2e6;
-}
-.quicktab .tab-bar li.order-1 {
-  order: 1;
-}
-.quicktab .tab-bar li.order-2 {
-  order: 2;
-}
-.quicktab .tab-bar li.order-3 {
-  order: 3;
-}
-.quicktab .tab-bar li.order-4 {
-  order: 4;
-}
-.quicktab .tab-bar li.order-5 {
-  order: 5;
-}
-.quicktab .tab-bar li.order-6 {
-  order: 6;
+  height: 100%;
+  border-right: 1px solid #f5f5f5;
 }
 .quicktab .tab-bar li button {
   display: flex;
@@ -57,7 +42,7 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 8px 16px;
+  padding: 0 18px;
   font-size: 16px;
   color: #212529;
   cursor: pointer;
@@ -70,10 +55,24 @@
   outline: none;
   transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
 }
+.quicktab .tab-bar li button.disabled {
+  color: #b6b6b6;
+  pointer-events: none;
+  cursor: default;
+  background-color: #f1f1f1;
+}
+.quicktab .tab-bar li button svg {
+  width: 14px;
+  height: 14px;
+  fill: #212529;
+}
 .quicktab .tab-bar li.scroll {
+  position: relative;
   display: flex;
   flex-grow: 1;
   overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .quicktab .tab-bar li.scroll::-webkit-scrollbar {
   display: none;
@@ -81,7 +80,16 @@
 .quicktab .tab-bar li.scroll button {
   position: relative;
   max-width: 180px;
-  border-right: 1px solid #dee2e6;
+  border-right: 1px solid #f5f5f5;
+}
+.quicktab .tab-bar li.scroll button.hover svg {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  display: none;
+}
+.quicktab .tab-bar li.scroll button.hover:hover svg {
+  display: inline;
 }
 .quicktab .tab-bar li.scroll button::after {
   position: absolute;
@@ -115,46 +123,52 @@
   flex-shrink: 0;
   margin-left: 8px;
   font-size: 12px;
-  color: #c2c2c2;
   border-radius: 50%;
+  fill: #c2c2c2;
 }
 .quicktab .tab-bar li.scroll button svg:hover {
-  color: #fff;
   background-color: #ff5722;
+  fill: #fff;
 }
 .quicktab .tab-bar li:not(.scroll) button:hover {
-  color: #212529;
-  background-color: #f8f9fa;
+  background-color: #fafafa;
 }
 .quicktab .tab-bar li:not(.scroll) button:active {
-  background-color: #383f45;
+  background-color: whitesmoke;
 }
 .quicktab .tab-body {
   position: relative;
   flex-grow: 1;
+  padding-left: 0;
+  margin: 0;
   overflow: hidden;
+  list-style: none;
+  background-color: inherit;
 }
-.quicktab .tab-body .tab-body-item {
+.quicktab .tab-body li {
   position: absolute;
   top: -200%;
   width: 100%;
   height: 100%;
+  background-color: inherit;
 }
-.quicktab .tab-body .tab-body-item.active {
+.quicktab .tab-body li.active {
   position: unset;
   left: unset;
 }
-.quicktab .tab-body .tab-body-item iframe {
+.quicktab .tab-body li iframe {
   display: block;
   width: 100%;
   height: 100%;
   border: 0;
 }
-.quicktab .tab-body .tab-body-item .mask {
+.quicktab .tab-body li .mask {
   position: absolute;
   inset: 0;
+  opacity: 1;
+  transition: opacity 800ms;
 }
-.quicktab .tab-body .tab-body-item .mask .mask-inner {
+.quicktab .tab-body li .mask .mask-inner {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -166,8 +180,9 @@
 .quicktab-list-group {
   position: fixed;
   display: none;
+  flex-direction: column;
   width: 120px;
-  max-height: 280px;
+  max-height: 320px;
   padding: 0;
   margin: 0;
   overflow: hidden;
@@ -176,6 +191,9 @@
   background-color: #fff;
   border-radius: 0;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+.quicktab-list-group.show {
+  display: flex;
 }
 .quicktab-list-group li {
   display: flex;

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>title</title>
+    <link rel="stylesheet" href="/dist/css/quicktab.css">
+
+    <style>
+        .parent {
+            width: 800px;
+            max-width: 100%;
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <h1>这是大标题</h1>
+    <h1>这是大标题</h1>
+    <h1>这是大标题</h1>
+    <h1>这是大标题</h1>
+    <h1>这是大标题</h1>
+    <h1>这是大标题</h1>
+    <h1>这是大标题</h1>
+    <h1>这是大标题</h1>
+    <h1>这是大标题</h1>
+    <h1>这是大标题</h1>
+    <h1>这是大标题</h1>
+
+    <div class="qtab1"></div>
+    <div class="parent">
+        <div class="qtab2" ></div>
+    </div>
+
+    <button onclick="test()">dianjishian</button>
+
+
+    <!-- <div data-qt-toggle="quicktab" data-qt-id="false2"></div> -->
+
+
+    <div class="parent">
+        <div class="qtab22" 
+        data-qt-toggle="quicktab2" 
+        data-qt-id="false" 
+        data-qt-cachetype="local" 
+        data-qt-minHeight="400" 
+        data-qt-height="400" 
+        data-qt-width="100%" 
+        data-qt-lang="en" 
+        data-qt-responsive="trueqq222"
+        data-qt-responsive-breakpoint="576wwqq"
+        data-qt-responsive-hideItem="prev,next" 
+        data-qt-defaultTabs='[{"title":"data属性首页1","url":"welcome.html?a=1","close":false}]'
+        data-qt-toolbar-hide="true"
+        data-qt-toolbar-position="false"
+        data-qt-toolbar-prev="false"
+        data-qt-toolbar-prev-icon=""
+        data-qt-toolbar-prev-order="10"
+        data-qt-toolbar-refresh="true"
+        data-qt-toolbar-refresh-icon=""
+        data-qt-toolbar-refresh-order="20"
+        data-qt-toolbar-tabWrapper-order="30"
+        data-qt-toolbar-next="true"
+        data-qt-toolbar-next-icon=""
+        data-qt-toolbar-next-order="40"
+        data-qt-toolbar-dropdown="false"
+        data-qt-toolbar-dropdown-icon=""
+        data-qt-toolbar-dropdown-order="50"
+        data-qt-toolbar-fullscreen="true"
+        data-qt-toolbar-fullscreen-icon=""
+        data-qt-toolbar-fullscreen-order="60"
+        data-qt-tab-contextmenu="false"
+        data-qt-tab-contextmenu-close="true" 
+        data-qt-tab-contextmenu-close-text=""
+        data-qt-tab-contextmenu-close-order="1"
+        data-qt-tab-contextmenu-close-separator="true"
+        data-qt-tab-contextmenu-closeOthers="true" 
+        data-qt-tab-contextmenu-closeOthers-text=""
+        data-qt-tab-contextmenu-closeOthers-order="1"
+        data-qt-tab-contextmenu-closeOthers-separator="true"
+        data-qt-tab-contextmenu-closePrev="true" 
+        data-qt-tab-contextmenu-closePrev-text=""
+        data-qt-tab-contextmenu-closePrev-order="1"
+        data-qt-tab-contextmenu-closePrev-separator="true"
+        data-qt-tab-contextmenu-closeNext="true" 
+        data-qt-tab-contextmenu-closeNext-text=""
+        data-qt-tab-contextmenu-closeNext-order="1"
+        data-qt-tab-contextmenu-closeNext-separator="true"
+        data-qt-tab-contextmenu-closeAll="true" 
+        data-qt-tab-contextmenu-closeAll-text=""
+        data-qt-tab-contextmenu-closeAll-order="1"
+        data-qt-tab-contextmenu-closeAll-separator="true"
+        data-qt-tab-contextmenu-fullscreen="true" 
+        data-qt-tab-contextmenu-fullscreen-text=""
+        data-qt-tab-contextmenu-fullscreen-order="1"
+        data-qt-tab-contextmenu-fullscreen-separator="true"
+        data-qt-tab-contextmenu-refresh="true" 
+        data-qt-tab-contextmenu-refresh-text=""
+        data-qt-tab-contextmenu-refresh-order="1"
+        data-qt-tab-contextmenu-refresh-separator="true"
+        data-qt-tab-contextmenu-centerActive="true" 
+        data-qt-tab-contextmenu-centerActive-text=""
+        data-qt-tab-contextmenu-centerActive-order="1"
+        data-qt-tab-contextmenu-centerActive-separator="true"
+        data-qt-tab-contextmenu-newBlank="true" 
+        data-qt-tab-contextmenu-newBlank-text=""
+        data-qt-tab-contextmenu-newBlank-order="1"
+        data-qt-tab-contextmenu-newBlank-separator="true"
+        data-qt-tab-mouseWheelSwitch="true"
+        data-qt-tab-mouseWheelSwitch-onlyScroll="false"
+        data-qt-tab-mouseWheelSwitch-centerActive="true"
+        data-qt-tab-maxNum="10"
+        data-qt-tab-closeBtn="true"
+        data-qt-tab-closeBtn-showOnHover="false"
+        data-qt-tab-closeBtn-icon=""
+        data-qt-tab-resizeCenterActive="true"
+        data-qt-tab-clickCenterActive="false"
+        data-qt-tab-doubleClickRefresh="false"
+        data-qt-tab-dragSort="true"
+        data-qt-tab-timeout="false"
+        data-qt-tab-timeout-filter="null"
+        data-qt-tab-timeout-text=""
+        data-qt-tab-timeout-second="3000"
+        data-qt-tab-timeout-template="null"
+        data-qt-tab-loading="true"
+        data-qt-tab-loading-filter="null"
+        data-qt-tab-loading-template="null"
+        data-qt-onTabActivated="null"
+        data-qt-onTabAddActivated="null"
+        data-qt-onTabLoaded="null"
+        data-qt-onTabTimeout="null"
+        data-qt-onTabFinally="null"
+        data-qt-onTabAll="test"
+        data-qt-onTabLoadingTransitionend="null"
+        data-qt-onTabClick="null"
+        data-qt-onTabDoubleClick="null"
+        data-qt-onTabClose="null"
+        data-qt-onInit="null"
+        >
+        </div>
+    </div>
+
+
+    <button id="add">添加tab</button>
+    <button id="add2">静态方法</button>
+    <button id="btn1">获取tab的宽度</button>
+
+
+    <a href="https://imccc.cc/ai.html" data-qt-tab='{"title":"新的tab页面一","url":"page2.html?id=1111"}'
+        data-qt-target=".qtab2">通过data属性来添加tab</a>
+
+    <input type="text" id="urlinput" value="https://imccc.cc/ai.html"><button id="add3">通过tab的url刷新tab</button>
+  
+
+    <script src="/dist/js/quicktab.js"></script>
+    <script src="/dist/js/langs/en_US.js"></script>
+
+
+    <script>
+        function test(){
+           return {
+            a:10
+           }
+        }
+    </script>
+
+    <script>
+
+
+        const qt2 = new Quicktab(document.querySelector('.qtab2'),{
+            id:'wocaotab',
+            responsive:false
+        })
+    </script>
+
+
+    <script>
+        
+        // console.log(Quicktab.DEFAULTS);
+        // console.log(Quicktab.LANGS);
+
+        // const qtab = new Quicktab({
+        //     selector: '.qtab1',
+        //     //反转
+        //     reverse: true,
+        //     //工具栏配置
+        //     tabBar: {
+        //         //如果不启用
+        //         enable: true,
+        //         //全屏
+        //         fullscreen: {
+        //             enable: true,
+        //             order: 2
+        //         }
+        //     }
+        // })
+    </script>
+
+    <script>
+
+        // function generateRandomNumber(min, max) {
+        //     return Math.floor(Math.random() * (max - min + 1) + min);
+        // }
+
+        // let length = generateRandomNumber(20, 50)
+
+
+        // let tabs = [];
+
+
+        // for (let index = 0; index < length; index++) {
+        //     tabs.push({    //标题
+        //         title: 'page1.html' + index,
+        //         // 地址
+        //         url: 'page1.html?id=' + index,
+        //         //是否可以关闭
+        //         close: false
+        //     },)
+        // }
+
+
+        // const qtab2 = new Quicktab({
+
+        //     //翻译
+        //     locale: 'en-US',
+
+        //     //初始化选择器
+        //     selector: '.qtab2',
+        //     //选项卡栏配置
+        //     tabBar: {
+        //         //是否隐藏工具栏  true:隐藏 false:显示
+        //         hide: false,
+        //         //导航栏是否底部显示
+        //         position: 'top',
+        //         //全屏
+        //         fullscreen: {
+        //             enable: true,
+        //             order: 3
+        //         },
+        //         refresh: {
+        //             order: 999
+        //         },
+        //         prev: {
+        //             enable: true,
+        //         }
+        //     },
+        //     tab: {
+        //         resizeCenterActive: true,
+        //         dbClickRefresh: true,
+        //         //点击自动居中激活项
+        //         clickCenterActive: true,
+        //         // tab的最大数量配置(不可关闭的tab除外)
+        //         maxNum: null,
+        //         //是否启用关闭按钮
+        //         closeBtn: {
+        //             enable: true,
+        //             // 鼠标移入才显示关闭按钮
+        //             showOnHover: false
+        //         },
+        //         dragSort: true,
+        //         //加载层
+        //         loading: {
+        //             //是否启用,也可以自定义函数来过滤
+        //             enable: true,
+        //             // enable: function (url, qt) {
+        //             //     return !url.startsWith("https")
+        //             // },
+        //             //自定义加载模板 str func
+        //             template: null,
+        //         },
+        //         //超时设置
+        //         timeout: {
+        //             //是否启用超时
+        //             enable: true,
+        //             //超时时间
+        //             second: 3000,
+        //             //超时时的提示文本
+        //             text: '请求超时',
+        //             //超时自定义模板
+        //             template: null,
+        //         },
+        //         //右键菜单
+        //         contextmenu: {
+        //             enable: true,
+
+        //             //关闭当前
+        //             close: {
+        //                 enable: true,
+        //                 text: '关闭当前tab',
+        //                 separator: true,
+        //                 order: 6
+        //             },
+        //             //关闭其它
+        //             closeOthers: {
+        //                 enable: true,
+        //                 order: 2,
+        //                 separator: false,
+        //             },
+
+        //             centerActive: {
+        //                 separator: false
+        //             }
+        //         },
+        //         //鼠标滚轮切换tab
+        //         mouseWheelSwitch: {
+        //             // false:不启用 true:启用
+        //             enable: true,
+
+        //             // 只是横向滚动tab的滚动区域   true:启用 false:不启用
+        //             onlyScroll: true,
+
+        //             //激活的tab自动滚动居中 true:启用 false:不启用 (当onlyScroll:false时有效)
+        //             centerActive: false
+        //         },
+        //     },
+        //     //响应式配置
+        //     responsive: {
+        //         enable: true,
+        //         hideItem: ['prev', 'next', 'refresh']
+        //     },
+        //     //缓存
+        //     cache: {
+        //         enable: true,
+        //         type: 'local'
+        //     },
+        //     //默认初始化的tab
+        //     defaultTabs: [
+        //         {    //标题
+        //             title: '欢迎页面12',
+        //             // 地址
+        //             url: 'https://getbootstrap.com',
+        //             // url: 'page1.html',
+        //             //是否可以关闭
+        //             closable: true
+        //         },
+        //     ],
+        //     onInit: function (qt) {
+        //         console.log('onInit');
+        //     },
+        //     onTabAddActivated: function (qt) {
+        //         console.log('onTabAddActivated');
+        //     },
+        //     onTabActivated: function (qt) {
+        //         console.log('onTabActivated');
+        //     },
+
+        //     onTabFinally: function (qt) {
+        //         console.log('onTabFinally');
+        //     },
+
+        //     onTabAll: function (qt) {
+        //         console.log('onTabAll');
+        //     },
+
+        //     onTabLoaded: function (iframe, url, qt) {
+        //         console.log('onTabLoaded', iframe);
+        //     },
+
+        //     onTabLoadingTransitionend: function (qt) {
+        //         console.log('onTabLoadingTransitionend');
+        //     },
+        //     onTabTimeout: function (url, qt) {
+        //         console.log('onTabTimeout', url);
+        //     },
+
+        //     onTabClick: function (tabEl, qt) {
+        //         console.log('onTabClick');
+        //         console.log(tabEl);
+        //         console.log(qt);
+        //     },
+        // })
+
+        // console.log(Quicktab.LOCALES);
+ 
+
+        // function generateRandomNumber(min, max) {
+        //     return Math.floor(Math.random() * (max - min + 1) + min);
+        // }
+
+
+        // $('#add').on('click', function () {
+        //     let num = generateRandomNumber(1, 5000000);
+        //     qtab2.addTab({
+        //         // url: 'https://getbootstrap.com',
+        //         // url: 'https://imccc.cc/ai.html?id=',
+        //         url: 'page1.html?num=' + num,
+        //         // url: 'page2.html?id=1000',
+        //         title: '新的标签页-' + num,
+        //         //可否关闭，默认值是 true:添加一个可以关闭的tab
+        //         close: true,
+        //     })
+        // })
+
+
+        // $('#add2').on('click', function () {
+        //     console.log(Quicktab.get('.qtab2'))
+        //     console.log(qtab2 === Quicktab.get('.qtab2')) //true
+
+        // })
+
+        // $('#add3').on('click', function () {
+        //     let url = $('#urlinput').val();
+        //     // console.log(url);
+
+        //     qtab2.refreshTabByUrl(url)
+        // })
+
+        // $('#btn1').on('click', function () {
+        //     let tab = qtab2.getTabByUrl($('#urlinput').val());
+        //     // offsetWidth
+        //     // offsetLeft
+        //     console.log(tab.offsetWidth);
+        //     console.log(tab.offsetLeft);
+        // })
+
+
+    </script>
+
+</body>
+
+</html>

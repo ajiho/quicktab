@@ -10,15 +10,10 @@
   display: flex;
   flex-direction: column;
   height: 222px;
+  background-color: #fff;
 
   // 加上该类名可以让tab-bar排到底部
-  &.reverse {
-    flex-direction: column-reverse;
-  }
-
-  // 用于解决鼠标点击到iframe上点击事件丢失问题，会导致右键菜单或者下拉菜单点击任意区域自动消息的逻辑失效问题
-  &.contextmenu-open iframe,
-  &.dropdown-open iframe {
+  &.pen iframe {
     pointer-events: none;
   }
 
@@ -32,17 +27,18 @@
     padding-left: 0;
     margin: 0;
     list-style: none;
-    border: 1px solid #dee2e6;
+    background-color: inherit;
+    border: 1px solid $border-color;
     border-right: none;
 
-    li {
-      border-right: 1px solid #dee2e6;
+    // 隐藏工具栏
+    &.hide {
+      display: none;
+    }
 
-      @for $i from 1 through 6 {
-        &.order-#{$i} {
-          order: $i;
-        }
-      }
+    li {
+      height: 100%;
+      border-right: 1px solid $border-color;
 
       button {
         display: flex;
@@ -51,25 +47,44 @@
         align-items: center;
         justify-content: center;
         height: 100%;
-        padding: 8px 16px;
+        padding: 0 18px;
         font-size: 16px;
         color: #212529;
         cursor: pointer;
         user-select: none;
-        background: #fff;
+        background: $white;
         border: 0;
         border-radius: 0;
         outline: none;
         transition:
           color 0.15s ease-in-out,
           background-color 0.15s ease-in-out;
+
+        // 禁用效果
+        &.disabled {
+          color: color.adjust($white, $blackness: 40%);
+          pointer-events: none;
+          cursor: default;
+          background-color: color.adjust($white, $blackness: 6%);
+        }
+
+        // svg大小
+        svg {
+          width: 14px;
+          height: 14px;
+          fill: #212529;
+        }
       }
 
-      // 可滚动的li
+      // 滚动的li
       &.scroll {
+        //  fix:滚动无法居中的bug,该css属性必须加上
+        position: relative;
         display: flex;
         flex-grow: 1;
         overflow: auto;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
 
         &::-webkit-scrollbar {
           display: none;
@@ -78,7 +93,23 @@
         button {
           position: relative;
           max-width: 180px;
-          border-right: 1px solid #dee2e6;
+          border-right: 1px solid $border-color;
+
+          // 这一块是实现鼠标移入时才显示关闭按钮的样式
+          &.hover {
+            svg {
+              position: absolute;
+              top: 3px;
+              right: 3px;
+              display: none;
+            }
+
+            &:hover {
+              svg {
+                display: inline;
+              }
+            }
+          }
 
           &::after {
             position: absolute;
@@ -87,13 +118,13 @@
             width: 0;
             height: 1px;
             content: '';
-            background-color: #7431fa;
+            background-color: $primary-color;
             border-radius: 0;
             transition: all 0.3s;
           }
 
           &:hover {
-            color: #7431fa;
+            color: $primary-color;
 
             &::after {
               width: 100%;
@@ -101,44 +132,47 @@
           }
 
           &.active {
-            color: #7431fa;
+            color: $primary-color;
 
             &::after {
               width: 100%;
             }
           }
 
+          // 按钮文本
           span {
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
           }
 
+          // 关闭按钮
           svg {
             flex-shrink: 0;
             margin-left: 8px;
             font-size: 12px;
-            color: #c2c2c2;
             border-radius: 50%;
+            fill: #c2c2c2;
 
             &:hover {
-              color: #fff;
               background-color: #ff5722;
+              fill: #fff;
             }
           }
         }
       }
 
-      // 不带滚动的li
+      // 非滚动的li
       &:not(.scroll) {
         button {
+          // 鼠标移入的时候变暗5%
           &:hover {
-            color: #212529;
-            background-color: #f8f9fa;
+            background-color: color.adjust($white, $blackness: 2%);
           }
 
+          // 按下变亮10%
           &:active {
-            background-color: color.adjust($color: #212529, $lightness: 10%);
+            background-color: color.adjust($white, $blackness: 4%);
           }
         }
       }
@@ -149,13 +183,18 @@
   .tab-body {
     position: relative;
     flex-grow: 1;
+    padding-left: 0;
+    margin: 0;
     overflow: hidden;
+    list-style: none;
+    background-color: inherit;
 
-    .tab-body-item {
+    li {
       position: absolute;
       top: -200%;
       width: 100%;
       height: 100%;
+      background-color: inherit;
 
       &.active {
         position: unset;
@@ -173,6 +212,8 @@
       .mask {
         position: absolute;
         inset: 0;
+        opacity: 1;
+        transition: opacity 800ms;
 
         .mask-inner {
           display: flex;

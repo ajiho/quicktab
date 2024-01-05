@@ -1,45 +1,61 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="zh">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-<!--button{$}*3-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>这是子页面2</title>
 
-<h1>我是页面2的内容1</h1>
-<h1>我是页面2的内容2</h1>
-<h1>我是页面2的内容3</h1>
-<h1>我是页面2的内容4</h1>
-<h1>我是页面2的内容5</h1>
-<h1>我是页面2的内容6</h1>
-<h1>我是页面2的内容7</h1>
-<h1>我是页面2的内容8</h1>
-<h1>我是页面2的内容9</h1>
-<h1>我是页面2的内容10</h1>
-<h1>我是页面2的内容11</h1>
-<h1>我是页面2的内容12</h1>
-<h1>我是页面2的内容13</h1>
-<h1>我是页面2的内容14</h1>
-<h1>我是页面2的内容15</h1>
-<h1>我是页面2的内容16</h1>
-<h1>我是页面2的内容17</h1>
-<h1>我是页面2的内容18</h1>
-<h1>我是页面2的内容19</h1>
-<h1>我是页面2的内容20</h1>
-<h1>我是页面2的内容21</h1>
-<h1>我是页面2的内容22</h1>
-<h1>我是页面2的内容23</h1>
-<h1>我是页面2的内容24</h1>
-<h1>我是页面2的内容25</h1>
-<h1>我是页面2的内容26</h1>
-<h1>我是页面2的内容27</h1>
-<h1>我是页面2的内容28</h1>
-<h1>我是页面2的内容29</h1>
-<h1>我是页面2的内容30</h1>
+
+
+
+</head>
+
+<body>
+
+    <h1>这是子页面11</h1>
+    <h1>这是子页面21</h1>
+    <h1>这是子页面31</h1>
+    <h1>这是子页面41</h1>
+    <h1>这是子页面51</h1>
+    <h1>这是子页面61</h1>
+    <h1>这是子页面71</h1>
+    <h1>这是子页面81</h1>
+    <h1>这是子页面91</h1>
+    <h1>这是子页面101</h1>
+    <h1>这是子页面111</h1>
+    <h1>这是子页面121</h1>
+    <h1>这是子页面131</h1>
+    <h1>这是子页面141</h1>
+    <h1>这是子页面151</h1>
+    <h1>这是子页面161</h1>
+    <h1>这是子页面171</h1>
+    <h1>这是子页面181</h1>
+    <h1>这是子页面191</h1>
+    <h1>这是子页面201</h1>
+    <h1>这是子页面211</h1>
+    <h1>这是子页面221</h1>
+    <h1>这是子页面231</h1>
+    <h1>这是子页面241</h1>
+    <h1>这是子页面251</h1>
+    <h1>这是子页面261</h1>
+    <h1>这是子页面271</h1>
+    <h1>这是子页面281</h1>
+    <h1>这是子页面291</h1>
+    <h1>这是子页面301</h1>
+
+    <button data-test1="test1" data-test2="test2">test</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+
+    <script>
+        $(document).on('click', '[data-test1][data-test2]', function () {
+            //error
+            console.log('1');
+        });
+    </script>
 
 </body>
+
 </html>

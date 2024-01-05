@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        function isJSONString(str) {
+            try {
+                const result = JSON.parse(str);
+                return (Object.prototype.toString.call(result) === '[object Object]') || Array.isArray(result)
+            } catch (e) {
+                return false;
+            }
+        }
+
+        // 示例用法
+        // const jsonString = '{"name": "John", "age": 30}';
+        const nonJsonString = '[{"title":"data属性首页1","url":"welcome.html?a=1","close":false}]';
+
+        // console.log(isJSONString(jsonString));  // 输出: true
+        console.log(isJSONString(nonJsonString));  // 输出: false
+
+    </script>
+</body>
+
+</html>

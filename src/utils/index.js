@@ -5,33 +5,58 @@ export default {
    * @returns {Element}
    */
   createNode(htmlStr) {
-    let div = document.createElement('div')
-    div.innerHTML = htmlStr
-    return div.children[0]
+    const node = document.createElement('div')
+    node.innerHTML = htmlStr
+    return node.firstChild
   },
 
-  /**
-   * 节流函数
-   * @param func
-   * @param wait
-   * @returns {(function(...[*]): void)|*}
-   */
+  //防抖
   debounce(func, wait = 500) {
-    let timeID
-    return function (...args) {
-      if (timeID) clearTimeout(timeID)
-      timeID = setTimeout(() => {
-        func.apply(this, args)
+    let timeout
+
+    return function () {
+      const context = this
+      const args = arguments
+
+      clearTimeout(timeout)
+      timeout = setTimeout(function () {
+        func.apply(context, args)
       }, wait)
     }
   },
 
   // 判断iframe是否跨域
   canAccessIFrame(iframe) {
-    return (
-      (iframe.contentDocument || iframe.contentWindow.document)?.body
-        ?.innerHTML !== undefined
-    )
+    if (!iframe.contentWindow || !iframe.contentDocument) {
+      return false
+    }
+    return true
+  },
+
+  /**
+   * 给一个元素的某些特定后代元素设置属性
+   * @param {Element|String} element  需要设置样式的元素,可以是dom对象也可以是dom字符串
+   * @param {Array} selectorArr
+   */
+  setProperty(element, selectorArr, name, value) {
+    if (!Array.isArray(selectorArr)) {
+      console.error('Invalid arguments')
+      return
+    }
+
+    const type = !(element instanceof Element)
+
+    if (type) {
+      const tempElement = document.createElement('div')
+      tempElement.innerHTML = element
+      element = tempElement
+    }
+
+    element.querySelectorAll(selectorArr).forEach((tabBarItem) => {
+      tabBarItem.style.setProperty(name, value)
+    })
+
+    return type ? element.innerHTML : element
   },
 
   sprintf(_str, ...args) {
@@ -51,40 +76,8 @@ export default {
     return flag ? str : ''
   },
 
-  //判断是否为字符串
-  isString(str) {
-    return typeof str == 'string' && str.constructor === String
-  },
-
   isStr(str) {
     return Object.prototype.toString.call(str) === '[object String]'
-  },
-
-  deepExtend(out, ...arguments_) {
-    if (!out) {
-      return {}
-    }
-
-    for (const obj of arguments_) {
-      if (!obj) {
-        continue
-      }
-
-      for (const [key, value] of Object.entries(obj)) {
-        switch (Object.prototype.toString.call(value)) {
-          case '[object Object]':
-            out[key] = this.deepExtend(out[key], value)
-            break
-          case '[object Array]':
-            out[key] = this.deepExtend(new Array(value.length), value)
-            break
-          default:
-            out[key] = value
-        }
-      }
-    }
-
-    return out
   },
 
   //数组对象去重
@@ -100,20 +93,187 @@ export default {
     }, [])
   },
 
-  /**
-   * 通过key更新obj中的指定数据
-   * @param obj 更新值的对象
-   * @param objKey 拼接后的key数据，string ‘.’符号拼接
-   * @param newValue 更新的值
-   * @returns {*} 返回更新后的数据
-   */
-  updateObjDataByKey(obj, objKey, newValue) {
-    const keyList = objKey.split('.')
-    const lastKey = keyList[keyList.length - 1]
-    keyList.reduce((pre, item) => {
-      if (item === lastKey) pre[item] = newValue
-      return pre[item]
-    }, obj)
-    return obj
+  // 类似jQuery的$(document).ready(function () {});
+  ready(callback) {
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', callback)
+    } else {
+      callback()
+    }
+  },
+
+  //可以让单击事件具备双击的能力
+  handleSingleAndDoubleClick(
+    callbacks,
+    { enableDbClick = true, delay = 200 } = {},
+  ) {
+    let clicks = 0
+    let timer = null
+    const { click, dbclick } = callbacks
+
+    return function (event) {
+      const preventAndstop = (type) => {
+        const { preventDefault = true, stopPropagation = true } = type
+        if (preventDefault) event.preventDefault()
+        if (stopPropagation) event.stopPropagation()
+      }
+
+      const callBack = (type) => {
+        const { handle } = type
+        if (typeof handle === 'function') {
+          handle.call(this, event)
+        }
+      }
+
+      if (enableDbClick === true) {
+        clicks++
+        if (clicks === 1) {
+          //单击
+
+          preventAndstop(click)
+
+          timer = setTimeout(() => {
+            callBack(click)
+            clicks = 0
+          }, delay)
+        } else {
+          preventAndstop(dbclick)
+          clearTimeout(timer)
+          callBack(dbclick)
+          clicks = 0
+        }
+      } else {
+        preventAndstop(click)
+        callBack(click)
+      }
+    }
+  },
+
+  extend() {
+    let options,
+      name,
+      src,
+      copy,
+      copyIsArray,
+      clone,
+      target = arguments[0] || {}, //第一个参数
+      i = 1,
+      length = arguments.length,
+      deep = false
+
+    // 处理深度复制情况
+    if (typeof target === 'boolean') {
+      deep = target
+
+      // 跳过布尔值和目标
+      target = arguments[i] || {}
+      i++
+    }
+
+    // 当目标是字符串或其他东西时处理大小写（可能在深度复制中）
+    if (typeof target !== 'object' && typeof target !== 'function') {
+      target = {}
+    }
+
+    // 如果只传递一个参数，则扩展jQuery本身
+    if (i === length) {
+      target = this
+      i--
+    }
+
+    for (; i < length; i++) {
+      // 仅处理非null/未定义的值
+      if ((options = arguments[i]) != null) {
+        // 延伸基础对象
+        for (name in options) {
+          copy = options[name]
+
+          // 防止Object.prototype污染
+          // 防止无休止的循环
+          if (name === '__proto__' || target === copy) {
+            continue
+          }
+
+          // 如果我们正在合并普通对象或数组，则重复出现
+          if (
+            deep &&
+            copy &&
+            (this.isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))
+          ) {
+            src = target[name]
+
+            // 确保源值的类型正确
+            if (copyIsArray && !Array.isArray(src)) {
+              clone = []
+            } else if (!copyIsArray && !this.isPlainObject(src)) {
+              clone = {}
+            } else {
+              clone = src
+            }
+            copyIsArray = false
+
+            // 从不移动原始对象，而是克隆它们
+            target[name] = this.extend(deep, clone, copy)
+
+            // 不要引入未定义的值
+            // } else if (copy !== undefined) {
+          } else {
+            target[name] = copy
+          }
+        }
+      }
+    }
+
+    // 返回修改后的对象
+    return target
+  },
+
+  //用于判断一个对象是否是纯粹的 JavaScript 对象（即不是 DOM 对象、函数、数组等）。具体作用是检查对象是否通过对象字面量或 new Object() 创建，且其原型链上只包含标准的 Object 原型
+  isPlainObject(obj) {
+    if (typeof obj !== 'object' || obj === null || obj instanceof Array) {
+      return false
+    }
+
+    const prototype = Object.getPrototypeOf(obj)
+    return prototype === Object.prototype || prototype === null
+  },
+
+  isObject(value) {
+    return Object.prototype.toString.call(value) === '[object Object]'
+  },
+
+  isJSONString(str) {
+    try {
+      const result = JSON.parse(str)
+      return (
+        Object.prototype.toString.call(result) === '[object Object]' ||
+        Array.isArray(result)
+      )
+    } catch (e) {
+      return false
+    }
+  },
+
+  parseAttributeValue(value) {
+    // 如果值是 'true' 或 'false'，转换为相应的布尔值
+    if (value === 'true') {
+      return true
+    } else if (value === 'false') {
+      return false
+    }
+
+    // 尝试解析为 JSON
+    if (this.isJSONString(value)) {
+      return JSON.parse(value)
+    }
+
+    // 尝试获取全局函数
+    const globalFunction = window[value]
+    if (typeof globalFunction === 'function') {
+      return globalFunction
+    }
+
+    // 返回原始值
+    return value
   },
 }
