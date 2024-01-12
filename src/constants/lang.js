@@ -1,5 +1,5 @@
 export default {
-  formatLoadingMessage() {
+  formatTimeoutMessage() {
     return '请求超时'
   },
 

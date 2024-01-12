@@ -1,5 +1,5 @@
 Quicktab.LANGS['en-US'] = Quicktab.LANGS['en'] = {
-  formatLoadingMessage() {
+  formatTimeoutMessage() {
     return 'request timeout'
   },
 

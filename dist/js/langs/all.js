@@ -3,78 +3,72 @@
   factory();
 })((function () { 'use strict';
 
-  Quicktab.LANGS['en-US'] = Quicktab.LANGS['en'] = {
-    formatLoadingMessage() {
-      return 'request timeout'
-    },
-
-    formatContextmenuClose() {
-      return `Close current`
-    },
-
-    formatContextmenuCloseOthers() {
-      return `Close Other`
-    },
-    formatContextmenuClosePrev() {
-      return `Close left side`
-    },
-    formatContextmenuCloseNext() {
-      return `Close right side`
-    },
-    formatContextmenuCloseAll() {
-      return `Close all`
-    },
-    formatContextmenuFullscreen() {
-      return `full screen`
-    },
-    formatContextmenuRefresh() {
-      return `Refresh`
-    },
-    formatContextmenuCenterActive() {
-      return `Go back to the current`
-    },
-    formatContextmenuNewBlank() {
-      return `Open a new window`
-    },
-  };
-
-  Object.assign(Quicktab.DEFAULTS, Quicktab.LANGS['en-US']);
-
   Quicktab.LANGS['ru_RU'] = Quicktab.LANGS['ru'] = {
-    formatLoadingMessage() {
-      return 'Время ожидания'
+    formatTimeoutMessage() {
+      return 'Время ожидания';
     },
-
     formatContextmenuClose() {
-      return `Закрыть текущий`
+      return "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0442\u0435\u043A\u0443\u0449\u0438\u0439";
     },
-
     formatContextmenuCloseOthers() {
-      return `Закрыть другие`
+      return "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0434\u0440\u0443\u0433\u0438\u0435";
     },
     formatContextmenuClosePrev() {
-      return `Закрыть слева`
+      return "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0441\u043B\u0435\u0432\u0430";
     },
     formatContextmenuCloseNext() {
-      return `Закрыть правую сторону`
+      return "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u043F\u0440\u0430\u0432\u0443\u044E \u0441\u0442\u043E\u0440\u043E\u043D\u0443";
     },
     formatContextmenuCloseAll() {
-      return `Закрыть все`
+      return "\u0417\u0430\u043A\u0440\u044B\u0442\u044C \u0432\u0441\u0435";
     },
     formatContextmenuFullscreen() {
-      return `Полный экран`
+      return "\u041F\u043E\u043B\u043D\u044B\u0439 \u044D\u043A\u0440\u0430\u043D";
     },
     formatContextmenuRefresh() {
-      return `Обновить`
+      return "\u041E\u0431\u043D\u043E\u0432\u0438\u0442\u044C";
     },
     formatContextmenuCenterActive() {
-      return `Вернуться к текущему`
+      return "\u0412\u0435\u0440\u043D\u0443\u0442\u044C\u0441\u044F \u043A \u0442\u0435\u043A\u0443\u0449\u0435\u043C\u0443";
     },
     formatContextmenuNewBlank() {
-      return `Открыть новое окно`
-    },
+      return "\u041E\u0442\u043A\u0440\u044B\u0442\u044C \u043D\u043E\u0432\u043E\u0435 \u043E\u043A\u043D\u043E";
+    }
   };
-
   Object.assign(Quicktab.DEFAULTS, Quicktab.LANGS['ru_RU']);
+
+  Quicktab.LANGS['en-US'] = Quicktab.LANGS['en'] = {
+    formatTimeoutMessage() {
+      return 'request timeout';
+    },
+    formatContextmenuClose() {
+      return "Close current";
+    },
+    formatContextmenuCloseOthers() {
+      return "Close Other";
+    },
+    formatContextmenuClosePrev() {
+      return "Close left side";
+    },
+    formatContextmenuCloseNext() {
+      return "Close right side";
+    },
+    formatContextmenuCloseAll() {
+      return "Close all";
+    },
+    formatContextmenuFullscreen() {
+      return "full screen";
+    },
+    formatContextmenuRefresh() {
+      return "Refresh";
+    },
+    formatContextmenuCenterActive() {
+      return "Go back to the current";
+    },
+    formatContextmenuNewBlank() {
+      return "Open a new window";
+    }
+  };
+  Object.assign(Quicktab.DEFAULTS, Quicktab.LANGS['en-US']);
 
 }));

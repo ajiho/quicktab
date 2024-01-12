@@ -21,10 +21,10 @@ const plugins = [
         include: '**/*.js',
         exclude: 'node_modules/**'
     }),
-    // babel({
-    //     babelHelpers: 'bundled',
-    //     exclude: 'node_modules/**'
-    // })
+    babel({
+        babelHelpers: 'bundled',
+        exclude: ['node_modules/**','src/utils/event.js']
+    })
 ]
 
 if (process.env.NODE_ENV === 'production') {

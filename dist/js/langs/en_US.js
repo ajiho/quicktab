@@ -4,40 +4,37 @@
 })((function () { 'use strict';
 
   Quicktab.LANGS['en-US'] = Quicktab.LANGS['en'] = {
-    formatLoadingMessage() {
-      return 'request timeout'
+    formatTimeoutMessage() {
+      return 'request timeout';
     },
-
     formatContextmenuClose() {
-      return `Close current`
+      return "Close current";
     },
-
     formatContextmenuCloseOthers() {
-      return `Close Other`
+      return "Close Other";
     },
     formatContextmenuClosePrev() {
-      return `Close left side`
+      return "Close left side";
     },
     formatContextmenuCloseNext() {
-      return `Close right side`
+      return "Close right side";
     },
     formatContextmenuCloseAll() {
-      return `Close all`
+      return "Close all";
     },
     formatContextmenuFullscreen() {
-      return `full screen`
+      return "full screen";
     },
     formatContextmenuRefresh() {
-      return `Refresh`
+      return "Refresh";
     },
     formatContextmenuCenterActive() {
-      return `Go back to the current`
+      return "Go back to the current";
     },
     formatContextmenuNewBlank() {
-      return `Open a new window`
-    },
+      return "Open a new window";
+    }
   };
-
   Object.assign(Quicktab.DEFAULTS, Quicktab.LANGS['en-US']);
 
 }));

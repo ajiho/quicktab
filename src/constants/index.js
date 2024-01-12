@@ -1,4 +1,6 @@
 import FullOption from './full-option'
+import FullOptionStruct from './full-option-struct'
+import TabOptionStruct from './tab-option-struct'
 import TabOption from './tab-option'
 import DataKeys from './datakeys'
 import Classes from './classes'
@@ -38,6 +40,8 @@ export default {
   VERSION,
   DEFAULTS,
   FULLOPTION: FullOption,
+  FULLOPTIONSTRUCT: FullOptionStruct,
+  TABOPTIONSTRUCT: TabOptionStruct,
   DATAKEYS: DataKeys,
   TABDEFAULTS: TabOption,
   CLASSES: Classes,

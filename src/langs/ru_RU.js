@@ -1,5 +1,5 @@
 Quicktab.LANGS['ru_RU'] = Quicktab.LANGS['ru'] = {
-  formatLoadingMessage() {
+  formatTimeoutMessage() {
     return 'Время ожидания'
   },
 

@@ -1,7 +1,5 @@
 // 该配置项目是全部启用的列表
 export default {
-  //必填项，是用户自己指定的唯一值用以区分quicktab的实例,缓存功能和通过data属性快捷添加tab的能力需要使用
-  id: undefined,
   //最小高度
   minHeight: undefined,
   //高度
@@ -16,8 +14,8 @@ export default {
   responsive: {
     // 断点视口
     breakpoint: 576,
-    // 小设备时因此的tabbar上的项目(只能是tabbar上被启用的item)
-    hideItem: 'prev,next',
+    // 小设备时隐藏的工具栏上的项目
+    hideToolbarItem: ['prev', 'next'],
   },
   //默认tab
   defaultTabs: [],
@@ -70,7 +68,7 @@ export default {
 
   //tab配置
   tab: {
-    //记忆
+    //记忆(刷新tab不丢失)
     remember: false,
 
     //右键菜单配置
@@ -128,8 +126,8 @@ export default {
       //激活的tab自动滚动居中 true:启用 false:不启用 (当onlyScroll:false时有效)
       centerActive: true,
     },
-    //最大数量  null:表示无限制
-    maxNum: null,
+    //最大数量  -1:表示无限制
+    maxNum: -1,
     //关闭按钮  false:表示禁用该功能
     closeBtn: {
       //关闭按钮是否鼠标移入时才显示 true:启用 false:一直显示
@@ -155,7 +153,7 @@ export default {
       //超时时间
       second: 3000,
       //超时自定义模板
-      template: null,
+      template: '',
     },
     //tab加载时的模板 false:表示禁用该功能
     loading: {
@@ -163,8 +161,8 @@ export default {
       filter(url) {
         return true
       },
-      //自定义加载模板 str func
-      template: null,
+      //自定义加载模板
+      template: '',
     },
   },
   //tab被激活的事件(这里是比如关闭tab时，会自动激活别的tab时的事件回调)

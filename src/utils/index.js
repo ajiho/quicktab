@@ -255,25 +255,171 @@ export default {
   },
 
   parseAttributeValue(value) {
-    // 如果值是 'true' 或 'false'，转换为相应的布尔值
-    if (value === 'true') {
-      return true
-    } else if (value === 'false') {
-      return false
-    }
-
-    // 尝试解析为 JSON
-    if (this.isJSONString(value)) {
+    try {
       return JSON.parse(value)
+    } catch (error) {
+      // 尝试获取全局函数
+      const globalFunction = window[value]
+      if (typeof globalFunction === 'function') {
+        return globalFunction
+      }
+      return value
+    }
+  },
+
+  updateObjDataByKey(obj, objKey, newValue) {
+    const keyList = objKey.split('.')
+    const lastKey = keyList[keyList.length - 1]
+    keyList.reduce((pre, item) => {
+      if (item === lastKey) pre[item] = newValue
+      return pre[item]
+    }, obj)
+    return obj
+  },
+
+  getObjDataByKey(obj, objKey) {
+    const keyList = objKey.split('.')
+    return keyList.reduce((currentObj, key) => {
+      if (currentObj && typeof currentObj === 'object' && key in currentObj) {
+        return currentObj[key]
+      } else {
+        return undefined // 返回 undefined 表示未找到相应的值
+      }
+    }, obj)
+  },
+
+  //对几个需要转换成字符串属性进行处理
+  stringTypeOptions(obj) {
+    const objKey = ['minHeight', 'height', 'width']
+    objKey.forEach((item) => {
+      this.updateObjDataByKey(
+        obj,
+        item,
+        this.getObjDataByKey(obj, item).toString(),
+      )
+    })
+    return obj
+  },
+
+  parseOptions(element, options, prefix = '') {
+    for (const key in options) {
+      const attrKey = prefix + key
+      const dataVal = this.parseAttributeValue(element.getAttribute(attrKey))
+      if (this.isObject(options[key])) {
+        //如果是对象
+        dataVal === false
+          ? (options[key] = false)
+          : this.parseOptions(element, options[key], attrKey + '-')
+      } else {
+        if (dataVal !== null) {
+          options[key] = dataVal
+        }
+      }
+    }
+    return options
+  },
+  hasDuplicates(array) {
+    for (let i = 0; i < array.length; i++) {
+      if (array.indexOf(array[i]) !== i) {
+        return true
+      }
+    }
+    return false
+  },
+
+  onResize(element, callback) {
+    const resizeObserver = new ResizeObserver((entries) => {
+      // 处理大小变化的回调函数
+      entries.forEach((entry) => {
+        // entry.target 是发生大小变化的元素 entry.contentRect 包含元素的新大小信息
+        if (!entry.target.firstResize) {
+          //优化:第一次不执行
+          entry.target.firstResize = true
+          return
+        }
+        callback.call(element, entry.contentRect)
+      })
+    })
+    resizeObserver.observe(element)
+  },
+  // 获取开启和激活的选项
+  getEnabledAndSortedOpsKey(options, keyClassMap) {
+    return Object.keys(options)
+      .filter((key) => {
+        if (Object.keys(keyClassMap).includes(key) && options[key] !== false) {
+          return true
+        }
+        return false
+      })
+      .sort((a, b) => options[a].order - options[b].order)
+  },
+  //实现类似jquery的prevAll
+  prevAll(element) {
+    const result = []
+    let currentElement = element.previousElementSibling
+
+    while (currentElement) {
+      result.push(currentElement)
+      currentElement = currentElement.previousElementSibling
     }
 
-    // 尝试获取全局函数
-    const globalFunction = window[value]
-    if (typeof globalFunction === 'function') {
-      return globalFunction
+    return result
+  },
+  //实现类似jquery的nextAll
+  nextAll(element) {
+    const result = []
+    let currentElement = element.nextElementSibling
+
+    while (currentElement) {
+      result.push(currentElement)
+      currentElement = currentElement.nextElementSibling
     }
 
-    // 返回原始值
-    return value
+    return result
+  },
+
+  // 获取元素在父元素中的index
+  index(el) {
+    let index = 0
+    if (!el || !el.parentNode) {
+      return -1
+    }
+    // previousElementSibling：上一个兄弟元素
+    while (el && (el = el.previousElementSibling)) {
+      index++
+    }
+    return index
+  },
+
+  // 触发动画
+  animate(prevRect, target) {
+    let ms = 300
+    if (ms) {
+      let currentRect = target.getBoundingClientRect()
+      if (prevRect.nodeType === 1) {
+        prevRect = prevRect.getBoundingClientRect()
+      }
+
+      target.style.setProperty('transition', 'none')
+      target.style.setProperty(
+        'transform',
+        `translate3d(${prevRect.left - currentRect.left}px,${
+          prevRect.top - currentRect.top
+        }px,0)`,
+      )
+
+      target.offsetWidth // 触发重绘
+
+      target.style.setProperty('transition', `transform ${ms}ms`)
+      target.style.setProperty('transform', 'translate3d(0,0,0)')
+
+      // 时间到了之后把transition和transform清空
+      clearTimeout(target.animated)
+      target.animated = setTimeout(function () {
+        target.style.setProperty('transition', '')
+        target.style.setProperty('transform', '')
+        target.animated = false
+      }, ms)
+    }
   },
 }

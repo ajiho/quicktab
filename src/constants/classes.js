@@ -1,13 +1,13 @@
 export default {
   container: 'quicktab',
-  tabBar: 'tab-bar',
-  tabBarHide: 'hide',
-  tabBarPrevItem: 'prev',
-  tabBarRefreshItem: 'refresh',
-  tabBarScrollItem: 'scroll',
-  tabBarNextItem: 'next',
-  tabBarDropdownItem: 'dropdown',
-  tabBarFullscreenItem: 'fullscreen',
+  toolbar: 'tab-bar',
+  toolbarHide: 'hide',
+  toolbarPrevItem: 'prev',
+  toolbarRefreshItem: 'refresh',
+  toolbarTabWrapperItem: 'scroll',
+  toolbarNextItem: 'next',
+  toolbarDropdownItem: 'dropdown',
+  toolbarFullscreenItem: 'fullscreen',
   tabBody: 'tab-body',
   //该类名实现iframe的鼠标事件穿透问题
   pointerEventsNnoe: 'pen',
@@ -17,7 +17,8 @@ export default {
   //关闭按钮鼠标移入时才显示时的辅助类名
   showCloseBtnOnHover: 'hover',
   listGroupCloseItem: 'close',
-  listGroupShow: 'show',
+
+  listGroupActive: 'active',
   listGroupCloseOtherItem: 'other',
   listGroupClosePrevItem: 'prev',
   listGroupCloseNextItem: 'next',

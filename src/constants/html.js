@@ -2,12 +2,12 @@ import Classes from './classes'
 import DataKeys from './datakeys'
 
 export default {
-  //tab工具栏容器
-  tabBar: [`<ul class="${Classes.tabBar} %s">`, '</ul>'],
+  //工具栏容器
+  toolbar: [`<ul class="${Classes.toolbar} %s">`, '</ul>'],
 
-  // tab工具栏的项目
-  tabBarItem: `<li class="%s"><button>%s</button></li>`,
-  tabBarScrollItem: `<li class="%s"></li>`,
+  // 工具栏的项目
+  toolbarItem: `<li class="%s">%s</li>`,
+
   //选项卡body部分
   tabBody: `<ul class="${Classes.tabBody}"></ul>`,
 

@@ -41,7 +41,6 @@ try {
         '--',
         '--esm',
         '--include=event',
-        '--include=attributes',
         `--filename="${filename}"`
     ], {
         cwd: "./" + path,

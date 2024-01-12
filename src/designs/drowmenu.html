@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sticky List with Collapsible Sections</title>
+    <style>
+        .list-container {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            width: 320px;
+            background-color: #f1f1f1;
+            overflow-y: auto;
+            height: 300px;
+        }
+
+        .list-item {
+            padding: 10px;
+            cursor: pointer;
+            background-color: #ddd;
+        }
+
+        .section {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .section li {
+            padding: 8px;
+            background-color: #fff;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .sticky {
+            position: sticky;
+            top: 0;
+            z-index: 1;
+            background-color: #ddd;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="list-container">
+        <div class="list-item sticky" data-section="section1">打开的标签页</div>
+        <ul class="section " id="section1">
+            <li>Item 1.1</li>
+            <li>Item 1.2</li>
+            <li>Item 1.3</li>
+            <li>Item 1.3</li>
+            <li>Item 1.3</li>
+            <li>Item 1.3</li>
+            <li>Item 1.3</li>
+            <li>Item 1.3</li>
+        </ul>
+        <div class="list-item sticky" data-section="section2">最近关闭的标签页</div>
+        <ul class="section" id="section2">
+            <li>Item 2.1</li>
+            <li>Item 2.2</li>
+            <li>Item 2.3</li>
+            <li>Item 2.3</li>
+            <li>Item 2.3</li>
+            <li>Item 2.3</li>
+            <li>Item 2.3</li>
+            <li>Item 2.3</li>
+            <li>Item 2.3</li>
+            <li>Item 2.3</li>
+        </ul>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const listItems = document.querySelectorAll('.list-item');
+
+            listItems.forEach(function (item) {
+                item.addEventListener('click', function () {
+                    const sectionId = item.getAttribute('data-section');
+                    const section = document.getElementById(sectionId);
+
+                    // Toggle the visibility of the section
+                    section.classList.toggle('collapsed');
+                });
+            });
+
+            const sections = document.querySelectorAll('.section');
+
+            window.addEventListener('scroll', function () {
+                sections.forEach(function (section) {
+                    const rect = section.getBoundingClientRect();
+                    const isSticky = rect.top <= 0;
+
+                    if (isSticky) {
+                        section.classList.add('sticky');
+                    } else {
+                        section.classList.remove('sticky');
+                    }
+                });
+            });
+        });
+
+    </script>
+</body>
+
+</html>
