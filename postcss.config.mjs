@@ -1,3 +1,5 @@
+import autoprefixer from "autoprefixer";
+
 export default context => {
   return {
     map: {
@@ -5,11 +7,13 @@ export default context => {
       annotation: true,
       sourcesContent: true
     },
-    plugins: {
-      //自动添加厂商前缀
-      autoprefixer: {
+    plugins: [
+      autoprefixer({
+        //禁用级联效果(厂商前缀对齐)
         cascade: false
-      }
-    }
+      })
+    ],
   }
-}
+};
+
+

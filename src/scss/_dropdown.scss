@@ -1,0 +1,193 @@
+@use 'sass:color';
+
+.quicktab-dropdown {
+  *:focus {
+    outline: none;
+  }
+
+  position: fixed;
+  display: none;
+  width: 320px;
+  max-width: 100%;
+  font-size: 14px;
+  background-color: #fff;
+  box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 7.5%);
+
+  &.active {
+    display: inline-block;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid $primary-color;
+
+    svg {
+      width: 16px;
+      height: 16px;
+      margin-right: 16px;
+    }
+
+    input {
+      flex-grow: 1;
+      appearance: none;
+      border: none;
+      outline: none;
+    }
+  }
+
+  .body {
+    max-height: 300px;
+    overflow-y: auto;
+
+    $background: #ededed;
+
+    // 滚动条的颜色美化
+    @include simplebar;
+
+    // 两个都没有结果的时候
+    .empty {
+      display: none;
+      padding: 12px;
+      text-align: center;
+    }
+
+    // 搜索关键词高亮
+    .highlighted {
+      font-weight: bold;
+      background-color: #ff0;
+    }
+
+    // 图标容器
+    .icon-wrapper {
+      box-sizing: border-box;
+      display: none;
+      flex-shrink: 0;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+
+      svg {
+        width: 24px;
+        height: 24px;
+        fill: #212529;
+      }
+
+      &:hover {
+        background-color: #dbdbdb;
+      }
+
+      &:focus {
+        border: 2px solid $primary-color;
+      }
+    }
+
+    .sticky {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      padding: 14px 16px;
+      font-size: 14px;
+      background-color: #fff;
+
+      &.has-icon {
+        cursor: pointer;
+
+        .icon-wrapper {
+          display: flex;
+        }
+      }
+
+      .subheader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        user-select: none;
+
+        .subheader-text {
+          flex-grow: 1;
+          min-width: 0;
+          margin-right: 8px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        svg {
+          transform: scale(0.4);
+        }
+      }
+    }
+
+    .section {
+      padding: 0;
+      margin: 0;
+      list-style-type: none;
+
+      li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 4px 16px;
+        cursor: default;
+        user-select: none;
+
+        .details {
+          flex-grow: 1;
+          min-width: 0;
+          margin-right: 8px;
+          font-size: 14px;
+
+          p {
+            margin: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            &:first-child {
+              font-weight: 400;
+            }
+
+            &:last-child {
+              display: flex;
+              align-items: center;
+              margin-top: 6px;
+              font-size: 90%;
+              font-weight: lighter;
+
+              .dot {
+                margin: 0 8px;
+                font-weight: 800;
+              }
+
+              .url {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+              }
+            }
+          }
+        }
+
+        &:hover {
+          background-color: $background;
+
+          .icon-wrapper {
+            display: flex;
+          }
+        }
+
+        &.active {
+          background-color: color.adjust($background, $blackness: 4%);
+
+          .icon-wrapper {
+            display: flex;
+          }
+        }
+      }
+    }
+  }
+}

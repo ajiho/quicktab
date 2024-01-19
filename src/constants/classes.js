@@ -9,8 +9,10 @@ export default {
   toolbarDropdownItem: 'dropdown',
   toolbarFullscreenItem: 'fullscreen',
   tabBody: 'tab-body',
-  //该类名实现iframe的鼠标事件穿透问题
-  pointerEventsNnoe: 'pen',
+
+
+
+
   tabActive: 'active',
   tabDisabled: 'disabled',
   tabPaneActive: 'active',
@@ -29,4 +31,15 @@ export default {
   listGroupFullscreenItem: 'fullscreen',
   //遮罩层
   overlays: 'mask',
+
+
+  //下拉菜单粘性标题部分有图标时的类
+  dropdownBodyStickyHasIcon: 'has-icon',
+
+  //用于阻止事件被iframe无视的问题(增强用户体验)
+  contextmenuPEN: 'pen-contextmenu',
+  dropdownPEN: 'pen-dropdown',
+
+  dropdownActive: 'active',
+
 }

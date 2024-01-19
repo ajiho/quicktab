@@ -6,8 +6,8 @@ export default {
    */
   createNode(htmlStr) {
     const node = document.createElement('div')
-    node.innerHTML = htmlStr
-    return node.firstChild
+    node.innerHTML = htmlStr.trim()// 去除字符串两端的空白
+    return node.firstElementChild
   },
 
   //防抖
@@ -403,8 +403,7 @@ export default {
       target.style.setProperty('transition', 'none')
       target.style.setProperty(
         'transform',
-        `translate3d(${prevRect.left - currentRect.left}px,${
-          prevRect.top - currentRect.top
+        `translate3d(${prevRect.left - currentRect.left}px,${prevRect.top - currentRect.top
         }px,0)`,
       )
 
@@ -422,4 +421,51 @@ export default {
       }, ms)
     }
   },
+
+
+  /**
+   * 把时间戳转换成人类友好的时间
+   * @param {Number} timestamp 微妙时间戳
+   * @returns {String} 
+   */
+  timeAgo(timestamp, customText = {
+    second: '秒前',
+    minutes: '分钟前',
+    hours: '小时前',
+    days: '天前',
+    months: '月前',
+    years: '年前'
+  }) {
+
+    const seconds = Math.floor((Date.now() - Math.floor(timestamp)) / 1000);
+
+    const minute = 60;
+    const hour = 60 * minute;
+    const day = 24 * hour;
+    const month = 30 * day;
+    const year = 365 * day;
+
+    if (seconds < minute) {
+      return `${seconds} ${customText.second}`;
+    } else if (seconds < hour) {
+      const minutes = Math.floor(seconds / minute);
+      return `${minutes} ${customText.minutes}`;
+    } else if (seconds < day) {
+      const hours = Math.floor(seconds / hour);
+      return `${hours} ${customText.hours}`;
+    } else if (seconds < month) {
+      const days = Math.floor(seconds / day);
+      return `${days} ${customText.days}`;
+    } else if (seconds < year) {
+      const months = Math.floor(seconds / month);
+      return `${months} ${customText.months}`;
+    } else {
+      const years = Math.floor(seconds / year);
+      return `${years} ${customText.years}`;
+    }
+  },
+  //判断数字是否有小数点
+  hasDecimal(number) {
+    return !Number.isInteger(number);
+  }
 }

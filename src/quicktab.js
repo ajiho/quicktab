@@ -4,6 +4,7 @@ import Cache from './utils/cache'
 import event from './utils/event'
 import Struct from './utils/struct'
 
+
 import {
   autoUpdate,
   computePosition,
@@ -11,6 +12,10 @@ import {
   offset,
   shift,
 } from '@floating-ui/dom'
+
+
+
+import SimpleBar from 'simplebar'
 
 class Quicktab {
   #id
@@ -22,6 +27,8 @@ class Quicktab {
   #toolbarEl
   // tab滚动区域包裹层
   #toolbarItemTabWrapperEl
+  // 工具栏-item-下拉菜单按钮
+  #toolbarItemDropdownEl
   // tab的面板区域包裹层
   #tabBodyEl
   //缓存句柄
@@ -32,12 +39,31 @@ class Quicktab {
   #cacheDefaultTabsKey
   //右键菜单的列表组
   #contextmenuEl
+  //下拉菜单的元素
+  #dropdownEl
   //tab右键菜单floatui自动更新的监听器
   #contextmenuCleanup
-  //可否关闭pen
-  #canRemovePenClass = 0
+
+  //下拉菜单floatui自动更新的监听器
+  #dropdownCleanup
   //工具栏需要隐藏的项目
   #hideItemSelector
+
+  //激活tab居中防抖函数
+  #debounceCenterActive
+
+
+  // 下拉菜单的一些组成部分
+  #openTabsSubtitleEl
+  #openTabsOriginalListEl
+  #openTabsearchResultsEl
+  #recentlyClosedTabsSubtitleEl
+  #recentlyClosedTabsOriginalListEl
+  #recentlyClosedTabssearchResultsEl
+  #noResultsMessageEl
+
+  // 用以存储最近关闭的缓存的key
+  #cacheRecentlyClosedTabsKey
 
   //实例集合
   static #instances = new Map()
@@ -77,16 +103,22 @@ class Quicktab {
     //额外处理defaultTabs参数
     this.#options = this.#parsedefaultTabs(this.#options)
 
-    console.log(this.#options)
+
 
     this.#id = id
     this.#cacheKey = `${Constants.CLASSES.container}-${id}`
     this.#cacheDefaultTabsKey = `${this.#cacheKey}-defaultTabs`
+    this.#cacheRecentlyClosedTabsKey = `${this.#cacheKey}-recentlyClosed`
     this.#hideItemSelector = this.#options.responsive.hideToolbarItem?.map(
       (item) => {
         return `.${Constants.CLASSES.toolbar} li.${item}`
       },
     )
+    this.#debounceCenterActive = Utils.debounce(() => {
+      this.scrollToTabByUrl(this.#getTabUrl(this.getActiveTab()))
+    }, 500)
+
+
 
     //初始化
     this.#init()
@@ -95,13 +127,137 @@ class Quicktab {
     this.#options.onInit?.(this)
   }
 
+
+
   #init() {
     this.#initLocale()
     this.#initCache()
     this.#initContainer()
     this.#initContextmenu()
+    this.#initDropdown()
     this.#initEvent()
     this.#initTabs()
+  }
+
+
+  #initDropdown() {
+
+    if (
+      this.#options.toolbar.hide === true ||
+      this.#options.tab.dropdown === false
+    )
+      return
+
+
+    const dropdownOptions = this.#options.toolbar.dropdown;
+
+    //组织html
+    const html = [
+      Utils.sprintf(
+        Constants.HTML.dropdown[0],
+        this.#id,
+      ),
+    ]
+
+    const placeholderText = dropdownOptions.searchInput.placeholder.trim() !== ''
+      ? dropdownOptions.searchInput.placeholder
+      : this.#options.formatSearchInputPlaceholder();
+
+
+
+
+    html.push(Utils.sprintf(
+      Constants.HTML.dropdownHeader,
+      dropdownOptions.searchInput.prefixIcon,
+      placeholderText
+    ))
+
+    // 加入body的开始标记
+    html.push(Constants.HTML.dropdownBody[0])
+
+
+    //打开的标签的副标题
+    const openedTabsText = dropdownOptions.openedTabs.text.trim() !== ''
+      ? dropdownOptions.openedTabs.text
+      : this.#options.formatOpenedTabs();
+
+    html.push(Utils.sprintf(
+      Constants.HTML.dropdownBodySticky,
+      '',
+      openedTabsText,
+      ''
+    ))
+
+
+
+    //插入两个section(一个存储原来的结果，一个是展示搜索结果，展示搜索结果的默认要隐藏)
+    html.push(Constants.HTML.dropdownBodySection)
+    html.push(Utils.setProperty(Constants.HTML.dropdownBodySection, ['.section'], 'display', 'none'))
+
+
+    //插入第二个副标题
+    const recentlyClosedTabsText = dropdownOptions.recentlyClosedTabs.text.trim() !== ''
+      ? dropdownOptions.recentlyClosedTabs.text
+      : this.#options.formatRecentlyClosedTabs();
+
+
+    html.push(Utils.sprintf(
+      Constants.HTML.dropdownBodySticky,
+      Constants.CLASSES.dropdownBodyStickyHasIcon,
+      recentlyClosedTabsText,
+      Utils.sprintf(Constants.HTML.iconWrapper, 'tabindex="0"', dropdownOptions.recentlyClosedTabs.hideIcon)
+    ))
+
+    //这两个section外面再套一个div
+    html.push('<div>')
+    //再插入两个section
+    html.push(Constants.HTML.dropdownBodySection)
+    html.push(Utils.setProperty(Constants.HTML.dropdownBodySection, ['.section'], 'display', 'none'))
+    html.push('</div>')
+
+    //再插入一个无数据时的dom
+    const noResultsText = dropdownOptions.searchNoResultsText.trim() !== ''
+      ? dropdownOptions.searchNoResultsText
+      : this.#options.formatSearchNoResults();
+
+    html.push(Utils.sprintf(Constants.HTML.dropdownEmpty, noResultsText))
+
+
+
+    html.push(Constants.HTML.dropdownBody[1])
+
+    html.push(Constants.HTML.dropdown[1])
+
+
+
+    //插入到body中去
+    document.body.insertAdjacentHTML('beforeEnd', html.join(''))
+
+    //查找右键菜单
+    this.#dropdownEl = document.querySelector(
+      `[${Constants.DATAKEYS.dropdown}="${this.#id}"]`,
+    )
+
+    //查找一些必须的元素
+
+    const allSticky = this.#dropdownEl.querySelectorAll('.sticky');
+    const allSection = this.#dropdownEl.querySelectorAll('ul.section');
+
+    this.#openTabsSubtitleEl = allSticky[0];
+    this.#openTabsOriginalListEl = allSection[0];
+    this.#openTabsearchResultsEl = allSection[1];
+    this.#recentlyClosedTabsSubtitleEl = allSticky[1];
+    this.#recentlyClosedTabsOriginalListEl = allSection[2];
+    this.#recentlyClosedTabssearchResultsEl = allSection[3];
+    this.#noResultsMessageEl = this.#dropdownEl.querySelector('.empty');
+
+
+
+    //初始化滚动条插件
+    new SimpleBar(this.#dropdownEl.querySelector('.body'), {
+      autoHide: true
+    });
+
   }
 
   #initLocale() {
@@ -167,12 +323,34 @@ class Quicktab {
   #initEvent() {
     let that = this
 
-    const resizeCenterActiveDebounce = Utils.debounce(() => {
-      this.scrollToTabByUrl(this.#getTabUrl(this.getActiveTab()))
-    }, 500)
+
+    //用以处理tab右键菜单和下拉菜单的关闭处理
+    event(document).on(
+      'click contextmenu touchstart scroll dragstart',
+      function (event) {
+        const clickedElement = event.target;
+        const eventType = event.type;
+
+        //上面的这几种事件全部都要关闭tab的右键菜单
+        that.#closeContextmenu()
+
+        if (["click", "dragstart"].includes(eventType)) {//对于下拉菜单只处理点击和拖拽用户体验比较好
+          if (!that.#dropdownEl.contains(clickedElement) && !that.#toolbarItemDropdownEl.contains(clickedElement)) {
+            that.#closeDropdown()
+          }
+        }
+      },
+    )
+
+
 
     //响应式处理
     Utils.onResize(this.#container.parentNode, function (rect) {
+
+      //关闭tab右键菜单和下拉菜单
+      that.#closeContextmenu()
+      that.#closeDropdown()
+
       if (that.#options.responsive !== false) {
         //如果启用了响应式就动态设置显示和隐藏
         Utils.setProperty(
@@ -187,12 +365,12 @@ class Quicktab {
         that.#options.toolbar.hide === false &&
         that.#options.tab.resizeCenterActive === true
       ) {
-        resizeCenterActiveDebounce()
+        that.#debounceCenterActive()
       }
     })
 
     //添加通过html属性添加tab的能力(这个非常方便)
-    event(document.body).on(
+    event(document).on(
       'click',
       `[${Constants.DATAKEYS.singleTab}][${Constants.DATAKEYS.singleTabTarget}]`,
       function (event) {
@@ -226,6 +404,7 @@ class Quicktab {
       },
     )
 
+
     //tab的单击事件
     event(this.#toolbarItemTabWrapperEl).on(
       //单击和双击
@@ -236,8 +415,23 @@ class Quicktab {
           click: {
             stopPropagation: false,
             handle: function () {
-              that.#tabClickHandle(that.#getTabUrl(this))
-            },
+
+
+              let url = that.#getTabUrl(this);
+
+              //tab被单击的回调
+              typeof that.#options.onTabClick === 'function' &&
+                that.#options.onTabClick.call(that, url, that)
+
+              //激活
+              that.#activeTabByUrl(url)
+
+              //滚动到tab所在位置
+              if (that.#options.tab.clickCenterActive === true) {
+                that.scrollToTabByUrl(url)
+              }
+
+            }
           },
           dbclick: {
             stopPropagation: false,
@@ -258,9 +452,11 @@ class Quicktab {
         'click',
         `button > svg`,
         function (event) {
-          event.stopPropagation() //必须要阻止事件的冒泡
+          event.stopPropagation() //必须要阻止事件的冒泡,否则会冲突
 
           let tab = this.parentNode
+          //因为阻止了事件的冒泡传递，因此，需要手动关闭右键菜单
+          that.#closeContextmenu();
           that.closeTabByUrl(that.#getTabUrl(tab))
         },
       )
@@ -269,6 +465,7 @@ class Quicktab {
     //给工具栏绑定事件
     event(this.#toolbarEl).on('click', `li > button`, function (event) {
       let classItem = this.parentNode.getAttribute('class')
+
       switch (classItem) {
         case 'fullscreen':
           that
@@ -283,6 +480,9 @@ class Quicktab {
           break
         case 'next':
           that.nextScroll()
+          break
+        case 'dropdown':
+          that.#toggleDropdown()
           break
       }
     })
@@ -303,10 +503,10 @@ class Quicktab {
         const direction = Math.sign(event.deltaY)
 
         if (direction === -1 && prev) {
-          that.activeTabByUrl(that.#getTabUrl(prev))
+          that.#activeTabByUrl(that.#getTabUrl(prev))
           centerTabEl = prev
         } else if (direction === 1 && next) {
-          that.activeTabByUrl(that.#getTabUrl(next))
+          that.#activeTabByUrl(that.#getTabUrl(next))
           centerTabEl = next
         }
 
@@ -322,7 +522,7 @@ class Quicktab {
           event.preventDefault() //阻止默认事件，否则它会被外部的滚动条影响
 
           //判断是否启用右键菜单，如果启用就要关闭
-          if (that.#options.tab.contextmenu.enable === true) {
+          if (that.#options.tab.contextmenu !== false) {
             that.#closeContextmenu()
           }
 
@@ -340,6 +540,7 @@ class Quicktab {
 
     //是否启用右键菜单功能
     if (this.#options.tab.contextmenu !== false) {
+
       //tab右键的事件委托
       event(this.#toolbarItemTabWrapperEl).on(
         'contextmenu',
@@ -355,13 +556,6 @@ class Quicktab {
         },
       )
 
-      event(document).on(
-        'click contextmenu touchstart scroll dragstart',
-        function () {
-          that.#closeContextmenu()
-        },
-      )
-
       event(this.#contextmenuEl).on(
         'click contextmenu touchstart',
         `li[data-tab-url]`,
@@ -372,7 +566,7 @@ class Quicktab {
           const url = that.#getTabUrl(this)
           const itemClass = this.getAttribute('class')
 
-          console.log(itemClass)
+
 
           switch (itemClass) {
             case 'refresh':
@@ -394,7 +588,7 @@ class Quicktab {
               window.open(url, '_blank')
               break
             case 'fullscreen':
-              that.activeTabByUrl(url)
+              that.#activeTabByUrl(url)
               that.getTabPaneByUrl(url).requestFullscreen()
               break
             case 'center-active':
@@ -455,7 +649,161 @@ class Quicktab {
         dragging = null
       })
     }
+
+
+    //下拉菜单的相关事件
+    if (this.#options.toolbar.dropdown !== false) {
+
+      //点击最近关闭折叠
+      event(this.#dropdownEl).on('click', '.has-icon', function (event) {
+
+        const ul = this.nextElementSibling;
+        const iconWrapper = this.querySelector('.icon-wrapper');
+        iconWrapper.focus();
+
+
+        if (ul.style.display === "none") {
+          iconWrapper.innerHTML = that.#options.toolbar.dropdown.recentlyClosedTabs.hideIcon
+          ul.style.display = "block";
+        } else {
+          iconWrapper.innerHTML = that.#options.toolbar.dropdown.recentlyClosedTabs.showIcon
+          ul.style.display = "none";
+        }
+
+      })
+
+
+      //input框的事件
+      event(this.#dropdownEl).on('input', '.header input', function (event) {
+
+        const keyword = this.value.toLowerCase();
+
+        //先清空
+        that.#openTabsearchResultsEl.innerHTML = '';
+        that.#recentlyClosedTabssearchResultsEl.innerHTML = '';
+
+        if (keyword.trim() !== '') {
+          let results1 = false;
+          let results2 = false;
+
+
+
+          results1 = that.#matchKeyword(keyword, that.#openTabsOriginalListEl, that.#openTabsearchResultsEl, that.#openTabsSubtitleEl)
+          results2 = that.#matchKeyword(keyword, that.#recentlyClosedTabsOriginalListEl, that.#recentlyClosedTabssearchResultsEl, that.#recentlyClosedTabsSubtitleEl)
+
+          if (results1 === false && results2 === false) {//说明两个都没找到结果
+            that.#noResultsMessageEl.style.display = 'block';
+          } else {
+            that.#noResultsMessageEl.style.display = 'none';
+          }
+
+
+
+        } else {
+          //隐藏结果
+          that.#noResultsMessageEl.style.display = 'none';
+
+          that.#restoreBodyElement(that.#openTabsOriginalListEl, that.#openTabsearchResultsEl, that.#openTabsSubtitleEl)
+          that.#restoreBodyElement(that.#recentlyClosedTabsOriginalListEl, that.#recentlyClosedTabssearchResultsEl, that.#recentlyClosedTabsSubtitleEl)
+        }
+
+      })
+
+
+
+      //每个tab的点击事件
+      event(this.#dropdownEl).on('click', '.section li', function (event) {
+        const option = this[Constants.DATAKEYS.tabOptionDataKey];
+
+        that.addTab({
+          title: option.title,
+          url: option.url,
+          closable: option.closable
+        })
+
+        //点击完毕后关闭下拉菜单
+        that.#closeDropdown();
+
+      })
+
+      //tab的关闭按钮被单击
+      event(this.#dropdownEl).on('click', '.section li .icon-wrapper', function (event) {
+        event.stopPropagation()
+
+        const tabLiEl = this.parentNode;
+
+        const option = tabLiEl[Constants.DATAKEYS.tabOptionDataKey];
+
+
+
+        that.closeTabByUrl(option.url)
+
+
+        tabLiEl.remove();
+
+      })
+
+    }
+
+
   }
+
+  #restoreBodyElement(element, resultsEl, subtitleEl) {
+    element.style.display = 'block';
+    subtitleEl.style.display = 'block';
+    resultsEl.style.display = 'none';
+  }
+
+  #highlightKeyword(text, keyword) {
+    const regex = new RegExp(`(${keyword})`, 'gi');
+    return text.replace(regex, '<span class="highlighted">$1</span>');
+  }
+
+  // 匹配关键词高亮
+  #matchKeyword(keyword, element, resultsEl, subtitleEl) {
+
+    let hasResults = false
+
+    Array.from(element.children).forEach((li) => {
+
+      const title = li.querySelector('.title').textContent
+      const url = li.querySelector('.url').textContent.toLowerCase()
+
+
+      if (title.toLowerCase().includes(keyword) || url.toLowerCase().includes(keyword)) {
+        hasResults = true;
+
+        // console.log(li[Constants.DATAKEYS.tabOptionDataKey]);
+
+        let matchLi = li.cloneNode(true)
+
+        //bugfix:克隆会导致自定义属性丢失,重新赋值
+        matchLi[Constants.DATAKEYS.tabOptionDataKey] = li[Constants.DATAKEYS.tabOptionDataKey]
+
+
+        matchLi.querySelector('.title').innerHTML = this.#highlightKeyword(title, keyword);
+        matchLi.querySelector('.url').innerHTML = this.#highlightKeyword(url, keyword);
+
+        resultsEl.appendChild(matchLi);
+      }
+    });
+
+    if (hasResults) {
+      resultsEl.style.display = 'block';
+      subtitleEl.style.display = 'block';
+      element.style.display = 'none';
+
+    } else {
+      resultsEl.style.display = 'none';
+      element.style.display = 'none';
+      subtitleEl.style.display = 'none';
+    }
+
+    return hasResults
+
+  }
+
+
 
   //关闭所有的tabs
   closeAllTabs() {
@@ -490,18 +838,161 @@ class Quicktab {
     return element?.getAttribute(Constants.DATAKEYS.tabUrl)
   }
 
-  //显示右键菜单
-  #showContextmenuByUrl(url) {
-    const listGroupCloseItemEl = this.#contextmenuEl.querySelector(
-      `.${Constants.CLASSES.listGroupCloseItem}`,
-    )
-    if (this.isTabClosableByUrl(url)) {
-      listGroupCloseItemEl?.style.setProperty('display', null) //是可关闭的，因此需要显示右键菜单的关闭当前
+
+
+  #toggleDropdown() {
+
+    if (this.#dropdownEl.classList.contains(Constants.CLASSES.dropdownActive)) {
+      this.#closeDropdown()
     } else {
-      listGroupCloseItemEl?.style.setProperty('display', 'none')
+
+      this.#prepareDropdownData()
+      this.#showDropdown()
+
+
+    }
+  }
+
+  // 准备下拉菜单的数据
+  #prepareDropdownData() {
+
+    const allOpenedTabs = [];
+
+    this.getTabs()?.forEach(tabEl => {
+      allOpenedTabs.push(tabEl[Constants.DATAKEYS.tabOptionDataKey])
+    })
+
+
+
+    // 未激活的,按照timestamp从小到大排序
+    const notActiveTabs = allOpenedTabs.filter(tab => tab.active === false).sort((a, b) => b.timestamp - a.timestamp);
+
+    const ativeTabs = allOpenedTabs.find(tab => tab.active === true);
+
+    const newOrderTabs = [...notActiveTabs, ativeTabs];
+
+    const closeBtnTpl = Utils.sprintf(Constants.HTML.iconWrapper, '', this.#options.toolbar.dropdown.openedTabs.itemIcon)
+
+
+
+    //创建两个虚拟节点
+    const openTabsFrag = document.createDocumentFragment()
+
+
+
+
+    const timeFormatOptions = this.#options.toolbar.dropdown.timeFormat;
+
+    //国际化时间文本
+    const customText = {
+      second: timeFormatOptions.seconds.trim() !== ''
+        ? timeFormatOptions.seconds
+        : this.#options.formatTimeSeconds(),
+      minutes: timeFormatOptions.minutes.trim() !== ''
+        ? timeFormatOptions.minutes
+        : this.#options.formatTimeMinutes(),
+      hours: timeFormatOptions.hours.trim() !== ''
+        ? timeFormatOptions.hours
+        : this.#options.formatTimeHours(),
+      days: timeFormatOptions.days.trim() !== ''
+        ? timeFormatOptions.days
+        : this.#options.formatTimeDays(),
+      months: timeFormatOptions.months.trim() !== ''
+        ? timeFormatOptions.months
+        : this.#options.formatTimeMonths(),
+      years: timeFormatOptions.year.trim() !== ''
+        ? timeFormatOptions.year
+        : this.#options.formatTimeYear(),
     }
 
-    let tabEl = this.getTabByUrl(url)
+    newOrderTabs.forEach((item, index) => {
+
+      const dropdownItemEl = Utils.createNode(Utils.sprintf(Constants.HTML.sectionItem, index === 0 ? Constants.CLASSES.dropdownActive : '', item.title, item.url, Utils.timeAgo(item.timestamp, customText), item.closable === true ? closeBtnTpl : ''))
+
+      dropdownItemEl[Constants.DATAKEYS.tabOptionDataKey] = item
+      openTabsFrag.appendChild(dropdownItemEl)
+    })
+
+    this.#openTabsOriginalListEl.replaceChildren(openTabsFrag)
+
+
+
+    //然后准备最近关闭的标签
+    const recentlyClosedTabsFrag = document.createDocumentFragment()
+    //获取最近关闭的tabs
+    this.#cacheHandle.get(this.#cacheRecentlyClosedTabsKey)
+      ?.sort((a, b) => b.timestamp - a.timestamp)
+      .forEach((item) => {
+
+        const recentlyClosedTabEl = Utils.createNode(Utils.sprintf(Constants.HTML.sectionItem, '', item.title, item.url, Utils.timeAgo(item.timestamp, customText), ''));
+
+        recentlyClosedTabEl[Constants.DATAKEYS.tabOptionDataKey] = item
+
+        recentlyClosedTabsFrag.appendChild(recentlyClosedTabEl)
+
+      })
+
+    this.#recentlyClosedTabsOriginalListEl.replaceChildren(recentlyClosedTabsFrag)
+
+  }
+
+  //显示下拉菜单
+  #showDropdown() {
+
+
+    this.#dropdownCleanup?.()
+    // 注册菜单自动更新位置
+    this.#dropdownCleanup = autoUpdate(
+      this.#toolbarItemDropdownEl,
+      this.#dropdownEl,
+      this.#updatePosition.bind(this, this.#toolbarItemDropdownEl, this.#dropdownEl, 'bottom-end'),
+    )
+
+
+    this.#dropdownEl.classList.add(Constants.CLASSES.dropdownActive)
+
+
+    this.#container.classList.add(Constants.CLASSES.dropdownPEN)
+
+    //关闭tab的右键菜单
+    this.#closeContextmenu()
+
+  }
+
+  //关闭右键菜单
+  #closeDropdown() {
+    this.#dropdownCleanup?.()
+
+
+    this.#dropdownEl.classList.remove(Constants.CLASSES.dropdownActive)
+
+    this.#container.classList.remove(Constants.CLASSES.dropdownPEN)
+  }
+
+  //显示右键菜单
+  #showContextmenuByUrl(url) {
+
+
+
+    //判断关闭当前菜单选项是否被启用
+    if (this.#options.tab.contextmenu.close !== false) {
+      const listGroupCloseItemEl = this.#contextmenuEl.querySelector(
+        `.${Constants.CLASSES.listGroupCloseItem}`,
+      )
+      const enableSeparator = this.#options.tab.contextmenu.close.separator === true;
+      if (this.isTabClosableByUrl(url)) {
+        listGroupCloseItemEl.style.setProperty('display', null) //是可关闭的，因此需要显示右键菜单的关闭当前
+        enableSeparator && listGroupCloseItemEl.nextElementSibling.style.setProperty('display', null)
+
+      } else {
+        listGroupCloseItemEl.style.setProperty('display', 'none')
+        enableSeparator && listGroupCloseItemEl.nextElementSibling.style.setProperty('display', 'none')
+      }
+    }
+
+
+
+    const tabEl = this.getTabByUrl(url)
 
     this.#contextmenuCleanup?.()
 
@@ -509,51 +1000,40 @@ class Quicktab {
     this.#contextmenuCleanup = autoUpdate(
       tabEl,
       this.#contextmenuEl,
-      this.#updatePosition.bind(this, tabEl, this.#contextmenuEl),
+      this.#updatePosition.bind(this, tabEl, this.#contextmenuEl, 'top'),
     )
 
     //显示右键菜单
     this.#contextmenuEl.classList.add(Constants.CLASSES.listGroupActive)
 
-    //给iframe添加防止鼠标事件穿透的class效果,增加用户体验
-    this.#addPenClass()
+    //给iframe添加蒙层
+    this.#container.classList.add(Constants.CLASSES.contextmenuPEN)
 
     //把url属性也给每一个列表项目设置一遍，方便后续事件的处理
     this.#contextmenuEl.querySelectorAll('li').forEach(function (li) {
       li.setAttribute(Constants.DATAKEYS.tabUrl, url)
     })
+
+    //关闭下拉菜单
+    this.#closeDropdown()
+
   }
+
+
+
 
   //关闭右键菜单
   #closeContextmenu() {
     this.#contextmenuCleanup?.()
     this.#contextmenuEl.classList.remove(Constants.CLASSES.listGroupActive)
-    this.#removePenClass()
+    this.#container.classList.remove(Constants.CLASSES.contextmenuPEN)
   }
 
-  #addPenClass() {
-    //添加防止鼠标事件失效的类名称
-    this.#container.classList.add(Constants.CLASSES.pointerEventsNnoe)
-    if (
-      !this.#contextmenuEl.classList.contains(Constants.CLASSES.listGroupShow)
-    ) {
-      this.#canRemovePenClass++
-    }
-  }
 
-  #removePenClass() {
-    if (this.#canRemovePenClass > 0) {
-      this.#canRemovePenClass--
-    }
+  #updatePosition(referenceEl, floatingEl, placement = 'top') {
 
-    if (this.#canRemovePenClass === 0) {
-      this.#container.classList.remove(Constants.CLASSES.pointerEventsNnoe)
-    }
-  }
-
-  #updatePosition(referenceEl, floatingEl) {
     computePosition(referenceEl, floatingEl, {
-      placement: 'top',
+      placement: placement,
       strategy: 'fixed', // 默认是'absolute'
       middleware: [
         offset(3), //offset(6)必须放在数组最前面，官方文档提示
@@ -632,7 +1112,7 @@ class Quicktab {
       this.#options.toolbar.hide === false &&
       this.#options.responsive !== false &&
       this.#container.parentNode.getBoundingClientRect().width <
-        this.#options.responsive.breakpoint
+      this.#options.responsive.breakpoint
     ) {
       html = Utils.setProperty(html, this.#hideItemSelector, 'display', 'none')
     }
@@ -650,6 +1130,14 @@ class Quicktab {
     this.#tabBodyEl = this.#container.querySelector(
       `.${Constants.CLASSES.tabBody}`,
     )
+
+
+    //下拉菜单的按钮,弹出下拉菜单时需要使用
+    this.#toolbarItemDropdownEl = this.#toolbarEl.querySelector(
+      `.${Constants.CLASSES.toolbarDropdownItem} button`,
+    )
+
+
   }
 
   #initContextmenu() {
@@ -701,7 +1189,6 @@ class Quicktab {
     const html = [
       Utils.sprintf(
         Constants.HTML.listGroup[0],
-        Constants.DATAKEYS.contextmenu,
         this.#id,
       ),
     ]
@@ -737,13 +1224,23 @@ class Quicktab {
     this.#contextmenuEl = document.querySelector(
       `[${Constants.DATAKEYS.contextmenu}="${this.#id}"]`,
     )
+
+    //滚动条初始化
+    new SimpleBar(this.#contextmenuEl, {
+      autoHide: true,
+      // scrollbarMinSize:6,
+      scrollbarMaxSize: 200,
+    });
+
   }
 
   #initTabs() {
-    const defaultTabs = this.#options.defaultTabs
+
+    const defaultTabs = this.#options.defaultTabs;
+    const cacheTabs = this.#cacheHandle.get(this.#cacheKey) //获取缓存中的tab
+    const cacheDefaultTabs = this.#cacheHandle.get(this.#cacheDefaultTabsKey) //获取缓存中的tab
 
     if (this.#options.tab.remember === false) {
-      //没有启用tab的缓存
 
       const cacheStores = ['local', 'session']
       const cacheKeys = [this.#cacheKey, this.#cacheDefaultTabsKey]
@@ -754,28 +1251,28 @@ class Quicktab {
         }
       }
 
-      this.#restoreTabs(
-        //直接恢复选项提供的默认tab
-        defaultTabs,
-      )
-      return
-    }
-
-    const cacheTabs = this.#cacheHandle.get(this.#cacheKey) //获取缓存中的tab
-
-    if (
-      cacheTabs &&
-      this.#cacheTabsCheck(cacheTabs) &&
-      JSON.stringify(defaultTabs) ===
-        JSON.stringify(this.#cacheHandle.get(this.#cacheDefaultTabsKey))
-    ) {
-      this.#restoreTabs(cacheTabs, this.#getCacheActiveTab()?.url)
-    } else {
       this.#restoreTabs(defaultTabs)
 
-      this.#cacheHandle.set(this.#cacheKey, defaultTabs)
+      return;
+    }
+
+
+    if (
+      cacheTabs !== null &&
+      cacheDefaultTabs !== null &&
+      this.#cacheTabsCheck(cacheTabs) &&
+      JSON.stringify(defaultTabs) ===
+      JSON.stringify(cacheDefaultTabs)
+    ) {//这里是缓存数据一切正常的情况下,直接回显就行
+
+      this.#restoreTabs(cacheTabs, this.#getCacheActiveTab()?.url)
+
+    } else {
+
+      this.#restoreTabs(defaultTabs, '', true)
       this.#cacheHandle.set(this.#cacheDefaultTabsKey, defaultTabs)
     }
+
   }
 
   //检测缓存中的tab的合法性
@@ -783,7 +1280,7 @@ class Quicktab {
     //要检查的键数组
     let targetKeys = [
       ...Object.keys(Constants.TABDEFAULTS),
-      Constants.CLASSES.tabActive,
+      Constants.CLASSES.tabActive
     ]
 
     return tabs.every((obj) =>
@@ -791,34 +1288,65 @@ class Quicktab {
     )
   }
 
+
   /**
    * 恢复tab
-   * @param {Array} tabs 数组
-   * @param {String} url 将要激活tab的url,不传将设置tabs中的最后一项
+   * @param {Array} options tab选项数组
+   * @param {String} url 将要激活tab的url,不传将设置options中的最后一项
+   * @param {Boolean} cache 是否要添加进缓存 true:添加进缓存 false:不添加缓存
    * @returns
    */
-  #restoreTabs(tabs, url = '') {
-    if (!Array.isArray(tabs) || tabs.length === 0) {
+  #restoreTabs(options, url = '', cache = false) {
+    if (!Array.isArray(options) || options.length === 0) {
       return
     }
+
 
     //创建两个虚拟节点
     const tabFrag = document.createDocumentFragment()
 
     //这里只添加所有的tab，不添加iframe,否则全部加载iframe将会卡爆(重点优化)
-    tabs.forEach((tab) =>
-      tabFrag.appendChild(Utils.createNode(this.#generateTabHtml(tab))),
-    )
+    options.forEach((option, index) => {
+
+      //克隆
+      option = Utils.extend(true, {}, option);
+
+
+
+
+
+
+
+      const tabNode = Utils.createNode(this.#generateTabHtml(option));
+
+
+      //插入一个时间参数，并把整个对象再次存到这个dom节点对象上,是下拉菜单功能需要使用
+      if (!Object.hasOwnProperty.call(option, 'timestamp')) {
+        option.timestamp = +`${Date.now()}.${index + 1}`
+      }
+
+      tabNode[Constants.DATAKEYS.tabOptionDataKey] = option
+      tabFrag.appendChild(tabNode)
+
+      //是否存缓存
+      if (cache === true) {
+        this.#addCacheTab(option)
+      }
+
+    })
+
+
 
     //添加虚拟节点到tab的容器里面
     this.#toolbarItemTabWrapperEl.appendChild(tabFrag)
 
-    if (url === '') {
-      url = tabs.slice(-1)[0]?.url
-    }
+
+    // 默认激活最后一项
+    url = url || options.slice(-1)?.[0]?.url;
+
 
     //激活最后一个
-    this.activeTabByUrl(url)
+    this.#activeTabByUrl(url, false, false)
 
     //滚动到激活tab所在位置
     this.#scrollToTabByUrl(url, 'auto')
@@ -834,7 +1362,6 @@ class Quicktab {
       return console.error(result)
     }
 
-    console.log(option)
 
     const url = option.url
 
@@ -862,18 +1389,26 @@ class Quicktab {
         }
       }
 
+
       //如果没有该tab则添加这个tab
-      this.#toolbarItemTabWrapperEl.insertAdjacentHTML(
-        'beforeEnd',
-        this.#generateTabHtml(option),
-      )
+      // this.#toolbarItemTabWrapperEl.insertAdjacentHTML(
+      //   'beforeEnd',
+      //   this.#generateTabHtml(option),
+      // )
+
+      const tabEl = Utils.createNode(this.#generateTabHtml(option))
+      option.timestamp = Date.now();
+      tabEl[Constants.DATAKEYS.tabOptionDataKey] = option
+      this.#toolbarItemTabWrapperEl.appendChild(tabEl)
+
 
       //添加进缓存
       this.#addCacheTab(option)
+
     }
 
     //激活这个被添加的tab
-    this.activeTabByUrl(url, true)
+    this.#activeTabByUrl(url, true)
 
     //滚动到tab所在位置
     this.scrollToTabByUrl(url)
@@ -897,7 +1432,7 @@ class Quicktab {
       this.#removeTabByUrl(url)
 
       //激活tab
-      this.activeTabByUrl(this.#getTabUrl(nextTab))
+      this.#activeTabByUrl(this.#getTabUrl(nextTab))
     } else {
       this.#removeTabByUrl(url)
     }
@@ -905,6 +1440,11 @@ class Quicktab {
 
   //单纯的只做删除的工作
   #removeTabByUrl(url) {
+
+    //添加进最近关闭的缓存
+    this.#cacheRecentlyClosedByUrl(url)
+
+
     //删除tab
     this.getTabByUrl(url)?.remove()
 
@@ -913,6 +1453,35 @@ class Quicktab {
 
     //删除缓存里的tab
     this.#removeCacheTabByUrl(url)
+
+
+  }
+
+
+
+  #cacheRecentlyClosedByUrl(url) {
+
+    //添加最近删除的缓存,从tab的dom中拿到选项进行缓存
+    let tabEl = this.getTabByUrl(url)
+
+    let tabOption = tabEl[Constants.DATAKEYS.tabOptionDataKey];
+
+    //更新时间戳为关闭时的时间戳
+    tabOption.timestamp = Date.now()
+    if (this.#cacheHandle.has(this.#cacheRecentlyClosedTabsKey)) {
+      //先取所有的数组
+      let all = this.#cacheHandle.get(this.#cacheRecentlyClosedTabsKey);
+
+      while (all.length >= 10) {
+        all.shift();
+      }
+      all.push(tabOption)
+
+      this.#cacheHandle.set(this.#cacheRecentlyClosedTabsKey, all)
+    } else {
+      this.#cacheHandle.set(this.#cacheRecentlyClosedTabsKey, [tabOption])
+    }
+
   }
 
   // 删除面板
@@ -937,20 +1506,50 @@ class Quicktab {
     this.#cacheHandle.set(this.#cacheKey, tabs)
   }
 
-  activeTabByUrl(url, fromAddTabMethod = false) {
+
+
+  // activeTabByUrl(url) {
+  //   this.#activeTabByUrl(url)
+  // }
+
+
+
+  /**
+   * 私有的激活tab的方法
+   * @param {String} url 
+   * @param {Boolean} fromAddTabMethod 激活tab的方法方法是否来自addTab()
+   * @param {Boolean} timestamp 是否需要更新自动时间戳
+   * @returns 
+   */
+  #activeTabByUrl(url, fromAddTabMethod = false, timestamp = true) {
     //过滤掉不存在的tab,或者已经激活的tab
     if (!this.getTabByUrl(url) || this.isTabActiveByUrl(url)) {
       return
     }
 
-    //把之前激活的tab的激活状态类给删掉
-    this.getActiveTab()?.classList.remove(Constants.CLASSES.tabActive)
 
-    //添加上激活的类
-    this.getTabByUrl(url)?.classList.add(Constants.CLASSES.tabActive)
+    const tabEl = this.getTabByUrl(url);
+    const activeTabEl = this.getActiveTab();
+    //把之前激活的tab的激活状态类给删掉
+    activeTabEl?.classList.remove(Constants.CLASSES.tabActive)
+    if (activeTabEl && activeTabEl[Constants.DATAKEYS.tabOptionDataKey]) {
+      activeTabEl[Constants.DATAKEYS.tabOptionDataKey].active = false;
+    }
+
+    //添加上激活的类,激活当前tab的dom里存的选项,并更新时间戳
+    tabEl?.classList.add(Constants.CLASSES.tabActive)
+    if (tabEl && tabEl[Constants.DATAKEYS.tabOptionDataKey]) {
+      tabEl[Constants.DATAKEYS.tabOptionDataKey].active = true;
+      if (timestamp === true) tabEl[Constants.DATAKEYS.tabOptionDataKey].timestamp = Date.now();
+    }
 
     //激活缓存中的tab
     this.#activeCacheTabByUrl(url)
+
+
+    if (timestamp === true) this.#updateCacheTabByUrl(url, 'timestamp', Date.now())
+
+
 
     //判断tab面板是否已经存在,不存在则添加
     if (!this.getTabPaneByUrl(url)) {
@@ -1035,7 +1634,7 @@ class Quicktab {
       }
     }
 
-    // console.log(iframe);
+
 
     //插入iframe
     this.getTabPaneByUrl(url)?.appendChild(iframe)
@@ -1190,26 +1789,24 @@ class Quicktab {
     })
   }
 
-  //tab被单击时的事件处理
-  #tabClickHandle(url) {
-    //tab被单击的回调
-    typeof this.#options.onTabClick === 'function' &&
-      this.#options.onTabClick.call(this, url, this)
-
-    //激活
-    this.activeTabByUrl(url)
-
-    //滚动到tab所在位置
-    if (this.#options.tab.clickCenterActive === true) {
-      this.scrollToTabByUrl(url)
-    }
-  }
-
   //获取缓存中激活的tab项
   #getCacheActiveTab() {
     return this.#cacheHandle
       .get(this.#cacheKey)
       ?.find((item) => item.active === true)
+  }
+
+  //根据url来修改数据
+  #updateCacheTabByUrl(url, updateKey, updateValue) {
+
+    if (this.#options.tab.remember === false) return
+
+    const tabs = this.#cacheHandle.get(this.#cacheKey);
+    const targetElement = tabs.find(item => item.url === url)
+    if (targetElement) {
+      targetElement[updateKey] = updateValue;
+    }
+    this.#cacheHandle.set(this.#cacheKey, tabs)
   }
 
   #getTabLoadingByUrl(url) {
@@ -1281,6 +1878,7 @@ class Quicktab {
       `[${Constants.DATAKEYS.tabUrl}="${url}"]`,
     )
   }
+
 
   getTabs() {
     return this.#toolbarItemTabWrapperEl.querySelectorAll(
@@ -1361,17 +1959,17 @@ class Quicktab {
   }
 
   // 获取tab的所有数量
-  getTabsCount() {}
+  getTabsCount() { }
 
   // 获取tab的标题
-  getTitle(url) {}
+  getTitle(url) { }
 
-  setTitle(url, title) {}
+  setTitle(url, title) { }
 
-  getDisableByUrl(url) {}
+  getDisableByUrl(url) { }
 
   // 设置禁用状态
-  setDisableByUrl(url, status = true) {}
+  setDisableByUrl(url, status = true) { }
 
   static get(selector) {
     return Quicktab.#instances[selector]

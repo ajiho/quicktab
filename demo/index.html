@@ -13,6 +13,7 @@
             width: 800px;
             max-width: 100%;
         }
+
     </style>
 
 </head>
@@ -33,9 +34,8 @@
 
   
 
-
     <script src="/dist/js/quicktab.js"></script>
-    <script src="/dist/js/langs/en_US.js"></script>
+    <script src="/dist/js/langs/all.js"></script>
 
 
     <script>
@@ -48,19 +48,33 @@
                 // hideToolbarItem:['prev']
             },
             defaultTabs:[
+                // {
+                //     title:'q3332',
+                //     url:'https://imccc.cc/ai.html'
+                // },
+                // {
+                //     title:'q222',
+                //     url:'page3.html',
+                //     closable:false
+                // },
                 {
-                    title:'q3332',
-                    url:'https://imccc.cc/ai.html'
-                },
-                {
-                    title:'q222',
-                    url:'page3.html'
+                    title:'page3',
+                    url:'page3.html?a=50',
+                    closable:false
                 }
             ],
             onInit:function(){
 
             },
             toolbar:{
+                dropdown:{
+                    searchInput: {
+                        placeholder: '',
+                    },
+                    recentlyClosedTabs:{
+                        text:''
+                    }
+                },
                 position:'top',
                 hide:false,
                 fullscreen:{
@@ -71,7 +85,8 @@
                 }
             },
             tab:{
-                maxNum:2,
+                remember:false,
+                maxNum:-1,
                 clickCenterActive:true,
                 dragSort:true,
                 dbClickRefresh:true,
@@ -88,10 +103,51 @@
                     template:'<div>qqqq</div>'
                 },
                 contextmenu:{
-                    close:{
-                        text:'关闭当',
-                        // order:'q'
-                    }
+                    close: {
+        text: '',
+        order: 10,
+        separator: true,
+      },
+      closeOthers: {
+        text: '',
+        order: 20,
+        separator: true,
+      },
+      closePrev: {
+        text: '',
+        order: 30,
+        separator: true,
+      },
+      closeNext: {
+        text: '',
+        order: 40,
+        separator: true,
+      },
+      closeAll: {
+        text: '',
+        order: 50,
+        separator: true,
+      },
+      fullscreen: {
+        text: '',
+        order: 60,
+        separator: true,
+      },
+      refresh: {
+        text: '',
+        order: 70,
+        separator: true,
+      },
+      centerActive: {
+        text: '',
+        order: 80,
+        separator: true,
+      },
+      newBlank: {
+        text: '',
+        order: 90,
+        separator: true,
+      },
                 }
             }
         })

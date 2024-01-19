@@ -35,7 +35,32 @@ export default Struct.object({
       order: number(),
     }),
     next: toolbarItemStruct,
-    dropdown: toolbarItemStruct,
+    dropdown: Struct.falseOrObject({
+      icon: string(),
+      order: number(),
+      searchInput: Struct.falseOrObject({
+        placeholder: string(),
+        prefixIcon: string()
+      }),
+      openedTabs: Struct.falseOrObject({
+        text: string(),
+        itemIcon: string()
+      }),
+      recentlyClosedTabs: Struct.falseOrObject({
+        text: string(),
+        showIcon: string(),
+        hideIcon: string(),
+      }),
+      timeFormat: Struct.falseOrObject({
+        year: string(),
+        months: string(),
+        days: string(),
+        hours: string(),
+        minutes: string(),
+        seconds: string(),
+      }),
+      searchNoResultsText: string()
+    }),
     fullscreen: toolbarItemStruct,
   }),
   tab: Struct.object({

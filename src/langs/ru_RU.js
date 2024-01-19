@@ -31,6 +31,36 @@ Quicktab.LANGS['ru_RU'] = Quicktab.LANGS['ru'] = {
   formatContextmenuNewBlank() {
     return `Открыть новое окно`
   },
+  formatSearchInputPlaceholder() {
+    return `Поиск по вкладкам`
+  },
+  formatOpenedTabs() {
+    return `Открыть вкладку`
+  },
+  formatRecentlyClosedTabs() {
+    return `Недавно закрытые вкладки`
+  },
+  formatSearchNoResults() {
+    return `Ничего не вышло.`
+  },
+  formatTimeYear() {
+    return `Год назад`
+  },
+  formatTimeMonths() {
+    return `Месяц назад`
+  },
+  formatTimeDays() {
+    return `дня назад`
+  },
+  formatTimeHours() {
+    return `часа назад`
+  },
+  formatTimeMinutes() {
+    return `минуты назад`
+  },
+  formatTimeSeconds() {
+    return `секунды назад`
+  },
 }
 
 Object.assign(Quicktab.DEFAULTS, Quicktab.LANGS['ru_RU'])

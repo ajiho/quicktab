@@ -12,9 +12,10 @@
   height: 222px;
   background-color: #fff;
 
-  // 加上该类名可以让tab-bar排到底部
-  &.pen iframe {
+  // pen开头的类名可以让鼠标事件不穿透
+  &[class*='pen-'] iframe {
     pointer-events: none;
+    user-select: none;
   }
 
   // 工具栏

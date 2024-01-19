@@ -78,7 +78,11 @@
 
   var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
 
-  var fails$l = function (exec) {
+  function getDefaultExportFromCjs (x) {
+  	return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, 'default') ? x['default'] : x;
+  }
+
+  var fails$m = function (exec) {
     try {
       return !!exec();
     } catch (error) {
@@ -86,9 +90,9 @@
     }
   };
 
-  var fails$k = fails$l;
+  var fails$l = fails$m;
 
-  var functionBindNative = !fails$k(function () {
+  var functionBindNative = !fails$l(function () {
     // eslint-disable-next-line es/no-function-prototype-bind -- safe
     var test = (function () { /* empty */ }).bind();
     // eslint-disable-next-line no-prototype-builtins -- safe
@@ -98,38 +102,38 @@
   var NATIVE_BIND$2 = functionBindNative;
 
   var FunctionPrototype$2 = Function.prototype;
-  var call$a = FunctionPrototype$2.call;
-  var uncurryThisWithBind = NATIVE_BIND$2 && FunctionPrototype$2.bind.bind(call$a, call$a);
+  var call$b = FunctionPrototype$2.call;
+  var uncurryThisWithBind = NATIVE_BIND$2 && FunctionPrototype$2.bind.bind(call$b, call$b);
 
   var functionUncurryThis = NATIVE_BIND$2 ? uncurryThisWithBind : function (fn) {
     return function () {
-      return call$a.apply(fn, arguments);
+      return call$b.apply(fn, arguments);
     };
   };
 
-  var uncurryThis$k = functionUncurryThis;
+  var uncurryThis$l = functionUncurryThis;
 
-  var toString$8 = uncurryThis$k({}.toString);
-  var stringSlice$5 = uncurryThis$k(''.slice);
+  var toString$9 = uncurryThis$l({}.toString);
+  var stringSlice$6 = uncurryThis$l(''.slice);
 
   var classofRaw$2 = function (it) {
-    return stringSlice$5(toString$8(it), 8, -1);
+    return stringSlice$6(toString$9(it), 8, -1);
   };
 
-  var uncurryThis$j = functionUncurryThis;
-  var fails$j = fails$l;
-  var classof$6 = classofRaw$2;
+  var uncurryThis$k = functionUncurryThis;
+  var fails$k = fails$m;
+  var classof$8 = classofRaw$2;
 
   var $Object$4 = Object;
-  var split = uncurryThis$j(''.split);
+  var split = uncurryThis$k(''.split);
 
   // fallback for non-array-like ES3 and non-enumerable old V8 strings
-  var indexedObject = fails$j(function () {
+  var indexedObject = fails$k(function () {
     // throws an error in rhino, see https://github.com/mozilla/rhino/issues/346
     // eslint-disable-next-line no-prototype-builtins -- safe
     return !$Object$4('z').propertyIsEnumerable(0);
   }) ? function (it) {
-    return classof$6(it) === 'String' ? split(it, '') : $Object$4(it);
+    return classof$8(it) === 'String' ? split(it, '') : $Object$4(it);
   } : $Object$4;
 
   // we can't use just `it == null` since of `document.all` special case
@@ -140,12 +144,12 @@
 
   var isNullOrUndefined$2 = isNullOrUndefined$3;
 
-  var $TypeError$b = TypeError;
+  var $TypeError$c = TypeError;
 
   // `RequireObjectCoercible` abstract operation
   // https://tc39.es/ecma262/#sec-requireobjectcoercible
   var requireObjectCoercible$5 = function (it) {
-    if (isNullOrUndefined$2(it)) throw new $TypeError$b("Can't call method on " + it);
+    if (isNullOrUndefined$2(it)) throw new $TypeError$c("Can't call method on " + it);
     return it;
   };
 
@@ -162,7 +166,7 @@
   };
 
   // https://github.com/zloirock/core-js/issues/86#issuecomment-115759028
-  var global$g =
+  var global$h =
     // eslint-disable-next-line es/no-global-this -- safe
     check(typeof globalThis == 'object' && globalThis) ||
     check(typeof window == 'object' && window) ||
@@ -175,24 +179,24 @@
 
   var shared$4 = {exports: {}};
 
-  var global$f = global$g;
+  var global$g = global$h;
 
   // eslint-disable-next-line es/no-object-defineproperty -- safe
-  var defineProperty$4 = Object.defineProperty;
+  var defineProperty$6 = Object.defineProperty;
 
   var defineGlobalProperty$3 = function (key, value) {
     try {
-      defineProperty$4(global$f, key, { value: value, configurable: true, writable: true });
+      defineProperty$6(global$g, key, { value: value, configurable: true, writable: true });
     } catch (error) {
-      global$f[key] = value;
+      global$g[key] = value;
     } return value;
   };
 
-  var global$e = global$g;
+  var global$f = global$h;
   var defineGlobalProperty$2 = defineGlobalProperty$3;
 
   var SHARED = '__core-js_shared__';
-  var store$3 = global$e[SHARED] || defineGlobalProperty$2(SHARED, {});
+  var store$3 = global$f[SHARED] || defineGlobalProperty$2(SHARED, {});
 
   var sharedStore = store$3;
 
@@ -220,35 +224,35 @@
     return $Object$3(requireObjectCoercible$3(argument));
   };
 
-  var uncurryThis$i = functionUncurryThis;
+  var uncurryThis$j = functionUncurryThis;
   var toObject$6 = toObject$7;
 
-  var hasOwnProperty = uncurryThis$i({}.hasOwnProperty);
+  var hasOwnProperty$1 = uncurryThis$j({}.hasOwnProperty);
 
   // `HasOwnProperty` abstract operation
   // https://tc39.es/ecma262/#sec-hasownproperty
   // eslint-disable-next-line es/no-object-hasown -- safe
   var hasOwnProperty_1 = Object.hasOwn || function hasOwn(it, key) {
-    return hasOwnProperty(toObject$6(it), key);
+    return hasOwnProperty$1(toObject$6(it), key);
   };
 
-  var uncurryThis$h = functionUncurryThis;
+  var uncurryThis$i = functionUncurryThis;
 
   var id = 0;
   var postfix = Math.random();
-  var toString$7 = uncurryThis$h(1.0.toString);
+  var toString$8 = uncurryThis$i(1.0.toString);
 
   var uid$2 = function (key) {
-    return 'Symbol(' + (key === undefined ? '' : key) + ')_' + toString$7(++id + postfix, 36);
+    return 'Symbol(' + (key === undefined ? '' : key) + ')_' + toString$8(++id + postfix, 36);
   };
 
   var engineUserAgent = typeof navigator != 'undefined' && String(navigator.userAgent) || '';
 
-  var global$d = global$g;
+  var global$e = global$h;
   var userAgent$2 = engineUserAgent;
 
-  var process = global$d.process;
-  var Deno = global$d.Deno;
+  var process = global$e.process;
+  var Deno = global$e.Deno;
   var versions = process && process.versions || Deno && Deno.version;
   var v8 = versions && versions.v8;
   var match, version;
@@ -274,13 +278,13 @@
 
   /* eslint-disable es/no-symbol -- required for testing */
   var V8_VERSION = engineV8Version;
-  var fails$i = fails$l;
-  var global$c = global$g;
+  var fails$j = fails$m;
+  var global$d = global$h;
 
-  var $String$6 = global$c.String;
+  var $String$6 = global$d.String;
 
   // eslint-disable-next-line es/no-object-getownpropertysymbols -- required for testing
-  var symbolConstructorDetection = !!Object.getOwnPropertySymbols && !fails$i(function () {
+  var symbolConstructorDetection = !!Object.getOwnPropertySymbols && !fails$j(function () {
     var symbol = Symbol('symbol detection');
     // Chrome 38 Symbol has incorrect toString conversion
     // `get-own-property-symbols` polyfill symbols converted to object are not Symbol instances
@@ -298,21 +302,21 @@
     && !Symbol.sham
     && typeof Symbol.iterator == 'symbol';
 
-  var global$b = global$g;
+  var global$c = global$h;
   var shared$3 = sharedExports;
-  var hasOwn$8 = hasOwnProperty_1;
+  var hasOwn$a = hasOwnProperty_1;
   var uid$1 = uid$2;
   var NATIVE_SYMBOL$1 = symbolConstructorDetection;
   var USE_SYMBOL_AS_UID$1 = useSymbolAsUid;
 
-  var Symbol$1 = global$b.Symbol;
+  var Symbol$2 = global$c.Symbol;
   var WellKnownSymbolsStore = shared$3('wks');
-  var createWellKnownSymbol = USE_SYMBOL_AS_UID$1 ? Symbol$1['for'] || Symbol$1 : Symbol$1 && Symbol$1.withoutSetter || uid$1;
+  var createWellKnownSymbol = USE_SYMBOL_AS_UID$1 ? Symbol$2['for'] || Symbol$2 : Symbol$2 && Symbol$2.withoutSetter || uid$1;
 
-  var wellKnownSymbol$a = function (name) {
-    if (!hasOwn$8(WellKnownSymbolsStore, name)) {
-      WellKnownSymbolsStore[name] = NATIVE_SYMBOL$1 && hasOwn$8(Symbol$1, name)
-        ? Symbol$1[name]
+  var wellKnownSymbol$d = function (name) {
+    if (!hasOwn$a(WellKnownSymbolsStore, name)) {
+      WellKnownSymbolsStore[name] = NATIVE_SYMBOL$1 && hasOwn$a(Symbol$2, name)
+        ? Symbol$2[name]
         : createWellKnownSymbol('Symbol.' + name);
     } return WellKnownSymbolsStore[name];
   };
@@ -323,45 +327,45 @@
   // `IsCallable` abstract operation
   // https://tc39.es/ecma262/#sec-iscallable
   // eslint-disable-next-line unicorn/no-typeof-undefined -- required for testing
-  var isCallable$i = typeof documentAll == 'undefined' && documentAll !== undefined ? function (argument) {
+  var isCallable$j = typeof documentAll == 'undefined' && documentAll !== undefined ? function (argument) {
     return typeof argument == 'function' || argument === documentAll;
   } : function (argument) {
     return typeof argument == 'function';
   };
 
-  var isCallable$h = isCallable$i;
+  var isCallable$i = isCallable$j;
 
-  var isObject$8 = function (it) {
-    return typeof it == 'object' ? it !== null : isCallable$h(it);
+  var isObject$b = function (it) {
+    return typeof it == 'object' ? it !== null : isCallable$i(it);
   };
 
-  var isObject$7 = isObject$8;
+  var isObject$a = isObject$b;
 
   var $String$5 = String;
-  var $TypeError$a = TypeError;
+  var $TypeError$b = TypeError;
 
   // `Assert: Type(argument) is Object`
   var anObject$8 = function (argument) {
-    if (isObject$7(argument)) return argument;
-    throw new $TypeError$a($String$5(argument) + ' is not an object');
+    if (isObject$a(argument)) return argument;
+    throw new $TypeError$b($String$5(argument) + ' is not an object');
   };
 
   var objectDefineProperties = {};
 
-  var fails$h = fails$l;
+  var fails$i = fails$m;
 
   // Detect IE8's incomplete defineProperty implementation
-  var descriptors = !fails$h(function () {
+  var descriptors = !fails$i(function () {
     // eslint-disable-next-line es/no-object-defineproperty -- required for testing
     return Object.defineProperty({}, 1, { get: function () { return 7; } })[1] !== 7;
   });
 
-  var DESCRIPTORS$9 = descriptors;
-  var fails$g = fails$l;
+  var DESCRIPTORS$c = descriptors;
+  var fails$h = fails$m;
 
   // V8 ~ Chrome 36-
   // https://bugs.chromium.org/p/v8/issues/detail?id=3334
-  var v8PrototypeDefineBug = DESCRIPTORS$9 && fails$g(function () {
+  var v8PrototypeDefineBug = DESCRIPTORS$c && fails$h(function () {
     // eslint-disable-next-line es/no-object-defineproperty -- required for testing
     return Object.defineProperty(function () { /* empty */ }, 'prototype', {
       value: 42,
@@ -371,23 +375,23 @@
 
   var objectDefineProperty = {};
 
-  var global$a = global$g;
-  var isObject$6 = isObject$8;
+  var global$b = global$h;
+  var isObject$9 = isObject$b;
 
-  var document$1 = global$a.document;
+  var document$1 = global$b.document;
   // typeof document.createElement is 'object' in old IE
-  var EXISTS$1 = isObject$6(document$1) && isObject$6(document$1.createElement);
+  var EXISTS$1 = isObject$9(document$1) && isObject$9(document$1.createElement);
 
   var documentCreateElement$2 = function (it) {
     return EXISTS$1 ? document$1.createElement(it) : {};
   };
 
-  var DESCRIPTORS$8 = descriptors;
-  var fails$f = fails$l;
+  var DESCRIPTORS$b = descriptors;
+  var fails$g = fails$m;
   var createElement = documentCreateElement$2;
 
   // Thanks to IE8 for its funny defineProperty
-  var ie8DomDefine = !DESCRIPTORS$8 && !fails$f(function () {
+  var ie8DomDefine = !DESCRIPTORS$b && !fails$g(function () {
     // eslint-disable-next-line es/no-object-defineproperty -- required for testing
     return Object.defineProperty(createElement('div'), 'a', {
       get: function () { return 7; }
@@ -396,39 +400,39 @@
 
   var NATIVE_BIND$1 = functionBindNative;
 
-  var call$9 = Function.prototype.call;
+  var call$a = Function.prototype.call;
 
-  var functionCall = NATIVE_BIND$1 ? call$9.bind(call$9) : function () {
-    return call$9.apply(call$9, arguments);
+  var functionCall = NATIVE_BIND$1 ? call$a.bind(call$a) : function () {
+    return call$a.apply(call$a, arguments);
   };
 
-  var global$9 = global$g;
-  var isCallable$g = isCallable$i;
+  var global$a = global$h;
+  var isCallable$h = isCallable$j;
 
   var aFunction = function (argument) {
-    return isCallable$g(argument) ? argument : undefined;
+    return isCallable$h(argument) ? argument : undefined;
   };
 
-  var getBuiltIn$4 = function (namespace, method) {
-    return arguments.length < 2 ? aFunction(global$9[namespace]) : global$9[namespace] && global$9[namespace][method];
+  var getBuiltIn$5 = function (namespace, method) {
+    return arguments.length < 2 ? aFunction(global$a[namespace]) : global$a[namespace] && global$a[namespace][method];
   };
 
-  var uncurryThis$g = functionUncurryThis;
+  var uncurryThis$h = functionUncurryThis;
 
-  var objectIsPrototypeOf = uncurryThis$g({}.isPrototypeOf);
+  var objectIsPrototypeOf = uncurryThis$h({}.isPrototypeOf);
 
-  var getBuiltIn$3 = getBuiltIn$4;
-  var isCallable$f = isCallable$i;
-  var isPrototypeOf = objectIsPrototypeOf;
+  var getBuiltIn$4 = getBuiltIn$5;
+  var isCallable$g = isCallable$j;
+  var isPrototypeOf$2 = objectIsPrototypeOf;
   var USE_SYMBOL_AS_UID = useSymbolAsUid;
 
   var $Object$2 = Object;
 
-  var isSymbol$3 = USE_SYMBOL_AS_UID ? function (it) {
+  var isSymbol$4 = USE_SYMBOL_AS_UID ? function (it) {
     return typeof it == 'symbol';
   } : function (it) {
-    var $Symbol = getBuiltIn$3('Symbol');
-    return isCallable$f($Symbol) && isPrototypeOf($Symbol.prototype, $Object$2(it));
+    var $Symbol = getBuiltIn$4('Symbol');
+    return isCallable$g($Symbol) && isPrototypeOf$2($Symbol.prototype, $Object$2(it));
   };
 
   var $String$4 = String;
@@ -441,15 +445,15 @@
     }
   };
 
-  var isCallable$e = isCallable$i;
+  var isCallable$f = isCallable$j;
   var tryToString$1 = tryToString$2;
 
-  var $TypeError$9 = TypeError;
+  var $TypeError$a = TypeError;
 
   // `Assert: IsCallable(argument) is true`
   var aCallable$4 = function (argument) {
-    if (isCallable$e(argument)) return argument;
-    throw new $TypeError$9(tryToString$1(argument) + ' is not a function');
+    if (isCallable$f(argument)) return argument;
+    throw new $TypeError$a(tryToString$1(argument) + ' is not a function');
   };
 
   var aCallable$3 = aCallable$4;
@@ -462,65 +466,65 @@
     return isNullOrUndefined$1(func) ? undefined : aCallable$3(func);
   };
 
-  var call$8 = functionCall;
-  var isCallable$d = isCallable$i;
-  var isObject$5 = isObject$8;
+  var call$9 = functionCall;
+  var isCallable$e = isCallable$j;
+  var isObject$8 = isObject$b;
 
-  var $TypeError$8 = TypeError;
+  var $TypeError$9 = TypeError;
 
   // `OrdinaryToPrimitive` abstract operation
   // https://tc39.es/ecma262/#sec-ordinarytoprimitive
   var ordinaryToPrimitive$1 = function (input, pref) {
     var fn, val;
-    if (pref === 'string' && isCallable$d(fn = input.toString) && !isObject$5(val = call$8(fn, input))) return val;
-    if (isCallable$d(fn = input.valueOf) && !isObject$5(val = call$8(fn, input))) return val;
-    if (pref !== 'string' && isCallable$d(fn = input.toString) && !isObject$5(val = call$8(fn, input))) return val;
-    throw new $TypeError$8("Can't convert object to primitive value");
+    if (pref === 'string' && isCallable$e(fn = input.toString) && !isObject$8(val = call$9(fn, input))) return val;
+    if (isCallable$e(fn = input.valueOf) && !isObject$8(val = call$9(fn, input))) return val;
+    if (pref !== 'string' && isCallable$e(fn = input.toString) && !isObject$8(val = call$9(fn, input))) return val;
+    throw new $TypeError$9("Can't convert object to primitive value");
   };
 
-  var call$7 = functionCall;
-  var isObject$4 = isObject$8;
-  var isSymbol$2 = isSymbol$3;
+  var call$8 = functionCall;
+  var isObject$7 = isObject$b;
+  var isSymbol$3 = isSymbol$4;
   var getMethod$1 = getMethod$2;
   var ordinaryToPrimitive = ordinaryToPrimitive$1;
-  var wellKnownSymbol$9 = wellKnownSymbol$a;
+  var wellKnownSymbol$c = wellKnownSymbol$d;
 
-  var $TypeError$7 = TypeError;
-  var TO_PRIMITIVE = wellKnownSymbol$9('toPrimitive');
+  var $TypeError$8 = TypeError;
+  var TO_PRIMITIVE = wellKnownSymbol$c('toPrimitive');
 
   // `ToPrimitive` abstract operation
   // https://tc39.es/ecma262/#sec-toprimitive
   var toPrimitive$1 = function (input, pref) {
-    if (!isObject$4(input) || isSymbol$2(input)) return input;
+    if (!isObject$7(input) || isSymbol$3(input)) return input;
     var exoticToPrim = getMethod$1(input, TO_PRIMITIVE);
     var result;
     if (exoticToPrim) {
       if (pref === undefined) pref = 'default';
-      result = call$7(exoticToPrim, input, pref);
-      if (!isObject$4(result) || isSymbol$2(result)) return result;
-      throw new $TypeError$7("Can't convert object to primitive value");
+      result = call$8(exoticToPrim, input, pref);
+      if (!isObject$7(result) || isSymbol$3(result)) return result;
+      throw new $TypeError$8("Can't convert object to primitive value");
     }
     if (pref === undefined) pref = 'number';
     return ordinaryToPrimitive(input, pref);
   };
 
   var toPrimitive = toPrimitive$1;
-  var isSymbol$1 = isSymbol$3;
+  var isSymbol$2 = isSymbol$4;
 
   // `ToPropertyKey` abstract operation
   // https://tc39.es/ecma262/#sec-topropertykey
   var toPropertyKey$2 = function (argument) {
     var key = toPrimitive(argument, 'string');
-    return isSymbol$1(key) ? key : key + '';
+    return isSymbol$2(key) ? key : key + '';
   };
 
-  var DESCRIPTORS$7 = descriptors;
+  var DESCRIPTORS$a = descriptors;
   var IE8_DOM_DEFINE$1 = ie8DomDefine;
   var V8_PROTOTYPE_DEFINE_BUG$1 = v8PrototypeDefineBug;
   var anObject$7 = anObject$8;
   var toPropertyKey$1 = toPropertyKey$2;
 
-  var $TypeError$6 = TypeError;
+  var $TypeError$7 = TypeError;
   // eslint-disable-next-line es/no-object-defineproperty -- safe
   var $defineProperty = Object.defineProperty;
   // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
@@ -531,7 +535,7 @@
 
   // `Object.defineProperty` method
   // https://tc39.es/ecma262/#sec-object.defineproperty
-  objectDefineProperty.f = DESCRIPTORS$7 ? V8_PROTOTYPE_DEFINE_BUG$1 ? function defineProperty(O, P, Attributes) {
+  objectDefineProperty.f = DESCRIPTORS$a ? V8_PROTOTYPE_DEFINE_BUG$1 ? function defineProperty(O, P, Attributes) {
     anObject$7(O);
     P = toPropertyKey$1(P);
     anObject$7(Attributes);
@@ -553,7 +557,7 @@
     if (IE8_DOM_DEFINE$1) try {
       return $defineProperty(O, P, Attributes);
     } catch (error) { /* empty */ }
-    if ('get' in Attributes || 'set' in Attributes) throw new $TypeError$6('Accessors not supported');
+    if ('get' in Attributes || 'set' in Attributes) throw new $TypeError$7('Accessors not supported');
     if ('value' in Attributes) O[P] = Attributes.value;
     return O;
   };
@@ -645,22 +649,22 @@
 
   var hiddenKeys$4 = {};
 
-  var uncurryThis$f = functionUncurryThis;
-  var hasOwn$7 = hasOwnProperty_1;
+  var uncurryThis$g = functionUncurryThis;
+  var hasOwn$9 = hasOwnProperty_1;
   var toIndexedObject$3 = toIndexedObject$5;
   var indexOf$1 = arrayIncludes.indexOf;
   var hiddenKeys$3 = hiddenKeys$4;
 
-  var push$3 = uncurryThis$f([].push);
+  var push$3 = uncurryThis$g([].push);
 
   var objectKeysInternal = function (object, names) {
     var O = toIndexedObject$3(object);
     var i = 0;
     var result = [];
     var key;
-    for (key in O) !hasOwn$7(hiddenKeys$3, key) && hasOwn$7(O, key) && push$3(result, key);
+    for (key in O) !hasOwn$9(hiddenKeys$3, key) && hasOwn$9(O, key) && push$3(result, key);
     // Don't enum bug & hidden keys
-    while (names.length > i) if (hasOwn$7(O, key = names[i++])) {
+    while (names.length > i) if (hasOwn$9(O, key = names[i++])) {
       ~indexOf$1(result, key) || push$3(result, key);
     }
     return result;
@@ -687,7 +691,7 @@
     return internalObjectKeys$1(O, enumBugKeys$2);
   };
 
-  var DESCRIPTORS$6 = descriptors;
+  var DESCRIPTORS$9 = descriptors;
   var V8_PROTOTYPE_DEFINE_BUG = v8PrototypeDefineBug;
   var definePropertyModule$3 = objectDefineProperty;
   var anObject$6 = anObject$8;
@@ -697,7 +701,7 @@
   // `Object.defineProperties` method
   // https://tc39.es/ecma262/#sec-object.defineproperties
   // eslint-disable-next-line es/no-object-defineproperties -- safe
-  objectDefineProperties.f = DESCRIPTORS$6 && !V8_PROTOTYPE_DEFINE_BUG ? Object.defineProperties : function defineProperties(O, Properties) {
+  objectDefineProperties.f = DESCRIPTORS$9 && !V8_PROTOTYPE_DEFINE_BUG ? Object.defineProperties : function defineProperties(O, Properties) {
     anObject$6(O);
     var props = toIndexedObject$2(Properties);
     var keys = objectKeys(Properties);
@@ -708,17 +712,17 @@
     return O;
   };
 
-  var getBuiltIn$2 = getBuiltIn$4;
+  var getBuiltIn$3 = getBuiltIn$5;
 
-  var html$1 = getBuiltIn$2('document', 'documentElement');
+  var html$1 = getBuiltIn$3('document', 'documentElement');
 
   var shared$2 = sharedExports;
   var uid = uid$2;
 
-  var keys = shared$2('keys');
+  var keys$1 = shared$2('keys');
 
   var sharedKey$3 = function (key) {
-    return keys[key] || (keys[key] = uid(key));
+    return keys$1[key] || (keys$1[key] = uid(key));
   };
 
   /* global ActiveXObject -- old IE, WSH */
@@ -805,19 +809,19 @@
     return Properties === undefined ? result : definePropertiesModule.f(result, Properties);
   };
 
-  var wellKnownSymbol$8 = wellKnownSymbol$a;
-  var create$3 = objectCreate;
-  var defineProperty$3 = objectDefineProperty.f;
+  var wellKnownSymbol$b = wellKnownSymbol$d;
+  var create$4 = objectCreate;
+  var defineProperty$5 = objectDefineProperty.f;
 
-  var UNSCOPABLES = wellKnownSymbol$8('unscopables');
+  var UNSCOPABLES = wellKnownSymbol$b('unscopables');
   var ArrayPrototype = Array.prototype;
 
   // Array.prototype[@@unscopables]
   // https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
   if (ArrayPrototype[UNSCOPABLES] === undefined) {
-    defineProperty$3(ArrayPrototype, UNSCOPABLES, {
+    defineProperty$5(ArrayPrototype, UNSCOPABLES, {
       configurable: true,
-      value: create$3(null)
+      value: create$4(null)
     });
   }
 
@@ -828,12 +832,12 @@
 
   var iterators = {};
 
-  var global$8 = global$g;
-  var isCallable$c = isCallable$i;
+  var global$9 = global$h;
+  var isCallable$d = isCallable$j;
 
-  var WeakMap$2 = global$8.WeakMap;
+  var WeakMap$2 = global$9.WeakMap;
 
-  var weakMapBasicDetection = isCallable$c(WeakMap$2) && /native code/.test(String(WeakMap$2));
+  var weakMapBasicDetection = isCallable$d(WeakMap$2) && /native code/.test(String(WeakMap$2));
 
   var createPropertyDescriptor$3 = function (bitmap, value) {
     return {
@@ -844,11 +848,11 @@
     };
   };
 
-  var DESCRIPTORS$5 = descriptors;
+  var DESCRIPTORS$8 = descriptors;
   var definePropertyModule$2 = objectDefineProperty;
   var createPropertyDescriptor$2 = createPropertyDescriptor$3;
 
-  var createNonEnumerableProperty$5 = DESCRIPTORS$5 ? function (object, key, value) {
+  var createNonEnumerableProperty$6 = DESCRIPTORS$8 ? function (object, key, value) {
     return definePropertyModule$2.f(object, key, createPropertyDescriptor$2(1, value));
   } : function (object, key, value) {
     object[key] = value;
@@ -856,17 +860,17 @@
   };
 
   var NATIVE_WEAK_MAP = weakMapBasicDetection;
-  var global$7 = global$g;
-  var isObject$3 = isObject$8;
-  var createNonEnumerableProperty$4 = createNonEnumerableProperty$5;
-  var hasOwn$6 = hasOwnProperty_1;
+  var global$8 = global$h;
+  var isObject$6 = isObject$b;
+  var createNonEnumerableProperty$5 = createNonEnumerableProperty$6;
+  var hasOwn$8 = hasOwnProperty_1;
   var shared$1 = sharedStore;
   var sharedKey$1 = sharedKey$3;
   var hiddenKeys$1 = hiddenKeys$4;
 
   var OBJECT_ALREADY_INITIALIZED = 'Object already initialized';
-  var TypeError$1 = global$7.TypeError;
-  var WeakMap$1 = global$7.WeakMap;
+  var TypeError$1 = global$8.TypeError;
+  var WeakMap$1 = global$8.WeakMap;
   var set, get, has;
 
   var enforce = function (it) {
@@ -876,7 +880,7 @@
   var getterFor = function (TYPE) {
     return function (it) {
       var state;
-      if (!isObject$3(it) || (state = get(it)).type !== TYPE) {
+      if (!isObject$6(it) || (state = get(it)).type !== TYPE) {
         throw new TypeError$1('Incompatible receiver, ' + TYPE + ' required');
       } return state;
     };
@@ -905,16 +909,16 @@
     var STATE = sharedKey$1('state');
     hiddenKeys$1[STATE] = true;
     set = function (it, metadata) {
-      if (hasOwn$6(it, STATE)) throw new TypeError$1(OBJECT_ALREADY_INITIALIZED);
+      if (hasOwn$8(it, STATE)) throw new TypeError$1(OBJECT_ALREADY_INITIALIZED);
       metadata.facade = it;
-      createNonEnumerableProperty$4(it, STATE, metadata);
+      createNonEnumerableProperty$5(it, STATE, metadata);
       return metadata;
     };
     get = function (it) {
-      return hasOwn$6(it, STATE) ? it[STATE] : {};
+      return hasOwn$8(it, STATE) ? it[STATE] : {};
     };
     has = function (it) {
-      return hasOwn$6(it, STATE);
+      return hasOwn$8(it, STATE);
     };
   }
 
@@ -944,13 +948,13 @@
     return !!descriptor && descriptor.enumerable;
   } : $propertyIsEnumerable;
 
-  var DESCRIPTORS$4 = descriptors;
-  var call$6 = functionCall;
+  var DESCRIPTORS$7 = descriptors;
+  var call$7 = functionCall;
   var propertyIsEnumerableModule = objectPropertyIsEnumerable;
   var createPropertyDescriptor$1 = createPropertyDescriptor$3;
   var toIndexedObject$1 = toIndexedObject$5;
   var toPropertyKey = toPropertyKey$2;
-  var hasOwn$5 = hasOwnProperty_1;
+  var hasOwn$7 = hasOwnProperty_1;
   var IE8_DOM_DEFINE = ie8DomDefine;
 
   // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
@@ -958,28 +962,28 @@
 
   // `Object.getOwnPropertyDescriptor` method
   // https://tc39.es/ecma262/#sec-object.getownpropertydescriptor
-  objectGetOwnPropertyDescriptor.f = DESCRIPTORS$4 ? $getOwnPropertyDescriptor : function getOwnPropertyDescriptor(O, P) {
+  objectGetOwnPropertyDescriptor.f = DESCRIPTORS$7 ? $getOwnPropertyDescriptor : function getOwnPropertyDescriptor(O, P) {
     O = toIndexedObject$1(O);
     P = toPropertyKey(P);
     if (IE8_DOM_DEFINE) try {
       return $getOwnPropertyDescriptor(O, P);
     } catch (error) { /* empty */ }
-    if (hasOwn$5(O, P)) return createPropertyDescriptor$1(!call$6(propertyIsEnumerableModule.f, O, P), O[P]);
+    if (hasOwn$7(O, P)) return createPropertyDescriptor$1(!call$7(propertyIsEnumerableModule.f, O, P), O[P]);
   };
 
-  var makeBuiltIn$2 = {exports: {}};
+  var makeBuiltIn$3 = {exports: {}};
 
-  var DESCRIPTORS$3 = descriptors;
-  var hasOwn$4 = hasOwnProperty_1;
+  var DESCRIPTORS$6 = descriptors;
+  var hasOwn$6 = hasOwnProperty_1;
 
   var FunctionPrototype$1 = Function.prototype;
   // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-  var getDescriptor = DESCRIPTORS$3 && Object.getOwnPropertyDescriptor;
+  var getDescriptor = DESCRIPTORS$6 && Object.getOwnPropertyDescriptor;
 
-  var EXISTS = hasOwn$4(FunctionPrototype$1, 'name');
+  var EXISTS = hasOwn$6(FunctionPrototype$1, 'name');
   // additional protection from minified / mangled / dropped function names
   var PROPER = EXISTS && (function something() { /* empty */ }).name === 'something';
-  var CONFIGURABLE = EXISTS && (!DESCRIPTORS$3 || (DESCRIPTORS$3 && getDescriptor(FunctionPrototype$1, 'name').configurable));
+  var CONFIGURABLE = EXISTS && (!DESCRIPTORS$6 || (DESCRIPTORS$6 && getDescriptor(FunctionPrototype$1, 'name').configurable));
 
   var functionName = {
     EXISTS: EXISTS,
@@ -987,14 +991,14 @@
     CONFIGURABLE: CONFIGURABLE
   };
 
-  var uncurryThis$e = functionUncurryThis;
-  var isCallable$b = isCallable$i;
+  var uncurryThis$f = functionUncurryThis;
+  var isCallable$c = isCallable$j;
   var store = sharedStore;
 
-  var functionToString = uncurryThis$e(Function.toString);
+  var functionToString = uncurryThis$f(Function.toString);
 
   // this helper broken in `core-js@3.4.1-3.4.4`, so we can't use `shared` helper
-  if (!isCallable$b(store.inspectSource)) {
+  if (!isCallable$c(store.inspectSource)) {
     store.inspectSource = function (it) {
       return functionToString(it);
     };
@@ -1002,73 +1006,73 @@
 
   var inspectSource$1 = store.inspectSource;
 
-  var uncurryThis$d = functionUncurryThis;
-  var fails$e = fails$l;
-  var isCallable$a = isCallable$i;
-  var hasOwn$3 = hasOwnProperty_1;
-  var DESCRIPTORS$2 = descriptors;
+  var uncurryThis$e = functionUncurryThis;
+  var fails$f = fails$m;
+  var isCallable$b = isCallable$j;
+  var hasOwn$5 = hasOwnProperty_1;
+  var DESCRIPTORS$5 = descriptors;
   var CONFIGURABLE_FUNCTION_NAME$1 = functionName.CONFIGURABLE;
   var inspectSource = inspectSource$1;
   var InternalStateModule$1 = internalState;
 
-  var enforceInternalState = InternalStateModule$1.enforce;
-  var getInternalState$2 = InternalStateModule$1.get;
+  var enforceInternalState$1 = InternalStateModule$1.enforce;
+  var getInternalState$3 = InternalStateModule$1.get;
   var $String$3 = String;
   // eslint-disable-next-line es/no-object-defineproperty -- safe
-  var defineProperty$2 = Object.defineProperty;
-  var stringSlice$4 = uncurryThis$d(''.slice);
-  var replace$4 = uncurryThis$d(''.replace);
-  var join = uncurryThis$d([].join);
+  var defineProperty$4 = Object.defineProperty;
+  var stringSlice$5 = uncurryThis$e(''.slice);
+  var replace$5 = uncurryThis$e(''.replace);
+  var join = uncurryThis$e([].join);
 
-  var CONFIGURABLE_LENGTH = DESCRIPTORS$2 && !fails$e(function () {
-    return defineProperty$2(function () { /* empty */ }, 'length', { value: 8 }).length !== 8;
+  var CONFIGURABLE_LENGTH = DESCRIPTORS$5 && !fails$f(function () {
+    return defineProperty$4(function () { /* empty */ }, 'length', { value: 8 }).length !== 8;
   });
 
   var TEMPLATE = String(String).split('String');
 
-  var makeBuiltIn$1 = makeBuiltIn$2.exports = function (value, name, options) {
-    if (stringSlice$4($String$3(name), 0, 7) === 'Symbol(') {
-      name = '[' + replace$4($String$3(name), /^Symbol\(([^)]*)\)/, '$1') + ']';
+  var makeBuiltIn$2 = makeBuiltIn$3.exports = function (value, name, options) {
+    if (stringSlice$5($String$3(name), 0, 7) === 'Symbol(') {
+      name = '[' + replace$5($String$3(name), /^Symbol\(([^)]*)\)/, '$1') + ']';
     }
     if (options && options.getter) name = 'get ' + name;
     if (options && options.setter) name = 'set ' + name;
-    if (!hasOwn$3(value, 'name') || (CONFIGURABLE_FUNCTION_NAME$1 && value.name !== name)) {
-      if (DESCRIPTORS$2) defineProperty$2(value, 'name', { value: name, configurable: true });
+    if (!hasOwn$5(value, 'name') || (CONFIGURABLE_FUNCTION_NAME$1 && value.name !== name)) {
+      if (DESCRIPTORS$5) defineProperty$4(value, 'name', { value: name, configurable: true });
       else value.name = name;
     }
-    if (CONFIGURABLE_LENGTH && options && hasOwn$3(options, 'arity') && value.length !== options.arity) {
-      defineProperty$2(value, 'length', { value: options.arity });
+    if (CONFIGURABLE_LENGTH && options && hasOwn$5(options, 'arity') && value.length !== options.arity) {
+      defineProperty$4(value, 'length', { value: options.arity });
     }
     try {
-      if (options && hasOwn$3(options, 'constructor') && options.constructor) {
-        if (DESCRIPTORS$2) defineProperty$2(value, 'prototype', { writable: false });
+      if (options && hasOwn$5(options, 'constructor') && options.constructor) {
+        if (DESCRIPTORS$5) defineProperty$4(value, 'prototype', { writable: false });
       // in V8 ~ Chrome 53, prototypes of some methods, like `Array.prototype.values`, are non-writable
       } else if (value.prototype) value.prototype = undefined;
     } catch (error) { /* empty */ }
-    var state = enforceInternalState(value);
-    if (!hasOwn$3(state, 'source')) {
+    var state = enforceInternalState$1(value);
+    if (!hasOwn$5(state, 'source')) {
       state.source = join(TEMPLATE, typeof name == 'string' ? name : '');
     } return value;
   };
 
   // add fake Function#toString for correct work wrapped methods / constructors with methods like LoDash isNative
   // eslint-disable-next-line no-extend-native -- required
-  Function.prototype.toString = makeBuiltIn$1(function toString() {
-    return isCallable$a(this) && getInternalState$2(this).source || inspectSource(this);
+  Function.prototype.toString = makeBuiltIn$2(function toString() {
+    return isCallable$b(this) && getInternalState$3(this).source || inspectSource(this);
   }, 'toString');
 
-  var makeBuiltInExports = makeBuiltIn$2.exports;
+  var makeBuiltInExports = makeBuiltIn$3.exports;
 
-  var isCallable$9 = isCallable$i;
+  var isCallable$a = isCallable$j;
   var definePropertyModule$1 = objectDefineProperty;
-  var makeBuiltIn = makeBuiltInExports;
+  var makeBuiltIn$1 = makeBuiltInExports;
   var defineGlobalProperty$1 = defineGlobalProperty$3;
 
-  var defineBuiltIn$4 = function (O, key, value, options) {
+  var defineBuiltIn$5 = function (O, key, value, options) {
     if (!options) options = {};
     var simple = options.enumerable;
     var name = options.name !== undefined ? options.name : key;
-    if (isCallable$9(value)) makeBuiltIn(value, name, options);
+    if (isCallable$a(value)) makeBuiltIn$1(value, name, options);
     if (options.global) {
       if (simple) O[key] = value;
       else defineGlobalProperty$1(key, value);
@@ -1106,22 +1110,22 @@
   // eslint-disable-next-line es/no-object-getownpropertysymbols -- safe
   objectGetOwnPropertySymbols.f = Object.getOwnPropertySymbols;
 
-  var getBuiltIn$1 = getBuiltIn$4;
-  var uncurryThis$c = functionUncurryThis;
+  var getBuiltIn$2 = getBuiltIn$5;
+  var uncurryThis$d = functionUncurryThis;
   var getOwnPropertyNamesModule = objectGetOwnPropertyNames;
   var getOwnPropertySymbolsModule = objectGetOwnPropertySymbols;
   var anObject$4 = anObject$8;
 
-  var concat$1 = uncurryThis$c([].concat);
+  var concat$1 = uncurryThis$d([].concat);
 
   // all object keys, includes non-enumerable and symbols
-  var ownKeys$1 = getBuiltIn$1('Reflect', 'ownKeys') || function ownKeys(it) {
+  var ownKeys$1 = getBuiltIn$2('Reflect', 'ownKeys') || function ownKeys(it) {
     var keys = getOwnPropertyNamesModule.f(anObject$4(it));
     var getOwnPropertySymbols = getOwnPropertySymbolsModule.f;
     return getOwnPropertySymbols ? concat$1(keys, getOwnPropertySymbols(it)) : keys;
   };
 
-  var hasOwn$2 = hasOwnProperty_1;
+  var hasOwn$4 = hasOwnProperty_1;
   var ownKeys = ownKeys$1;
   var getOwnPropertyDescriptorModule = objectGetOwnPropertyDescriptor;
   var definePropertyModule = objectDefineProperty;
@@ -1132,42 +1136,42 @@
     var getOwnPropertyDescriptor = getOwnPropertyDescriptorModule.f;
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
-      if (!hasOwn$2(target, key) && !(exceptions && hasOwn$2(exceptions, key))) {
+      if (!hasOwn$4(target, key) && !(exceptions && hasOwn$4(exceptions, key))) {
         defineProperty(target, key, getOwnPropertyDescriptor(source, key));
       }
     }
   };
 
-  var fails$d = fails$l;
-  var isCallable$8 = isCallable$i;
+  var fails$e = fails$m;
+  var isCallable$9 = isCallable$j;
 
   var replacement = /#|\.prototype\./;
 
-  var isForced$1 = function (feature, detection) {
+  var isForced$2 = function (feature, detection) {
     var value = data[normalize(feature)];
     return value === POLYFILL ? true
       : value === NATIVE ? false
-      : isCallable$8(detection) ? fails$d(detection)
+      : isCallable$9(detection) ? fails$e(detection)
       : !!detection;
   };
 
-  var normalize = isForced$1.normalize = function (string) {
+  var normalize = isForced$2.normalize = function (string) {
     return String(string).replace(replacement, '.').toLowerCase();
   };
 
-  var data = isForced$1.data = {};
-  var NATIVE = isForced$1.NATIVE = 'N';
-  var POLYFILL = isForced$1.POLYFILL = 'P';
+  var data = isForced$2.data = {};
+  var NATIVE = isForced$2.NATIVE = 'N';
+  var POLYFILL = isForced$2.POLYFILL = 'P';
 
-  var isForced_1 = isForced$1;
+  var isForced_1 = isForced$2;
 
-  var global$6 = global$g;
+  var global$7 = global$h;
   var getOwnPropertyDescriptor$1 = objectGetOwnPropertyDescriptor.f;
-  var createNonEnumerableProperty$3 = createNonEnumerableProperty$5;
-  var defineBuiltIn$3 = defineBuiltIn$4;
+  var createNonEnumerableProperty$4 = createNonEnumerableProperty$6;
+  var defineBuiltIn$4 = defineBuiltIn$5;
   var defineGlobalProperty = defineGlobalProperty$3;
   var copyConstructorProperties = copyConstructorProperties$1;
-  var isForced = isForced_1;
+  var isForced$1 = isForced_1;
 
   /*
     options.target         - name of the target object
@@ -1190,11 +1194,11 @@
     var STATIC = options.stat;
     var FORCED, target, key, targetProperty, sourceProperty, descriptor;
     if (GLOBAL) {
-      target = global$6;
+      target = global$7;
     } else if (STATIC) {
-      target = global$6[TARGET] || defineGlobalProperty(TARGET, {});
+      target = global$7[TARGET] || defineGlobalProperty(TARGET, {});
     } else {
-      target = (global$6[TARGET] || {}).prototype;
+      target = (global$7[TARGET] || {}).prototype;
     }
     if (target) for (key in source) {
       sourceProperty = source[key];
@@ -1202,7 +1206,7 @@
         descriptor = getOwnPropertyDescriptor$1(target, key);
         targetProperty = descriptor && descriptor.value;
       } else targetProperty = target[key];
-      FORCED = isForced(GLOBAL ? key : TARGET + (STATIC ? '.' : '#') + key, options.forced);
+      FORCED = isForced$1(GLOBAL ? key : TARGET + (STATIC ? '.' : '#') + key, options.forced);
       // contained in target
       if (!FORCED && targetProperty !== undefined) {
         if (typeof sourceProperty == typeof targetProperty) continue;
@@ -1210,23 +1214,23 @@
       }
       // add a flag to not completely full polyfills
       if (options.sham || (targetProperty && targetProperty.sham)) {
-        createNonEnumerableProperty$3(sourceProperty, 'sham', true);
+        createNonEnumerableProperty$4(sourceProperty, 'sham', true);
       }
-      defineBuiltIn$3(target, key, sourceProperty, options);
+      defineBuiltIn$4(target, key, sourceProperty, options);
     }
   };
 
-  var fails$c = fails$l;
+  var fails$d = fails$m;
 
-  var correctPrototypeGetter = !fails$c(function () {
+  var correctPrototypeGetter = !fails$d(function () {
     function F() { /* empty */ }
     F.prototype.constructor = null;
     // eslint-disable-next-line es/no-object-getprototypeof -- required for testing
     return Object.getPrototypeOf(new F()) !== F.prototype;
   });
 
-  var hasOwn$1 = hasOwnProperty_1;
-  var isCallable$7 = isCallable$i;
+  var hasOwn$3 = hasOwnProperty_1;
+  var isCallable$8 = isCallable$j;
   var toObject$5 = toObject$7;
   var sharedKey = sharedKey$3;
   var CORRECT_PROTOTYPE_GETTER = correctPrototypeGetter;
@@ -1240,21 +1244,21 @@
   // eslint-disable-next-line es/no-object-getprototypeof -- safe
   var objectGetPrototypeOf = CORRECT_PROTOTYPE_GETTER ? $Object$1.getPrototypeOf : function (O) {
     var object = toObject$5(O);
-    if (hasOwn$1(object, IE_PROTO)) return object[IE_PROTO];
+    if (hasOwn$3(object, IE_PROTO)) return object[IE_PROTO];
     var constructor = object.constructor;
-    if (isCallable$7(constructor) && object instanceof constructor) {
+    if (isCallable$8(constructor) && object instanceof constructor) {
       return constructor.prototype;
     } return object instanceof $Object$1 ? ObjectPrototype : null;
   };
 
-  var fails$b = fails$l;
-  var isCallable$6 = isCallable$i;
-  var isObject$2 = isObject$8;
+  var fails$c = fails$m;
+  var isCallable$7 = isCallable$j;
+  var isObject$5 = isObject$b;
   var getPrototypeOf$1 = objectGetPrototypeOf;
-  var defineBuiltIn$2 = defineBuiltIn$4;
-  var wellKnownSymbol$7 = wellKnownSymbol$a;
+  var defineBuiltIn$3 = defineBuiltIn$5;
+  var wellKnownSymbol$a = wellKnownSymbol$d;
 
-  var ITERATOR$2 = wellKnownSymbol$7('iterator');
+  var ITERATOR$2 = wellKnownSymbol$a('iterator');
   var BUGGY_SAFARI_ITERATORS$1 = false;
 
   // `%IteratorPrototype%` object
@@ -1272,7 +1276,7 @@
     }
   }
 
-  var NEW_ITERATOR_PROTOTYPE = !isObject$2(IteratorPrototype$2) || fails$b(function () {
+  var NEW_ITERATOR_PROTOTYPE = !isObject$5(IteratorPrototype$2) || fails$c(function () {
     var test = {};
     // FF44- legacy iterators case
     return IteratorPrototype$2[ITERATOR$2].call(test) !== test;
@@ -1282,8 +1286,8 @@
 
   // `%IteratorPrototype%[@@iterator]()` method
   // https://tc39.es/ecma262/#sec-%iteratorprototype%-@@iterator
-  if (!isCallable$6(IteratorPrototype$2[ITERATOR$2])) {
-    defineBuiltIn$2(IteratorPrototype$2, ITERATOR$2, function () {
+  if (!isCallable$7(IteratorPrototype$2[ITERATOR$2])) {
+    defineBuiltIn$3(IteratorPrototype$2, ITERATOR$2, function () {
       return this;
     });
   }
@@ -1293,21 +1297,21 @@
     BUGGY_SAFARI_ITERATORS: BUGGY_SAFARI_ITERATORS$1
   };
 
-  var defineProperty$1 = objectDefineProperty.f;
-  var hasOwn = hasOwnProperty_1;
-  var wellKnownSymbol$6 = wellKnownSymbol$a;
+  var defineProperty$3 = objectDefineProperty.f;
+  var hasOwn$2 = hasOwnProperty_1;
+  var wellKnownSymbol$9 = wellKnownSymbol$d;
 
-  var TO_STRING_TAG$2 = wellKnownSymbol$6('toStringTag');
+  var TO_STRING_TAG$2 = wellKnownSymbol$9('toStringTag');
 
   var setToStringTag$3 = function (target, TAG, STATIC) {
     if (target && !STATIC) target = target.prototype;
-    if (target && !hasOwn(target, TO_STRING_TAG$2)) {
-      defineProperty$1(target, TO_STRING_TAG$2, { configurable: true, value: TAG });
+    if (target && !hasOwn$2(target, TO_STRING_TAG$2)) {
+      defineProperty$3(target, TO_STRING_TAG$2, { configurable: true, value: TAG });
     }
   };
 
   var IteratorPrototype$1 = iteratorsCore.IteratorPrototype;
-  var create$2 = objectCreate;
+  var create$3 = objectCreate;
   var createPropertyDescriptor = createPropertyDescriptor$3;
   var setToStringTag$2 = setToStringTag$3;
   var Iterators$2 = iterators;
@@ -1316,36 +1320,36 @@
 
   var iteratorCreateConstructor = function (IteratorConstructor, NAME, next, ENUMERABLE_NEXT) {
     var TO_STRING_TAG = NAME + ' Iterator';
-    IteratorConstructor.prototype = create$2(IteratorPrototype$1, { next: createPropertyDescriptor(+!ENUMERABLE_NEXT, next) });
+    IteratorConstructor.prototype = create$3(IteratorPrototype$1, { next: createPropertyDescriptor(+!ENUMERABLE_NEXT, next) });
     setToStringTag$2(IteratorConstructor, TO_STRING_TAG, false);
     Iterators$2[TO_STRING_TAG] = returnThis$1;
     return IteratorConstructor;
   };
 
-  var uncurryThis$b = functionUncurryThis;
+  var uncurryThis$c = functionUncurryThis;
   var aCallable$2 = aCallable$4;
 
   var functionUncurryThisAccessor = function (object, key, method) {
     try {
       // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-      return uncurryThis$b(aCallable$2(Object.getOwnPropertyDescriptor(object, key)[method]));
+      return uncurryThis$c(aCallable$2(Object.getOwnPropertyDescriptor(object, key)[method]));
     } catch (error) { /* empty */ }
   };
 
-  var isObject$1 = isObject$8;
+  var isObject$4 = isObject$b;
 
   var isPossiblePrototype$1 = function (argument) {
-    return isObject$1(argument) || argument === null;
+    return isObject$4(argument) || argument === null;
   };
 
   var isPossiblePrototype = isPossiblePrototype$1;
 
   var $String$2 = String;
-  var $TypeError$5 = TypeError;
+  var $TypeError$6 = TypeError;
 
   var aPossiblePrototype$1 = function (argument) {
     if (isPossiblePrototype(argument)) return argument;
-    throw new $TypeError$5("Can't set " + $String$2(argument) + ' as a prototype');
+    throw new $TypeError$6("Can't set " + $String$2(argument) + ' as a prototype');
   };
 
   /* eslint-disable no-proto -- safe */
@@ -1376,16 +1380,16 @@
   }() : undefined);
 
   var $$8 = _export;
-  var call$5 = functionCall;
+  var call$6 = functionCall;
   var FunctionName = functionName;
-  var isCallable$5 = isCallable$i;
+  var isCallable$6 = isCallable$j;
   var createIteratorConstructor = iteratorCreateConstructor;
   var getPrototypeOf = objectGetPrototypeOf;
-  var setPrototypeOf = objectSetPrototypeOf;
+  var setPrototypeOf$1 = objectSetPrototypeOf;
   var setToStringTag$1 = setToStringTag$3;
-  var createNonEnumerableProperty$2 = createNonEnumerableProperty$5;
-  var defineBuiltIn$1 = defineBuiltIn$4;
-  var wellKnownSymbol$5 = wellKnownSymbol$a;
+  var createNonEnumerableProperty$3 = createNonEnumerableProperty$6;
+  var defineBuiltIn$2 = defineBuiltIn$5;
+  var wellKnownSymbol$8 = wellKnownSymbol$d;
   var Iterators$1 = iterators;
   var IteratorsCore = iteratorsCore;
 
@@ -1393,7 +1397,7 @@
   var CONFIGURABLE_FUNCTION_NAME = FunctionName.CONFIGURABLE;
   var IteratorPrototype = IteratorsCore.IteratorPrototype;
   var BUGGY_SAFARI_ITERATORS = IteratorsCore.BUGGY_SAFARI_ITERATORS;
-  var ITERATOR$1 = wellKnownSymbol$5('iterator');
+  var ITERATOR$1 = wellKnownSymbol$8('iterator');
   var KEYS = 'keys';
   var VALUES = 'values';
   var ENTRIES = 'entries';
@@ -1431,10 +1435,10 @@
       CurrentIteratorPrototype = getPrototypeOf(anyNativeIterator.call(new Iterable()));
       if (CurrentIteratorPrototype !== Object.prototype && CurrentIteratorPrototype.next) {
         if (getPrototypeOf(CurrentIteratorPrototype) !== IteratorPrototype) {
-          if (setPrototypeOf) {
-            setPrototypeOf(CurrentIteratorPrototype, IteratorPrototype);
-          } else if (!isCallable$5(CurrentIteratorPrototype[ITERATOR$1])) {
-            defineBuiltIn$1(CurrentIteratorPrototype, ITERATOR$1, returnThis);
+          if (setPrototypeOf$1) {
+            setPrototypeOf$1(CurrentIteratorPrototype, IteratorPrototype);
+          } else if (!isCallable$6(CurrentIteratorPrototype[ITERATOR$1])) {
+            defineBuiltIn$2(CurrentIteratorPrototype, ITERATOR$1, returnThis);
           }
         }
         // Set @@toStringTag to native iterators
@@ -1445,10 +1449,10 @@
     // fix Array.prototype.{ values, @@iterator }.name in V8 / FF
     if (PROPER_FUNCTION_NAME$1 && DEFAULT === VALUES && nativeIterator && nativeIterator.name !== VALUES) {
       if (CONFIGURABLE_FUNCTION_NAME) {
-        createNonEnumerableProperty$2(IterablePrototype, 'name', VALUES);
+        createNonEnumerableProperty$3(IterablePrototype, 'name', VALUES);
       } else {
         INCORRECT_VALUES_NAME = true;
-        defaultIterator = function values() { return call$5(nativeIterator, this); };
+        defaultIterator = function values() { return call$6(nativeIterator, this); };
       }
     }
 
@@ -1461,14 +1465,14 @@
       };
       if (FORCED) for (KEY in methods) {
         if (BUGGY_SAFARI_ITERATORS || INCORRECT_VALUES_NAME || !(KEY in IterablePrototype)) {
-          defineBuiltIn$1(IterablePrototype, KEY, methods[KEY]);
+          defineBuiltIn$2(IterablePrototype, KEY, methods[KEY]);
         }
       } else $$8({ target: NAME, proto: true, forced: BUGGY_SAFARI_ITERATORS || INCORRECT_VALUES_NAME }, methods);
     }
 
     // define iterator
     if (IterablePrototype[ITERATOR$1] !== defaultIterator) {
-      defineBuiltIn$1(IterablePrototype, ITERATOR$1, defaultIterator, { name: DEFAULT });
+      defineBuiltIn$2(IterablePrototype, ITERATOR$1, defaultIterator, { name: DEFAULT });
     }
     Iterators$1[NAME] = defaultIterator;
 
@@ -1485,14 +1489,14 @@
   var addToUnscopables$1 = addToUnscopables$2;
   var Iterators = iterators;
   var InternalStateModule = internalState;
-  var defineProperty = objectDefineProperty.f;
+  var defineProperty$2 = objectDefineProperty.f;
   var defineIterator = iteratorDefine;
   var createIterResultObject = createIterResultObject$1;
-  var DESCRIPTORS$1 = descriptors;
+  var DESCRIPTORS$4 = descriptors;
 
   var ARRAY_ITERATOR = 'Array Iterator';
   var setInternalState = InternalStateModule.set;
-  var getInternalState$1 = InternalStateModule.getterFor(ARRAY_ITERATOR);
+  var getInternalState$2 = InternalStateModule.getterFor(ARRAY_ITERATOR);
 
   // `Array.prototype.entries` method
   // https://tc39.es/ecma262/#sec-array.prototype.entries
@@ -1514,7 +1518,7 @@
   // `%ArrayIteratorPrototype%.next` method
   // https://tc39.es/ecma262/#sec-%arrayiteratorprototype%.next
   }, function () {
-    var state = getInternalState$1(this);
+    var state = getInternalState$2(this);
     var target = state.target;
     var index = state.index++;
     if (!target || index >= target.length) {
@@ -1538,8 +1542,8 @@
   addToUnscopables$1('entries');
 
   // V8 ~ Chrome 45- bug
-  if (DESCRIPTORS$1 && values.name !== 'values') try {
-    defineProperty(values, 'name', { value: 'values' });
+  if (DESCRIPTORS$4 && values.name !== 'values') try {
+    defineProperty$2(values, 'name', { value: 'values' });
   } catch (error) { /* empty */ }
 
   // iterable DOM collections
@@ -1586,22 +1590,22 @@
 
   var domTokenListPrototype = DOMTokenListPrototype$1 === Object.prototype ? undefined : DOMTokenListPrototype$1;
 
-  var global$5 = global$g;
+  var global$6 = global$h;
   var DOMIterables = domIterables;
   var DOMTokenListPrototype = domTokenListPrototype;
   var ArrayIteratorMethods = es_array_iterator;
-  var createNonEnumerableProperty$1 = createNonEnumerableProperty$5;
+  var createNonEnumerableProperty$2 = createNonEnumerableProperty$6;
   var setToStringTag = setToStringTag$3;
-  var wellKnownSymbol$4 = wellKnownSymbol$a;
+  var wellKnownSymbol$7 = wellKnownSymbol$d;
 
-  var ITERATOR = wellKnownSymbol$4('iterator');
+  var ITERATOR = wellKnownSymbol$7('iterator');
   var ArrayValues = ArrayIteratorMethods.values;
 
   var handlePrototype = function (CollectionPrototype, COLLECTION_NAME) {
     if (CollectionPrototype) {
       // some Chrome versions have non-configurable methods on DOMTokenList
       if (CollectionPrototype[ITERATOR] !== ArrayValues) try {
-        createNonEnumerableProperty$1(CollectionPrototype, ITERATOR, ArrayValues);
+        createNonEnumerableProperty$2(CollectionPrototype, ITERATOR, ArrayValues);
       } catch (error) {
         CollectionPrototype[ITERATOR] = ArrayValues;
       }
@@ -1609,7 +1613,7 @@
       if (DOMIterables[COLLECTION_NAME]) for (var METHOD_NAME in ArrayIteratorMethods) {
         // some Chrome versions have non-configurable methods on DOMTokenList
         if (CollectionPrototype[METHOD_NAME] !== ArrayIteratorMethods[METHOD_NAME]) try {
-          createNonEnumerableProperty$1(CollectionPrototype, METHOD_NAME, ArrayIteratorMethods[METHOD_NAME]);
+          createNonEnumerableProperty$2(CollectionPrototype, METHOD_NAME, ArrayIteratorMethods[METHOD_NAME]);
         } catch (error) {
           CollectionPrototype[METHOD_NAME] = ArrayIteratorMethods[METHOD_NAME];
         }
@@ -1618,14 +1622,14 @@
   };
 
   for (var COLLECTION_NAME in DOMIterables) {
-    handlePrototype(global$5[COLLECTION_NAME] && global$5[COLLECTION_NAME].prototype, COLLECTION_NAME);
+    handlePrototype(global$6[COLLECTION_NAME] && global$6[COLLECTION_NAME].prototype, COLLECTION_NAME);
   }
 
   handlePrototype(DOMTokenListPrototype, 'DOMTokenList');
 
-  var wellKnownSymbol$3 = wellKnownSymbol$a;
+  var wellKnownSymbol$6 = wellKnownSymbol$d;
 
-  var TO_STRING_TAG$1 = wellKnownSymbol$3('toStringTag');
+  var TO_STRING_TAG$1 = wellKnownSymbol$6('toStringTag');
   var test$1 = {};
 
   test$1[TO_STRING_TAG$1] = 'z';
@@ -1633,11 +1637,11 @@
   var toStringTagSupport = String(test$1) === '[object z]';
 
   var TO_STRING_TAG_SUPPORT = toStringTagSupport;
-  var isCallable$4 = isCallable$i;
+  var isCallable$5 = isCallable$j;
   var classofRaw$1 = classofRaw$2;
-  var wellKnownSymbol$2 = wellKnownSymbol$a;
+  var wellKnownSymbol$5 = wellKnownSymbol$d;
 
-  var TO_STRING_TAG = wellKnownSymbol$2('toStringTag');
+  var TO_STRING_TAG = wellKnownSymbol$5('toStringTag');
   var $Object = Object;
 
   // ES3 wrong here
@@ -1651,7 +1655,7 @@
   };
 
   // getting tag from ES6+ `Object.prototype.toString`
-  var classof$5 = TO_STRING_TAG_SUPPORT ? classofRaw$1 : function (it) {
+  var classof$7 = TO_STRING_TAG_SUPPORT ? classofRaw$1 : function (it) {
     var O, tag, result;
     return it === undefined ? 'Undefined' : it === null ? 'Null'
       // @@toStringTag case
@@ -1659,17 +1663,166 @@
       // builtinTag case
       : CORRECT_ARGUMENTS ? classofRaw$1(O)
       // ES3 arguments fallback
-      : (result = classofRaw$1(O)) === 'Object' && isCallable$4(O.callee) ? 'Arguments' : result;
+      : (result = classofRaw$1(O)) === 'Object' && isCallable$5(O.callee) ? 'Arguments' : result;
   };
 
-  var classof$4 = classof$5;
+  var classof$6 = classof$7;
 
   var $String$1 = String;
 
-  var toString$6 = function (argument) {
-    if (classof$4(argument) === 'Symbol') throw new TypeError('Cannot convert a Symbol value to a string');
+  var toString$7 = function (argument) {
+    if (classof$6(argument) === 'Symbol') throw new TypeError('Cannot convert a Symbol value to a string');
     return $String$1(argument);
   };
+
+  // a string of all valid unicode whitespaces
+  var whitespaces$2 = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002' +
+    '\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
+
+  var uncurryThis$b = functionUncurryThis;
+  var requireObjectCoercible$2 = requireObjectCoercible$5;
+  var toString$6 = toString$7;
+  var whitespaces$1 = whitespaces$2;
+
+  var replace$4 = uncurryThis$b(''.replace);
+  var ltrim = RegExp('^[' + whitespaces$1 + ']+');
+  var rtrim = RegExp('(^|[^' + whitespaces$1 + '])[' + whitespaces$1 + ']+$');
+
+  // `String.prototype.{ trim, trimStart, trimEnd, trimLeft, trimRight }` methods implementation
+  var createMethod$2 = function (TYPE) {
+    return function ($this) {
+      var string = toString$6(requireObjectCoercible$2($this));
+      if (TYPE & 1) string = replace$4(string, ltrim, '');
+      if (TYPE & 2) string = replace$4(string, rtrim, '$1');
+      return string;
+    };
+  };
+
+  var stringTrim = {
+    // `String.prototype.{ trimLeft, trimStart }` methods
+    // https://tc39.es/ecma262/#sec-string.prototype.trimstart
+    start: createMethod$2(1),
+    // `String.prototype.{ trimRight, trimEnd }` methods
+    // https://tc39.es/ecma262/#sec-string.prototype.trimend
+    end: createMethod$2(2),
+    // `String.prototype.trim` method
+    // https://tc39.es/ecma262/#sec-string.prototype.trim
+    trim: createMethod$2(3)
+  };
+
+  var PROPER_FUNCTION_NAME = functionName.PROPER;
+  var fails$b = fails$m;
+  var whitespaces = whitespaces$2;
+
+  var non = '\u200B\u0085\u180E';
+
+  // check that a method works with the correct list
+  // of whitespaces and has a correct name
+  var stringTrimForced = function (METHOD_NAME) {
+    return fails$b(function () {
+      return !!whitespaces[METHOD_NAME]()
+        || non[METHOD_NAME]() !== non
+        || (PROPER_FUNCTION_NAME && whitespaces[METHOD_NAME].name !== METHOD_NAME);
+    });
+  };
+
+  var $$7 = _export;
+  var $trim = stringTrim.trim;
+  var forcedStringTrimMethod = stringTrimForced;
+
+  // `String.prototype.trim` method
+  // https://tc39.es/ecma262/#sec-string.prototype.trim
+  $$7({ target: 'String', proto: true, forced: forcedStringTrimMethod('trim') }, {
+    trim: function trim() {
+      return $trim(this);
+    }
+  });
+
+  var classof$5 = classofRaw$2;
+
+  // `IsArray` abstract operation
+  // https://tc39.es/ecma262/#sec-isarray
+  // eslint-disable-next-line es/no-array-isarray -- safe
+  var isArray$2 = Array.isArray || function isArray(argument) {
+    return classof$5(argument) === 'Array';
+  };
+
+  var DESCRIPTORS$3 = descriptors;
+  var isArray$1 = isArray$2;
+
+  var $TypeError$5 = TypeError;
+  // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
+  var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
+
+  // Safari < 13 does not throw an error in this case
+  var SILENT_ON_NON_WRITABLE_LENGTH_SET = DESCRIPTORS$3 && !function () {
+    // makes no sense without proper strict mode support
+    if (this !== undefined) return true;
+    try {
+      // eslint-disable-next-line es/no-object-defineproperty -- safe
+      Object.defineProperty([], 'length', { writable: false }).length = 1;
+    } catch (error) {
+      return error instanceof TypeError;
+    }
+  }();
+
+  var arraySetLength = SILENT_ON_NON_WRITABLE_LENGTH_SET ? function (O, length) {
+    if (isArray$1(O) && !getOwnPropertyDescriptor(O, 'length').writable) {
+      throw new $TypeError$5('Cannot set read only .length');
+    } return O.length = length;
+  } : function (O, length) {
+    return O.length = length;
+  };
+
+  var $TypeError$4 = TypeError;
+  var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF; // 2 ** 53 - 1 == 9007199254740991
+
+  var doesNotExceedSafeInteger$2 = function (it) {
+    if (it > MAX_SAFE_INTEGER) throw $TypeError$4('Maximum allowed index exceeded');
+    return it;
+  };
+
+  var $$6 = _export;
+  var toObject$4 = toObject$7;
+  var lengthOfArrayLike$3 = lengthOfArrayLike$5;
+  var setArrayLength$1 = arraySetLength;
+  var doesNotExceedSafeInteger$1 = doesNotExceedSafeInteger$2;
+  var fails$a = fails$m;
+
+  var INCORRECT_TO_LENGTH = fails$a(function () {
+    return [].push.call({ length: 0x100000000 }, 1) !== 4294967297;
+  });
+
+  // V8 <= 121 and Safari <= 15.4; FF < 23 throws InternalError
+  // https://bugs.chromium.org/p/v8/issues/detail?id=12681
+  var properErrorOnNonWritableLength$1 = function () {
+    try {
+      // eslint-disable-next-line es/no-object-defineproperty -- safe
+      Object.defineProperty([], 'length', { writable: false }).push();
+    } catch (error) {
+      return error instanceof TypeError;
+    }
+  };
+
+  var FORCED$3 = INCORRECT_TO_LENGTH || !properErrorOnNonWritableLength$1();
+
+  // `Array.prototype.push` method
+  // https://tc39.es/ecma262/#sec-array.prototype.push
+  $$6({ target: 'Array', proto: true, arity: 1, forced: FORCED$3 }, {
+    // eslint-disable-next-line no-unused-vars -- required for `.length`
+    push: function push(item) {
+      var O = toObject$4(this);
+      var len = lengthOfArrayLike$3(O);
+      var argCount = arguments.length;
+      doesNotExceedSafeInteger$1(len + argCount);
+      for (var i = 0; i < argCount; i++) {
+        O[len] = arguments[i];
+        len++;
+      }
+      setArrayLength$1(O, len);
+      return len;
+    }
+  });
 
   var anObject$2 = anObject$8;
 
@@ -1689,13 +1842,13 @@
     return result;
   };
 
-  var fails$a = fails$l;
-  var global$4 = global$g;
+  var fails$9 = fails$m;
+  var global$5 = global$h;
 
   // babel-minify and Closure Compiler transpiles RegExp('a', 'y') -> /a/y and it causes SyntaxError
-  var $RegExp$2 = global$4.RegExp;
+  var $RegExp$2 = global$5.RegExp;
 
-  var UNSUPPORTED_Y$1 = fails$a(function () {
+  var UNSUPPORTED_Y$2 = fails$9(function () {
     var re = $RegExp$2('a', 'y');
     re.lastIndex = 2;
     return re.exec('abcd') !== null;
@@ -1703,11 +1856,11 @@
 
   // UC Browser bug
   // https://github.com/zloirock/core-js/issues/1008
-  var MISSED_STICKY = UNSUPPORTED_Y$1 || fails$a(function () {
+  var MISSED_STICKY$1 = UNSUPPORTED_Y$2 || fails$9(function () {
     return !$RegExp$2('a', 'y').sticky;
   });
 
-  var BROKEN_CARET = UNSUPPORTED_Y$1 || fails$a(function () {
+  var BROKEN_CARET = UNSUPPORTED_Y$2 || fails$9(function () {
     // https://bugzilla.mozilla.org/show_bug.cgi?id=773687
     var re = $RegExp$2('^r', 'gy');
     re.lastIndex = 2;
@@ -1716,28 +1869,28 @@
 
   var regexpStickyHelpers = {
     BROKEN_CARET: BROKEN_CARET,
-    MISSED_STICKY: MISSED_STICKY,
-    UNSUPPORTED_Y: UNSUPPORTED_Y$1
+    MISSED_STICKY: MISSED_STICKY$1,
+    UNSUPPORTED_Y: UNSUPPORTED_Y$2
   };
 
-  var fails$9 = fails$l;
-  var global$3 = global$g;
+  var fails$8 = fails$m;
+  var global$4 = global$h;
 
   // babel-minify and Closure Compiler transpiles RegExp('.', 's') -> /./s and it causes SyntaxError
-  var $RegExp$1 = global$3.RegExp;
+  var $RegExp$1 = global$4.RegExp;
 
-  var regexpUnsupportedDotAll = fails$9(function () {
+  var regexpUnsupportedDotAll = fails$8(function () {
     var re = $RegExp$1('.', 's');
     return !(re.dotAll && re.test('\n') && re.flags === 's');
   });
 
-  var fails$8 = fails$l;
-  var global$2 = global$g;
+  var fails$7 = fails$m;
+  var global$3 = global$h;
 
   // babel-minify and Closure Compiler transpiles RegExp('(?<a>b)', 'g') -> /(?<a>b)/g and it causes SyntaxError
-  var $RegExp = global$2.RegExp;
+  var $RegExp = global$3.RegExp;
 
-  var regexpUnsupportedNcg = fails$8(function () {
+  var regexpUnsupportedNcg = fails$7(function () {
     var re = $RegExp('(?<a>b)', 'g');
     return re.exec('b').groups.a !== 'b' ||
       'b'.replace(re, '$<a>c') !== 'bc';
@@ -1745,58 +1898,58 @@
 
   /* eslint-disable regexp/no-empty-capturing-group, regexp/no-empty-group, regexp/no-lazy-ends -- testing */
   /* eslint-disable regexp/no-useless-quantifier -- testing */
-  var call$4 = functionCall;
+  var call$5 = functionCall;
   var uncurryThis$a = functionUncurryThis;
-  var toString$5 = toString$6;
+  var toString$5 = toString$7;
   var regexpFlags = regexpFlags$1;
-  var stickyHelpers = regexpStickyHelpers;
+  var stickyHelpers$1 = regexpStickyHelpers;
   var shared = sharedExports;
-  var create$1 = objectCreate;
-  var getInternalState = internalState.get;
-  var UNSUPPORTED_DOT_ALL = regexpUnsupportedDotAll;
-  var UNSUPPORTED_NCG = regexpUnsupportedNcg;
+  var create$2 = objectCreate;
+  var getInternalState$1 = internalState.get;
+  var UNSUPPORTED_DOT_ALL$2 = regexpUnsupportedDotAll;
+  var UNSUPPORTED_NCG$1 = regexpUnsupportedNcg;
 
   var nativeReplace = shared('native-string-replace', String.prototype.replace);
   var nativeExec = RegExp.prototype.exec;
   var patchedExec = nativeExec;
-  var charAt$4 = uncurryThis$a(''.charAt);
+  var charAt$5 = uncurryThis$a(''.charAt);
   var indexOf = uncurryThis$a(''.indexOf);
   var replace$3 = uncurryThis$a(''.replace);
-  var stringSlice$3 = uncurryThis$a(''.slice);
+  var stringSlice$4 = uncurryThis$a(''.slice);
 
   var UPDATES_LAST_INDEX_WRONG = (function () {
     var re1 = /a/;
     var re2 = /b*/g;
-    call$4(nativeExec, re1, 'a');
-    call$4(nativeExec, re2, 'a');
+    call$5(nativeExec, re1, 'a');
+    call$5(nativeExec, re2, 'a');
     return re1.lastIndex !== 0 || re2.lastIndex !== 0;
   })();
 
-  var UNSUPPORTED_Y = stickyHelpers.BROKEN_CARET;
+  var UNSUPPORTED_Y$1 = stickyHelpers$1.BROKEN_CARET;
 
   // nonparticipating capturing group, copied from es5-shim's String#split patch.
   var NPCG_INCLUDED = /()??/.exec('')[1] !== undefined;
 
-  var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED || UNSUPPORTED_Y || UNSUPPORTED_DOT_ALL || UNSUPPORTED_NCG;
+  var PATCH = UPDATES_LAST_INDEX_WRONG || NPCG_INCLUDED || UNSUPPORTED_Y$1 || UNSUPPORTED_DOT_ALL$2 || UNSUPPORTED_NCG$1;
 
   if (PATCH) {
     patchedExec = function exec(string) {
       var re = this;
-      var state = getInternalState(re);
+      var state = getInternalState$1(re);
       var str = toString$5(string);
       var raw = state.raw;
       var result, reCopy, lastIndex, match, i, object, group;
 
       if (raw) {
         raw.lastIndex = re.lastIndex;
-        result = call$4(patchedExec, raw, str);
+        result = call$5(patchedExec, raw, str);
         re.lastIndex = raw.lastIndex;
         return result;
       }
 
       var groups = state.groups;
-      var sticky = UNSUPPORTED_Y && re.sticky;
-      var flags = call$4(regexpFlags, re);
+      var sticky = UNSUPPORTED_Y$1 && re.sticky;
+      var flags = call$5(regexpFlags, re);
       var source = re.source;
       var charsAdded = 0;
       var strCopy = str;
@@ -1807,9 +1960,9 @@
           flags += 'g';
         }
 
-        strCopy = stringSlice$3(str, re.lastIndex);
+        strCopy = stringSlice$4(str, re.lastIndex);
         // Support anchored sticky behavior.
-        if (re.lastIndex > 0 && (!re.multiline || re.multiline && charAt$4(str, re.lastIndex - 1) !== '\n')) {
+        if (re.lastIndex > 0 && (!re.multiline || re.multiline && charAt$5(str, re.lastIndex - 1) !== '\n')) {
           source = '(?: ' + source + ')';
           strCopy = ' ' + strCopy;
           charsAdded++;
@@ -1824,12 +1977,12 @@
       }
       if (UPDATES_LAST_INDEX_WRONG) lastIndex = re.lastIndex;
 
-      match = call$4(nativeExec, sticky ? reCopy : re, strCopy);
+      match = call$5(nativeExec, sticky ? reCopy : re, strCopy);
 
       if (sticky) {
         if (match) {
-          match.input = stringSlice$3(match.input, charsAdded);
-          match[0] = stringSlice$3(match[0], charsAdded);
+          match.input = stringSlice$4(match.input, charsAdded);
+          match[0] = stringSlice$4(match[0], charsAdded);
           match.index = re.lastIndex;
           re.lastIndex += match[0].length;
         } else re.lastIndex = 0;
@@ -1839,7 +1992,7 @@
       if (NPCG_INCLUDED && match && match.length > 1) {
         // Fix browsers whose `exec` methods don't consistently return `undefined`
         // for NPCG, like IE8. NOTE: This doesn't work for /(.?)?/
-        call$4(nativeReplace, match[0], reCopy, function () {
+        call$5(nativeReplace, match[0], reCopy, function () {
           for (i = 1; i < arguments.length - 2; i++) {
             if (arguments[i] === undefined) match[i] = undefined;
           }
@@ -1847,7 +2000,7 @@
       }
 
       if (match && groups) {
-        match.groups = object = create$1(null);
+        match.groups = object = create$2(null);
         for (i = 0; i < groups.length; i++) {
           group = groups[i];
           object[group[0]] = match[group[1]];
@@ -1860,177 +2013,880 @@
 
   var regexpExec$2 = patchedExec;
 
-  var $$7 = _export;
-  var exec$1 = regexpExec$2;
+  var $$5 = _export;
+  var exec$2 = regexpExec$2;
 
   // `RegExp.prototype.exec` method
   // https://tc39.es/ecma262/#sec-regexp.prototype.exec
-  $$7({ target: 'RegExp', proto: true, forced: /./.exec !== exec$1 }, {
-    exec: exec$1
+  $$5({ target: 'RegExp', proto: true, forced: /./.exec !== exec$2 }, {
+    exec: exec$2
   });
 
-  // a string of all valid unicode whitespaces
-  var whitespaces$2 = '\u0009\u000A\u000B\u000C\u000D\u0020\u00A0\u1680\u2000\u2001\u2002' +
-    '\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028\u2029\uFEFF';
+  var $$4 = _export;
+  var $includes = arrayIncludes.includes;
+  var fails$6 = fails$m;
+  var addToUnscopables = addToUnscopables$2;
 
-  var uncurryThis$9 = functionUncurryThis;
-  var requireObjectCoercible$2 = requireObjectCoercible$5;
-  var toString$4 = toString$6;
-  var whitespaces$1 = whitespaces$2;
+  // FF99+ bug
+  var BROKEN_ON_SPARSE = fails$6(function () {
+    // eslint-disable-next-line es/no-array-prototype-includes -- detection
+    return !Array(1).includes();
+  });
 
-  var replace$2 = uncurryThis$9(''.replace);
-  var ltrim = RegExp('^[' + whitespaces$1 + ']+');
-  var rtrim = RegExp('(^|[^' + whitespaces$1 + '])[' + whitespaces$1 + ']+$');
+  // `Array.prototype.includes` method
+  // https://tc39.es/ecma262/#sec-array.prototype.includes
+  $$4({ target: 'Array', proto: true, forced: BROKEN_ON_SPARSE }, {
+    includes: function includes(el /* , fromIndex = 0 */) {
+      return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
+    }
+  });
 
-  // `String.prototype.{ trim, trimStart, trimEnd, trimLeft, trimRight }` methods implementation
-  var createMethod$2 = function (TYPE) {
-    return function ($this) {
-      var string = toString$4(requireObjectCoercible$2($this));
-      if (TYPE & 1) string = replace$2(string, ltrim, '');
-      if (TYPE & 2) string = replace$2(string, rtrim, '$1');
-      return string;
-    };
+  // https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
+  addToUnscopables('includes');
+
+  var isCallable$4 = isCallable$j;
+  var isObject$3 = isObject$b;
+  var setPrototypeOf = objectSetPrototypeOf;
+
+  // makes subclassing work correct for wrapped built-ins
+  var inheritIfRequired$1 = function ($this, dummy, Wrapper) {
+    var NewTarget, NewTargetPrototype;
+    if (
+      // it can work only with native `setPrototypeOf`
+      setPrototypeOf &&
+      // we haven't completely correct pre-ES6 way for getting `new.target`, so use this
+      isCallable$4(NewTarget = dummy.constructor) &&
+      NewTarget !== Wrapper &&
+      isObject$3(NewTargetPrototype = NewTarget.prototype) &&
+      NewTargetPrototype !== Wrapper.prototype
+    ) setPrototypeOf($this, NewTargetPrototype);
+    return $this;
   };
 
-  var stringTrim = {
-    // `String.prototype.{ trimLeft, trimStart }` methods
-    // https://tc39.es/ecma262/#sec-string.prototype.trimstart
-    start: createMethod$2(1),
-    // `String.prototype.{ trimRight, trimEnd }` methods
-    // https://tc39.es/ecma262/#sec-string.prototype.trimend
-    end: createMethod$2(2),
-    // `String.prototype.trim` method
-    // https://tc39.es/ecma262/#sec-string.prototype.trim
-    trim: createMethod$2(3)
+  var isObject$2 = isObject$b;
+  var classof$4 = classofRaw$2;
+  var wellKnownSymbol$4 = wellKnownSymbol$d;
+
+  var MATCH$1 = wellKnownSymbol$4('match');
+
+  // `IsRegExp` abstract operation
+  // https://tc39.es/ecma262/#sec-isregexp
+  var isRegexp = function (it) {
+    var isRegExp;
+    return isObject$2(it) && ((isRegExp = it[MATCH$1]) !== undefined ? !!isRegExp : classof$4(it) === 'RegExp');
   };
 
-  var PROPER_FUNCTION_NAME = functionName.PROPER;
-  var fails$7 = fails$l;
-  var whitespaces = whitespaces$2;
+  var call$4 = functionCall;
+  var hasOwn$1 = hasOwnProperty_1;
+  var isPrototypeOf$1 = objectIsPrototypeOf;
+  var regExpFlags = regexpFlags$1;
 
-  var non = '\u200B\u0085\u180E';
+  var RegExpPrototype$3 = RegExp.prototype;
 
-  // check that a method works with the correct list
-  // of whitespaces and has a correct name
-  var stringTrimForced = function (METHOD_NAME) {
-    return fails$7(function () {
-      return !!whitespaces[METHOD_NAME]()
-        || non[METHOD_NAME]() !== non
-        || (PROPER_FUNCTION_NAME && whitespaces[METHOD_NAME].name !== METHOD_NAME);
+  var regexpGetFlags = function (R) {
+    var flags = R.flags;
+    return flags === undefined && !('flags' in RegExpPrototype$3) && !hasOwn$1(R, 'flags') && isPrototypeOf$1(RegExpPrototype$3, R)
+      ? call$4(regExpFlags, R) : flags;
+  };
+
+  var defineProperty$1 = objectDefineProperty.f;
+
+  var proxyAccessor$1 = function (Target, Source, key) {
+    key in Target || defineProperty$1(Target, key, {
+      configurable: true,
+      get: function () { return Source[key]; },
+      set: function (it) { Source[key] = it; }
     });
   };
 
-  var $$6 = _export;
-  var $trim = stringTrim.trim;
-  var forcedStringTrimMethod = stringTrimForced;
+  var makeBuiltIn = makeBuiltInExports;
+  var defineProperty = objectDefineProperty;
 
-  // `String.prototype.trim` method
-  // https://tc39.es/ecma262/#sec-string.prototype.trim
-  $$6({ target: 'String', proto: true, forced: forcedStringTrimMethod('trim') }, {
-    trim: function trim() {
-      return $trim(this);
-    }
-  });
-
-  var classof$3 = classofRaw$2;
-
-  // `IsArray` abstract operation
-  // https://tc39.es/ecma262/#sec-isarray
-  // eslint-disable-next-line es/no-array-isarray -- safe
-  var isArray$2 = Array.isArray || function isArray(argument) {
-    return classof$3(argument) === 'Array';
+  var defineBuiltInAccessor$2 = function (target, name, descriptor) {
+    if (descriptor.get) makeBuiltIn(descriptor.get, name, { getter: true });
+    if (descriptor.set) makeBuiltIn(descriptor.set, name, { setter: true });
+    return defineProperty.f(target, name, descriptor);
   };
+
+  var getBuiltIn$1 = getBuiltIn$5;
+  var defineBuiltInAccessor$1 = defineBuiltInAccessor$2;
+  var wellKnownSymbol$3 = wellKnownSymbol$d;
+  var DESCRIPTORS$2 = descriptors;
+
+  var SPECIES$1 = wellKnownSymbol$3('species');
+
+  var setSpecies$1 = function (CONSTRUCTOR_NAME) {
+    var Constructor = getBuiltIn$1(CONSTRUCTOR_NAME);
+
+    if (DESCRIPTORS$2 && Constructor && !Constructor[SPECIES$1]) {
+      defineBuiltInAccessor$1(Constructor, SPECIES$1, {
+        configurable: true,
+        get: function () { return this; }
+      });
+    }
+  };
+
+  var DESCRIPTORS$1 = descriptors;
+  var global$2 = global$h;
+  var uncurryThis$9 = functionUncurryThis;
+  var isForced = isForced_1;
+  var inheritIfRequired = inheritIfRequired$1;
+  var createNonEnumerableProperty$1 = createNonEnumerableProperty$6;
+  var create$1 = objectCreate;
+  var getOwnPropertyNames = objectGetOwnPropertyNames.f;
+  var isPrototypeOf = objectIsPrototypeOf;
+  var isRegExp = isRegexp;
+  var toString$4 = toString$7;
+  var getRegExpFlags = regexpGetFlags;
+  var stickyHelpers = regexpStickyHelpers;
+  var proxyAccessor = proxyAccessor$1;
+  var defineBuiltIn$1 = defineBuiltIn$5;
+  var fails$5 = fails$m;
+  var hasOwn = hasOwnProperty_1;
+  var enforceInternalState = internalState.enforce;
+  var setSpecies = setSpecies$1;
+  var wellKnownSymbol$2 = wellKnownSymbol$d;
+  var UNSUPPORTED_DOT_ALL$1 = regexpUnsupportedDotAll;
+  var UNSUPPORTED_NCG = regexpUnsupportedNcg;
+
+  var MATCH = wellKnownSymbol$2('match');
+  var NativeRegExp = global$2.RegExp;
+  var RegExpPrototype$2 = NativeRegExp.prototype;
+  var SyntaxError = global$2.SyntaxError;
+  var exec$1 = uncurryThis$9(RegExpPrototype$2.exec);
+  var charAt$4 = uncurryThis$9(''.charAt);
+  var replace$2 = uncurryThis$9(''.replace);
+  var stringIndexOf$1 = uncurryThis$9(''.indexOf);
+  var stringSlice$3 = uncurryThis$9(''.slice);
+  // TODO: Use only proper RegExpIdentifierName
+  var IS_NCG = /^\?<[^\s\d!#%&*+<=>@^][^\s!#%&*+<=>@^]*>/;
+  var re1 = /a/g;
+  var re2 = /a/g;
+
+  // "new" should create a new object, old webkit bug
+  var CORRECT_NEW = new NativeRegExp(re1) !== re1;
+
+  var MISSED_STICKY = stickyHelpers.MISSED_STICKY;
+  var UNSUPPORTED_Y = stickyHelpers.UNSUPPORTED_Y;
+
+  var BASE_FORCED = DESCRIPTORS$1 &&
+    (!CORRECT_NEW || MISSED_STICKY || UNSUPPORTED_DOT_ALL$1 || UNSUPPORTED_NCG || fails$5(function () {
+      re2[MATCH] = false;
+      // RegExp constructor can alter flags and IsRegExp works correct with @@match
+      return NativeRegExp(re1) !== re1 || NativeRegExp(re2) === re2 || String(NativeRegExp(re1, 'i')) !== '/a/i';
+    }));
+
+  var handleDotAll = function (string) {
+    var length = string.length;
+    var index = 0;
+    var result = '';
+    var brackets = false;
+    var chr;
+    for (; index <= length; index++) {
+      chr = charAt$4(string, index);
+      if (chr === '\\') {
+        result += chr + charAt$4(string, ++index);
+        continue;
+      }
+      if (!brackets && chr === '.') {
+        result += '[\\s\\S]';
+      } else {
+        if (chr === '[') {
+          brackets = true;
+        } else if (chr === ']') {
+          brackets = false;
+        } result += chr;
+      }
+    } return result;
+  };
+
+  var handleNCG = function (string) {
+    var length = string.length;
+    var index = 0;
+    var result = '';
+    var named = [];
+    var names = create$1(null);
+    var brackets = false;
+    var ncg = false;
+    var groupid = 0;
+    var groupname = '';
+    var chr;
+    for (; index <= length; index++) {
+      chr = charAt$4(string, index);
+      if (chr === '\\') {
+        chr += charAt$4(string, ++index);
+      } else if (chr === ']') {
+        brackets = false;
+      } else if (!brackets) switch (true) {
+        case chr === '[':
+          brackets = true;
+          break;
+        case chr === '(':
+          if (exec$1(IS_NCG, stringSlice$3(string, index + 1))) {
+            index += 2;
+            ncg = true;
+          }
+          result += chr;
+          groupid++;
+          continue;
+        case chr === '>' && ncg:
+          if (groupname === '' || hasOwn(names, groupname)) {
+            throw new SyntaxError('Invalid capture group name');
+          }
+          names[groupname] = true;
+          named[named.length] = [groupname, groupid];
+          ncg = false;
+          groupname = '';
+          continue;
+      }
+      if (ncg) groupname += chr;
+      else result += chr;
+    } return [result, named];
+  };
+
+  // `RegExp` constructor
+  // https://tc39.es/ecma262/#sec-regexp-constructor
+  if (isForced('RegExp', BASE_FORCED)) {
+    var RegExpWrapper = function RegExp(pattern, flags) {
+      var thisIsRegExp = isPrototypeOf(RegExpPrototype$2, this);
+      var patternIsRegExp = isRegExp(pattern);
+      var flagsAreUndefined = flags === undefined;
+      var groups = [];
+      var rawPattern = pattern;
+      var rawFlags, dotAll, sticky, handled, result, state;
+
+      if (!thisIsRegExp && patternIsRegExp && flagsAreUndefined && pattern.constructor === RegExpWrapper) {
+        return pattern;
+      }
+
+      if (patternIsRegExp || isPrototypeOf(RegExpPrototype$2, pattern)) {
+        pattern = pattern.source;
+        if (flagsAreUndefined) flags = getRegExpFlags(rawPattern);
+      }
+
+      pattern = pattern === undefined ? '' : toString$4(pattern);
+      flags = flags === undefined ? '' : toString$4(flags);
+      rawPattern = pattern;
+
+      if (UNSUPPORTED_DOT_ALL$1 && 'dotAll' in re1) {
+        dotAll = !!flags && stringIndexOf$1(flags, 's') > -1;
+        if (dotAll) flags = replace$2(flags, /s/g, '');
+      }
+
+      rawFlags = flags;
+
+      if (MISSED_STICKY && 'sticky' in re1) {
+        sticky = !!flags && stringIndexOf$1(flags, 'y') > -1;
+        if (sticky && UNSUPPORTED_Y) flags = replace$2(flags, /y/g, '');
+      }
+
+      if (UNSUPPORTED_NCG) {
+        handled = handleNCG(pattern);
+        pattern = handled[0];
+        groups = handled[1];
+      }
+
+      result = inheritIfRequired(NativeRegExp(pattern, flags), thisIsRegExp ? this : RegExpPrototype$2, RegExpWrapper);
+
+      if (dotAll || sticky || groups.length) {
+        state = enforceInternalState(result);
+        if (dotAll) {
+          state.dotAll = true;
+          state.raw = RegExpWrapper(handleDotAll(pattern), rawFlags);
+        }
+        if (sticky) state.sticky = true;
+        if (groups.length) state.groups = groups;
+      }
+
+      if (pattern !== rawPattern) try {
+        // fails in old engines, but we have no alternatives for unsupported regex syntax
+        createNonEnumerableProperty$1(result, 'source', rawPattern === '' ? '(?:)' : rawPattern);
+      } catch (error) { /* empty */ }
+
+      return result;
+    };
+
+    for (var keys = getOwnPropertyNames(NativeRegExp), index = 0; keys.length > index;) {
+      proxyAccessor(RegExpWrapper, NativeRegExp, keys[index++]);
+    }
+
+    RegExpPrototype$2.constructor = RegExpWrapper;
+    RegExpWrapper.prototype = RegExpPrototype$2;
+    defineBuiltIn$1(global$2, 'RegExp', RegExpWrapper, { constructor: true });
+  }
+
+  // https://tc39.es/ecma262/#sec-get-regexp-@@species
+  setSpecies('RegExp');
 
   var DESCRIPTORS = descriptors;
-  var isArray$1 = isArray$2;
+  var UNSUPPORTED_DOT_ALL = regexpUnsupportedDotAll;
+  var classof$3 = classofRaw$2;
+  var defineBuiltInAccessor = defineBuiltInAccessor$2;
+  var getInternalState = internalState.get;
 
-  var $TypeError$4 = TypeError;
-  // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe
-  var getOwnPropertyDescriptor = Object.getOwnPropertyDescriptor;
-
-  // Safari < 13 does not throw an error in this case
-  var SILENT_ON_NON_WRITABLE_LENGTH_SET = DESCRIPTORS && !function () {
-    // makes no sense without proper strict mode support
-    if (this !== undefined) return true;
-    try {
-      // eslint-disable-next-line es/no-object-defineproperty -- safe
-      Object.defineProperty([], 'length', { writable: false }).length = 1;
-    } catch (error) {
-      return error instanceof TypeError;
-    }
-  }();
-
-  var arraySetLength = SILENT_ON_NON_WRITABLE_LENGTH_SET ? function (O, length) {
-    if (isArray$1(O) && !getOwnPropertyDescriptor(O, 'length').writable) {
-      throw new $TypeError$4('Cannot set read only .length');
-    } return O.length = length;
-  } : function (O, length) {
-    return O.length = length;
-  };
-
+  var RegExpPrototype$1 = RegExp.prototype;
   var $TypeError$3 = TypeError;
-  var MAX_SAFE_INTEGER = 0x1FFFFFFFFFFFFF; // 2 ** 53 - 1 == 9007199254740991
 
-  var doesNotExceedSafeInteger$2 = function (it) {
-    if (it > MAX_SAFE_INTEGER) throw $TypeError$3('Maximum allowed index exceeded');
-    return it;
-  };
-
-  var $$5 = _export;
-  var toObject$4 = toObject$7;
-  var lengthOfArrayLike$3 = lengthOfArrayLike$5;
-  var setArrayLength$1 = arraySetLength;
-  var doesNotExceedSafeInteger$1 = doesNotExceedSafeInteger$2;
-  var fails$6 = fails$l;
-
-  var INCORRECT_TO_LENGTH = fails$6(function () {
-    return [].push.call({ length: 0x100000000 }, 1) !== 4294967297;
-  });
-
-  // V8 <= 121 and Safari <= 15.4; FF < 23 throws InternalError
-  // https://bugs.chromium.org/p/v8/issues/detail?id=12681
-  var properErrorOnNonWritableLength$1 = function () {
-    try {
-      // eslint-disable-next-line es/no-object-defineproperty -- safe
-      Object.defineProperty([], 'length', { writable: false }).push();
-    } catch (error) {
-      return error instanceof TypeError;
-    }
-  };
-
-  var FORCED$3 = INCORRECT_TO_LENGTH || !properErrorOnNonWritableLength$1();
-
-  // `Array.prototype.push` method
-  // https://tc39.es/ecma262/#sec-array.prototype.push
-  $$5({ target: 'Array', proto: true, arity: 1, forced: FORCED$3 }, {
-    // eslint-disable-next-line no-unused-vars -- required for `.length`
-    push: function push(item) {
-      var O = toObject$4(this);
-      var len = lengthOfArrayLike$3(O);
-      var argCount = arguments.length;
-      doesNotExceedSafeInteger$1(len + argCount);
-      for (var i = 0; i < argCount; i++) {
-        O[len] = arguments[i];
-        len++;
+  // `RegExp.prototype.dotAll` getter
+  // https://tc39.es/ecma262/#sec-get-regexp.prototype.dotall
+  if (DESCRIPTORS && UNSUPPORTED_DOT_ALL) {
+    defineBuiltInAccessor(RegExpPrototype$1, 'dotAll', {
+      configurable: true,
+      get: function dotAll() {
+        if (this === RegExpPrototype$1) return;
+        // We can't use InternalStateModule.getterFor because
+        // we don't add metadata for regexps created by a literal.
+        if (classof$3(this) === 'RegExp') {
+          return !!getInternalState(this).dotAll;
+        }
+        throw new $TypeError$3('Incompatible receiver, RegExp required');
       }
-      setArrayLength$1(O, len);
-      return len;
-    }
+    });
+  }
+
+  var NATIVE_BIND = functionBindNative;
+
+  var FunctionPrototype = Function.prototype;
+  var apply$2 = FunctionPrototype.apply;
+  var call$3 = FunctionPrototype.call;
+
+  // eslint-disable-next-line es/no-reflect -- safe
+  var functionApply = typeof Reflect == 'object' && Reflect.apply || (NATIVE_BIND ? call$3.bind(apply$2) : function () {
+    return call$3.apply(apply$2, arguments);
   });
 
-  var tryToString = tryToString$2;
+  var classofRaw = classofRaw$2;
+  var uncurryThis$8 = functionUncurryThis;
+
+  var functionUncurryThisClause = function (fn) {
+    // Nashorn bug:
+    //   https://github.com/zloirock/core-js/issues/1128
+    //   https://github.com/zloirock/core-js/issues/1130
+    if (classofRaw(fn) === 'Function') return uncurryThis$8(fn);
+  };
+
+  // TODO: Remove from `core-js@4` since it's moved to entry points
+
+  var uncurryThis$7 = functionUncurryThisClause;
+  var defineBuiltIn = defineBuiltIn$5;
+  var regexpExec$1 = regexpExec$2;
+  var fails$4 = fails$m;
+  var wellKnownSymbol$1 = wellKnownSymbol$d;
+  var createNonEnumerableProperty = createNonEnumerableProperty$6;
+
+  var SPECIES = wellKnownSymbol$1('species');
+  var RegExpPrototype = RegExp.prototype;
+
+  var fixRegexpWellKnownSymbolLogic = function (KEY, exec, FORCED, SHAM) {
+    var SYMBOL = wellKnownSymbol$1(KEY);
+
+    var DELEGATES_TO_SYMBOL = !fails$4(function () {
+      // String methods call symbol-named RegEp methods
+      var O = {};
+      O[SYMBOL] = function () { return 7; };
+      return ''[KEY](O) !== 7;
+    });
+
+    var DELEGATES_TO_EXEC = DELEGATES_TO_SYMBOL && !fails$4(function () {
+      // Symbol-named RegExp methods call .exec
+      var execCalled = false;
+      var re = /a/;
+
+      if (KEY === 'split') {
+        // We can't use real regex here since it causes deoptimization
+        // and serious performance degradation in V8
+        // https://github.com/zloirock/core-js/issues/306
+        re = {};
+        // RegExp[@@split] doesn't call the regex's exec method, but first creates
+        // a new one. We need to return the patched regex when creating the new one.
+        re.constructor = {};
+        re.constructor[SPECIES] = function () { return re; };
+        re.flags = '';
+        re[SYMBOL] = /./[SYMBOL];
+      }
+
+      re.exec = function () {
+        execCalled = true;
+        return null;
+      };
+
+      re[SYMBOL]('');
+      return !execCalled;
+    });
+
+    if (
+      !DELEGATES_TO_SYMBOL ||
+      !DELEGATES_TO_EXEC ||
+      FORCED
+    ) {
+      var uncurriedNativeRegExpMethod = uncurryThis$7(/./[SYMBOL]);
+      var methods = exec(SYMBOL, ''[KEY], function (nativeMethod, regexp, str, arg2, forceStringMethod) {
+        var uncurriedNativeMethod = uncurryThis$7(nativeMethod);
+        var $exec = regexp.exec;
+        if ($exec === regexpExec$1 || $exec === RegExpPrototype.exec) {
+          if (DELEGATES_TO_SYMBOL && !forceStringMethod) {
+            // The native String method already delegates to @@method (this
+            // polyfilled function), leasing to infinite recursion.
+            // We avoid it by directly calling the native @@method method.
+            return { done: true, value: uncurriedNativeRegExpMethod(regexp, str, arg2) };
+          }
+          return { done: true, value: uncurriedNativeMethod(str, regexp, arg2) };
+        }
+        return { done: false };
+      });
+
+      defineBuiltIn(String.prototype, KEY, methods[0]);
+      defineBuiltIn(RegExpPrototype, SYMBOL, methods[1]);
+    }
+
+    if (SHAM) createNonEnumerableProperty(RegExpPrototype[SYMBOL], 'sham', true);
+  };
+
+  var uncurryThis$6 = functionUncurryThis;
+  var toIntegerOrInfinity$1 = toIntegerOrInfinity$4;
+  var toString$3 = toString$7;
+  var requireObjectCoercible$1 = requireObjectCoercible$5;
+
+  var charAt$3 = uncurryThis$6(''.charAt);
+  var charCodeAt$1 = uncurryThis$6(''.charCodeAt);
+  var stringSlice$2 = uncurryThis$6(''.slice);
+
+  var createMethod$1 = function (CONVERT_TO_STRING) {
+    return function ($this, pos) {
+      var S = toString$3(requireObjectCoercible$1($this));
+      var position = toIntegerOrInfinity$1(pos);
+      var size = S.length;
+      var first, second;
+      if (position < 0 || position >= size) return CONVERT_TO_STRING ? '' : undefined;
+      first = charCodeAt$1(S, position);
+      return first < 0xD800 || first > 0xDBFF || position + 1 === size
+        || (second = charCodeAt$1(S, position + 1)) < 0xDC00 || second > 0xDFFF
+          ? CONVERT_TO_STRING
+            ? charAt$3(S, position)
+            : first
+          : CONVERT_TO_STRING
+            ? stringSlice$2(S, position, position + 2)
+            : (first - 0xD800 << 10) + (second - 0xDC00) + 0x10000;
+    };
+  };
+
+  var stringMultibyte = {
+    // `String.prototype.codePointAt` method
+    // https://tc39.es/ecma262/#sec-string.prototype.codepointat
+    codeAt: createMethod$1(false),
+    // `String.prototype.at` method
+    // https://github.com/mathiasbynens/String.prototype.at
+    charAt: createMethod$1(true)
+  };
+
+  var charAt$2 = stringMultibyte.charAt;
+
+  // `AdvanceStringIndex` abstract operation
+  // https://tc39.es/ecma262/#sec-advancestringindex
+  var advanceStringIndex$1 = function (S, index, unicode) {
+    return index + (unicode ? charAt$2(S, index).length : 1);
+  };
+
+  var uncurryThis$5 = functionUncurryThis;
+  var toObject$3 = toObject$7;
+
+  var floor$2 = Math.floor;
+  var charAt$1 = uncurryThis$5(''.charAt);
+  var replace$1 = uncurryThis$5(''.replace);
+  var stringSlice$1 = uncurryThis$5(''.slice);
+  // eslint-disable-next-line redos/no-vulnerable -- safe
+  var SUBSTITUTION_SYMBOLS = /\$([$&'`]|\d{1,2}|<[^>]*>)/g;
+  var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&'`]|\d{1,2})/g;
+
+  // `GetSubstitution` abstract operation
+  // https://tc39.es/ecma262/#sec-getsubstitution
+  var getSubstitution$1 = function (matched, str, position, captures, namedCaptures, replacement) {
+    var tailPos = position + matched.length;
+    var m = captures.length;
+    var symbols = SUBSTITUTION_SYMBOLS_NO_NAMED;
+    if (namedCaptures !== undefined) {
+      namedCaptures = toObject$3(namedCaptures);
+      symbols = SUBSTITUTION_SYMBOLS;
+    }
+    return replace$1(replacement, symbols, function (match, ch) {
+      var capture;
+      switch (charAt$1(ch, 0)) {
+        case '$': return '$';
+        case '&': return matched;
+        case '`': return stringSlice$1(str, 0, position);
+        case "'": return stringSlice$1(str, tailPos);
+        case '<':
+          capture = namedCaptures[stringSlice$1(ch, 1, -1)];
+          break;
+        default: // \d\d?
+          var n = +ch;
+          if (n === 0) return match;
+          if (n > m) {
+            var f = floor$2(n / 10);
+            if (f === 0) return match;
+            if (f <= m) return captures[f - 1] === undefined ? charAt$1(ch, 1) : captures[f - 1] + charAt$1(ch, 1);
+            return match;
+          }
+          capture = captures[n - 1];
+      }
+      return capture === undefined ? '' : capture;
+    });
+  };
+
+  var call$2 = functionCall;
+  var anObject$1 = anObject$8;
+  var isCallable$3 = isCallable$j;
+  var classof$2 = classofRaw$2;
+  var regexpExec = regexpExec$2;
 
   var $TypeError$2 = TypeError;
 
-  var deletePropertyOrThrow$2 = function (O, P) {
-    if (!delete O[P]) throw new $TypeError$2('Cannot delete property ' + tryToString(P) + ' of ' + tryToString(O));
+  // `RegExpExec` abstract operation
+  // https://tc39.es/ecma262/#sec-regexpexec
+  var regexpExecAbstract = function (R, S) {
+    var exec = R.exec;
+    if (isCallable$3(exec)) {
+      var result = call$2(exec, R, S);
+      if (result !== null) anObject$1(result);
+      return result;
+    }
+    if (classof$2(R) === 'RegExp') return call$2(regexpExec, R, S);
+    throw new $TypeError$2('RegExp#exec called on incompatible receiver');
   };
 
-  var $$4 = _export;
-  var toObject$3 = toObject$7;
+  var apply$1 = functionApply;
+  var call$1 = functionCall;
+  var uncurryThis$4 = functionUncurryThis;
+  var fixRegExpWellKnownSymbolLogic = fixRegexpWellKnownSymbolLogic;
+  var fails$3 = fails$m;
+  var anObject = anObject$8;
+  var isCallable$2 = isCallable$j;
+  var isNullOrUndefined = isNullOrUndefined$3;
+  var toIntegerOrInfinity = toIntegerOrInfinity$4;
+  var toLength = toLength$2;
+  var toString$2 = toString$7;
+  var requireObjectCoercible = requireObjectCoercible$5;
+  var advanceStringIndex = advanceStringIndex$1;
+  var getMethod = getMethod$2;
+  var getSubstitution = getSubstitution$1;
+  var regExpExec = regexpExecAbstract;
+  var wellKnownSymbol = wellKnownSymbol$d;
+
+  var REPLACE = wellKnownSymbol('replace');
+  var max$1 = Math.max;
+  var min$1 = Math.min;
+  var concat = uncurryThis$4([].concat);
+  var push$2 = uncurryThis$4([].push);
+  var stringIndexOf = uncurryThis$4(''.indexOf);
+  var stringSlice = uncurryThis$4(''.slice);
+
+  var maybeToString = function (it) {
+    return it === undefined ? it : String(it);
+  };
+
+  // IE <= 11 replaces $0 with the whole match, as if it was $&
+  // https://stackoverflow.com/questions/6024666/getting-ie-to-replace-a-regex-with-the-literal-string-0
+  var REPLACE_KEEPS_$0 = (function () {
+    // eslint-disable-next-line regexp/prefer-escape-replacement-dollar-char -- required for testing
+    return 'a'.replace(/./, '$0') === '$0';
+  })();
+
+  // Safari <= 13.0.3(?) substitutes nth capture where n>m with an empty string
+  var REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE = (function () {
+    if (/./[REPLACE]) {
+      return /./[REPLACE]('a', '$0') === '';
+    }
+    return false;
+  })();
+
+  var REPLACE_SUPPORTS_NAMED_GROUPS = !fails$3(function () {
+    var re = /./;
+    re.exec = function () {
+      var result = [];
+      result.groups = { a: '7' };
+      return result;
+    };
+    // eslint-disable-next-line regexp/no-useless-dollar-replacements -- false positive
+    return ''.replace(re, '$<a>') !== '7';
+  });
+
+  // @@replace logic
+  fixRegExpWellKnownSymbolLogic('replace', function (_, nativeReplace, maybeCallNative) {
+    var UNSAFE_SUBSTITUTE = REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE ? '$' : '$0';
+
+    return [
+      // `String.prototype.replace` method
+      // https://tc39.es/ecma262/#sec-string.prototype.replace
+      function replace(searchValue, replaceValue) {
+        var O = requireObjectCoercible(this);
+        var replacer = isNullOrUndefined(searchValue) ? undefined : getMethod(searchValue, REPLACE);
+        return replacer
+          ? call$1(replacer, searchValue, O, replaceValue)
+          : call$1(nativeReplace, toString$2(O), searchValue, replaceValue);
+      },
+      // `RegExp.prototype[@@replace]` method
+      // https://tc39.es/ecma262/#sec-regexp.prototype-@@replace
+      function (string, replaceValue) {
+        var rx = anObject(this);
+        var S = toString$2(string);
+
+        if (
+          typeof replaceValue == 'string' &&
+          stringIndexOf(replaceValue, UNSAFE_SUBSTITUTE) === -1 &&
+          stringIndexOf(replaceValue, '$<') === -1
+        ) {
+          var res = maybeCallNative(nativeReplace, rx, S, replaceValue);
+          if (res.done) return res.value;
+        }
+
+        var functionalReplace = isCallable$2(replaceValue);
+        if (!functionalReplace) replaceValue = toString$2(replaceValue);
+
+        var global = rx.global;
+        var fullUnicode;
+        if (global) {
+          fullUnicode = rx.unicode;
+          rx.lastIndex = 0;
+        }
+
+        var results = [];
+        var result;
+        while (true) {
+          result = regExpExec(rx, S);
+          if (result === null) break;
+
+          push$2(results, result);
+          if (!global) break;
+
+          var matchStr = toString$2(result[0]);
+          if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
+        }
+
+        var accumulatedResult = '';
+        var nextSourcePosition = 0;
+        for (var i = 0; i < results.length; i++) {
+          result = results[i];
+
+          var matched = toString$2(result[0]);
+          var position = max$1(min$1(toIntegerOrInfinity(result.index), S.length), 0);
+          var captures = [];
+          var replacement;
+          // NOTE: This is equivalent to
+          //   captures = result.slice(1).map(maybeToString)
+          // but for some reason `nativeSlice.call(result, 1, result.length)` (called in
+          // the slice polyfill when slicing native arrays) "doesn't work" in safari 9 and
+          // causes a crash (https://pastebin.com/N21QzeQA) when trying to debug it.
+          for (var j = 1; j < result.length; j++) push$2(captures, maybeToString(result[j]));
+          var namedCaptures = result.groups;
+          if (functionalReplace) {
+            var replacerArgs = concat([matched], captures, position, S);
+            if (namedCaptures !== undefined) push$2(replacerArgs, namedCaptures);
+            replacement = toString$2(apply$1(replaceValue, undefined, replacerArgs));
+          } else {
+            replacement = getSubstitution(matched, S, position, captures, namedCaptures, replaceValue);
+          }
+          if (position >= nextSourcePosition) {
+            accumulatedResult += stringSlice(S, nextSourcePosition, position) + replacement;
+            nextSourcePosition = position + matched.length;
+          }
+        }
+
+        return accumulatedResult + stringSlice(S, nextSourcePosition);
+      }
+    ];
+  }, !REPLACE_SUPPORTS_NAMED_GROUPS || !REPLACE_KEEPS_$0 || REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE);
+
+  var tryToString = tryToString$2;
+
+  var $TypeError$1 = TypeError;
+
+  var deletePropertyOrThrow$2 = function (O, P) {
+    if (!delete O[P]) throw new $TypeError$1('Cannot delete property ' + tryToString(P) + ' of ' + tryToString(O));
+  };
+
+  var uncurryThis$3 = functionUncurryThis;
+
+  var arraySlice$2 = uncurryThis$3([].slice);
+
+  var arraySlice$1 = arraySlice$2;
+
+  var floor$1 = Math.floor;
+
+  var sort = function (array, comparefn) {
+    var length = array.length;
+
+    if (length < 8) {
+      // insertion sort
+      var i = 1;
+      var element, j;
+
+      while (i < length) {
+        j = i;
+        element = array[i];
+        while (j && comparefn(array[j - 1], element) > 0) {
+          array[j] = array[--j];
+        }
+        if (j !== i++) array[j] = element;
+      }
+    } else {
+      // merge sort
+      var middle = floor$1(length / 2);
+      var left = sort(arraySlice$1(array, 0, middle), comparefn);
+      var right = sort(arraySlice$1(array, middle), comparefn);
+      var llength = left.length;
+      var rlength = right.length;
+      var lindex = 0;
+      var rindex = 0;
+
+      while (lindex < llength || rindex < rlength) {
+        array[lindex + rindex] = (lindex < llength && rindex < rlength)
+          ? comparefn(left[lindex], right[rindex]) <= 0 ? left[lindex++] : right[rindex++]
+          : lindex < llength ? left[lindex++] : right[rindex++];
+      }
+    }
+
+    return array;
+  };
+
+  var arraySort = sort;
+
+  var fails$2 = fails$m;
+
+  var arrayMethodIsStrict$2 = function (METHOD_NAME, argument) {
+    var method = [][METHOD_NAME];
+    return !!method && fails$2(function () {
+      // eslint-disable-next-line no-useless-call -- required for testing
+      method.call(null, argument || function () { return 1; }, 1);
+    });
+  };
+
+  var userAgent$1 = engineUserAgent;
+
+  var firefox = userAgent$1.match(/firefox\/(\d+)/i);
+
+  var engineFfVersion = !!firefox && +firefox[1];
+
+  var UA = engineUserAgent;
+
+  var engineIsIeOrEdge = /MSIE|Trident/.test(UA);
+
+  var userAgent = engineUserAgent;
+
+  var webkit = userAgent.match(/AppleWebKit\/(\d+)\./);
+
+  var engineWebkitVersion = !!webkit && +webkit[1];
+
+  var $$3 = _export;
+  var uncurryThis$2 = functionUncurryThis;
+  var aCallable$1 = aCallable$4;
+  var toObject$2 = toObject$7;
   var lengthOfArrayLike$2 = lengthOfArrayLike$5;
-  var setArrayLength = arraySetLength;
   var deletePropertyOrThrow$1 = deletePropertyOrThrow$2;
+  var toString$1 = toString$7;
+  var fails$1 = fails$m;
+  var internalSort = arraySort;
+  var arrayMethodIsStrict$1 = arrayMethodIsStrict$2;
+  var FF = engineFfVersion;
+  var IE_OR_EDGE = engineIsIeOrEdge;
+  var V8 = engineV8Version;
+  var WEBKIT = engineWebkitVersion;
+
+  var test = [];
+  var nativeSort = uncurryThis$2(test.sort);
+  var push$1 = uncurryThis$2(test.push);
+
+  // IE8-
+  var FAILS_ON_UNDEFINED = fails$1(function () {
+    test.sort(undefined);
+  });
+  // V8 bug
+  var FAILS_ON_NULL = fails$1(function () {
+    test.sort(null);
+  });
+  // Old WebKit
+  var STRICT_METHOD = arrayMethodIsStrict$1('sort');
+
+  var STABLE_SORT = !fails$1(function () {
+    // feature detection can be too slow, so check engines versions
+    if (V8) return V8 < 70;
+    if (FF && FF > 3) return;
+    if (IE_OR_EDGE) return true;
+    if (WEBKIT) return WEBKIT < 603;
+
+    var result = '';
+    var code, chr, value, index;
+
+    // generate an array with more 512 elements (Chakra and old V8 fails only in this case)
+    for (code = 65; code < 76; code++) {
+      chr = String.fromCharCode(code);
+
+      switch (code) {
+        case 66: case 69: case 70: case 72: value = 3; break;
+        case 68: case 71: value = 4; break;
+        default: value = 2;
+      }
+
+      for (index = 0; index < 47; index++) {
+        test.push({ k: chr + index, v: value });
+      }
+    }
+
+    test.sort(function (a, b) { return b.v - a.v; });
+
+    for (index = 0; index < test.length; index++) {
+      chr = test[index].k.charAt(0);
+      if (result.charAt(result.length - 1) !== chr) result += chr;
+    }
+
+    return result !== 'DGBEFHACIJK';
+  });
+
+  var FORCED$2 = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD || !STABLE_SORT;
+
+  var getSortCompare = function (comparefn) {
+    return function (x, y) {
+      if (y === undefined) return -1;
+      if (x === undefined) return 1;
+      if (comparefn !== undefined) return +comparefn(x, y) || 0;
+      return toString$1(x) > toString$1(y) ? 1 : -1;
+    };
+  };
+
+  // `Array.prototype.sort` method
+  // https://tc39.es/ecma262/#sec-array.prototype.sort
+  $$3({ target: 'Array', proto: true, forced: FORCED$2 }, {
+    sort: function sort(comparefn) {
+      if (comparefn !== undefined) aCallable$1(comparefn);
+
+      var array = toObject$2(this);
+
+      if (STABLE_SORT) return comparefn === undefined ? nativeSort(array) : nativeSort(array, comparefn);
+
+      var items = [];
+      var arrayLength = lengthOfArrayLike$2(array);
+      var itemsLength, index;
+
+      for (index = 0; index < arrayLength; index++) {
+        if (index in array) push$1(items, array[index]);
+      }
+
+      internalSort(items, getSortCompare(comparefn));
+
+      itemsLength = lengthOfArrayLike$2(items);
+      index = 0;
+
+      while (index < itemsLength) array[index] = items[index++];
+      while (index < arrayLength) deletePropertyOrThrow$1(array, index++);
+
+      return array;
+    }
+  });
+
+  var $$2 = _export;
+  var toObject$1 = toObject$7;
+  var lengthOfArrayLike$1 = lengthOfArrayLike$5;
+  var setArrayLength = arraySetLength;
+  var deletePropertyOrThrow = deletePropertyOrThrow$2;
   var doesNotExceedSafeInteger = doesNotExceedSafeInteger$2;
 
   // IE8-
@@ -2046,15 +2902,15 @@
     }
   };
 
-  var FORCED$2 = INCORRECT_RESULT || !properErrorOnNonWritableLength();
+  var FORCED$1 = INCORRECT_RESULT || !properErrorOnNonWritableLength();
 
   // `Array.prototype.unshift` method
   // https://tc39.es/ecma262/#sec-array.prototype.unshift
-  $$4({ target: 'Array', proto: true, arity: 1, forced: FORCED$2 }, {
+  $$2({ target: 'Array', proto: true, arity: 1, forced: FORCED$1 }, {
     // eslint-disable-next-line no-unused-vars -- required for `.length`
     unshift: function unshift(item) {
-      var O = toObject$3(this);
-      var len = lengthOfArrayLike$2(O);
+      var O = toObject$1(this);
+      var len = lengthOfArrayLike$1(O);
       var argCount = arguments.length;
       if (argCount) {
         doesNotExceedSafeInteger(len + argCount);
@@ -2062,7 +2918,7 @@
         while (k--) {
           var to = k + argCount;
           if (k in O) O[to] = O[k];
-          else deletePropertyOrThrow$1(O, to);
+          else deletePropertyOrThrow(O, to);
         }
         for (var j = 0; j < argCount; j++) {
           O[j] = arguments[j];
@@ -2071,38 +2927,23 @@
     }
   });
 
-  var NATIVE_BIND = functionBindNative;
-
-  var FunctionPrototype = Function.prototype;
-  var apply$2 = FunctionPrototype.apply;
-  var call$3 = FunctionPrototype.call;
-
-  // eslint-disable-next-line es/no-reflect -- safe
-  var functionApply = typeof Reflect == 'object' && Reflect.apply || (NATIVE_BIND ? call$3.bind(apply$2) : function () {
-    return call$3.apply(apply$2, arguments);
-  });
-
-  var uncurryThis$8 = functionUncurryThis;
-
-  var arraySlice$2 = uncurryThis$8([].slice);
-
-  var uncurryThis$7 = functionUncurryThis;
+  var uncurryThis$1 = functionUncurryThis;
   var isArray = isArray$2;
-  var isCallable$3 = isCallable$i;
-  var classof$2 = classofRaw$2;
-  var toString$3 = toString$6;
+  var isCallable$1 = isCallable$j;
+  var classof$1 = classofRaw$2;
+  var toString = toString$7;
 
-  var push$2 = uncurryThis$7([].push);
+  var push = uncurryThis$1([].push);
 
   var getJsonReplacerFunction = function (replacer) {
-    if (isCallable$3(replacer)) return replacer;
+    if (isCallable$1(replacer)) return replacer;
     if (!isArray(replacer)) return;
     var rawLength = replacer.length;
     var keys = [];
     for (var i = 0; i < rawLength; i++) {
       var element = replacer[i];
-      if (typeof element == 'string') push$2(keys, element);
-      else if (typeof element == 'number' || classof$2(element) === 'Number' || classof$2(element) === 'String') push$2(keys, toString$3(element));
+      if (typeof element == 'string') push(keys, element);
+      else if (typeof element == 'number' || classof$1(element) === 'Number' || classof$1(element) === 'String') push(keys, toString(element));
     }
     var keysLength = keys.length;
     var root = true;
@@ -2116,31 +2957,31 @@
     };
   };
 
-  var $$3 = _export;
-  var getBuiltIn = getBuiltIn$4;
-  var apply$1 = functionApply;
-  var call$2 = functionCall;
-  var uncurryThis$6 = functionUncurryThis;
-  var fails$5 = fails$l;
-  var isCallable$2 = isCallable$i;
-  var isSymbol = isSymbol$3;
-  var arraySlice$1 = arraySlice$2;
+  var $$1 = _export;
+  var getBuiltIn = getBuiltIn$5;
+  var apply = functionApply;
+  var call = functionCall;
+  var uncurryThis = functionUncurryThis;
+  var fails = fails$m;
+  var isCallable = isCallable$j;
+  var isSymbol$1 = isSymbol$4;
+  var arraySlice = arraySlice$2;
   var getReplacerFunction = getJsonReplacerFunction;
   var NATIVE_SYMBOL = symbolConstructorDetection;
 
   var $String = String;
   var $stringify = getBuiltIn('JSON', 'stringify');
-  var exec = uncurryThis$6(/./.exec);
-  var charAt$3 = uncurryThis$6(''.charAt);
-  var charCodeAt$1 = uncurryThis$6(''.charCodeAt);
-  var replace$1 = uncurryThis$6(''.replace);
-  var numberToString = uncurryThis$6(1.0.toString);
+  var exec = uncurryThis(/./.exec);
+  var charAt = uncurryThis(''.charAt);
+  var charCodeAt = uncurryThis(''.charCodeAt);
+  var replace = uncurryThis(''.replace);
+  var numberToString = uncurryThis(1.0.toString);
 
   var tester = /[\uD800-\uDFFF]/g;
   var low = /^[\uD800-\uDBFF]$/;
   var hi = /^[\uDC00-\uDFFF]$/;
 
-  var WRONG_SYMBOLS_CONVERSION = !NATIVE_SYMBOL || fails$5(function () {
+  var WRONG_SYMBOLS_CONVERSION = !NATIVE_SYMBOL || fails(function () {
     var symbol = getBuiltIn('Symbol')('stringify detection');
     // MS Edge converts symbol values to JSON as {}
     return $stringify([symbol]) !== '[null]'
@@ -2151,44 +2992,57 @@
   });
 
   // https://github.com/tc39/proposal-well-formed-stringify
-  var ILL_FORMED_UNICODE = fails$5(function () {
+  var ILL_FORMED_UNICODE = fails(function () {
     return $stringify('\uDF06\uD834') !== '"\\udf06\\ud834"'
       || $stringify('\uDEAD') !== '"\\udead"';
   });
 
   var stringifyWithSymbolsFix = function (it, replacer) {
-    var args = arraySlice$1(arguments);
+    var args = arraySlice(arguments);
     var $replacer = getReplacerFunction(replacer);
-    if (!isCallable$2($replacer) && (it === undefined || isSymbol(it))) return; // IE8 returns string on undefined
+    if (!isCallable($replacer) && (it === undefined || isSymbol$1(it))) return; // IE8 returns string on undefined
     args[1] = function (key, value) {
       // some old implementations (like WebKit) could pass numbers as keys
-      if (isCallable$2($replacer)) value = call$2($replacer, this, $String(key), value);
-      if (!isSymbol(value)) return value;
+      if (isCallable($replacer)) value = call($replacer, this, $String(key), value);
+      if (!isSymbol$1(value)) return value;
     };
-    return apply$1($stringify, null, args);
+    return apply($stringify, null, args);
   };
 
   var fixIllFormed = function (match, offset, string) {
-    var prev = charAt$3(string, offset - 1);
-    var next = charAt$3(string, offset + 1);
+    var prev = charAt(string, offset - 1);
+    var next = charAt(string, offset + 1);
     if ((exec(low, match) && !exec(hi, next)) || (exec(hi, match) && !exec(low, prev))) {
-      return '\\u' + numberToString(charCodeAt$1(match, 0), 16);
+      return '\\u' + numberToString(charCodeAt(match, 0), 16);
     } return match;
   };
 
   if ($stringify) {
     // `JSON.stringify` method
     // https://tc39.es/ecma262/#sec-json.stringify
-    $$3({ target: 'JSON', stat: true, arity: 3, forced: WRONG_SYMBOLS_CONVERSION || ILL_FORMED_UNICODE }, {
+    $$1({ target: 'JSON', stat: true, arity: 3, forced: WRONG_SYMBOLS_CONVERSION || ILL_FORMED_UNICODE }, {
       // eslint-disable-next-line no-unused-vars -- required for `.length`
       stringify: function stringify(it, replacer, space) {
-        var args = arraySlice$1(arguments);
-        var result = apply$1(WRONG_SYMBOLS_CONVERSION ? stringifyWithSymbolsFix : $stringify, null, args);
-        return ILL_FORMED_UNICODE && typeof result == 'string' ? replace$1(result, tester, fixIllFormed) : result;
+        var args = arraySlice(arguments);
+        var result = apply(WRONG_SYMBOLS_CONVERSION ? stringifyWithSymbolsFix : $stringify, null, args);
+        return ILL_FORMED_UNICODE && typeof result == 'string' ? replace(result, tester, fixIllFormed) : result;
       }
     });
   }
 
+  var Icons = {
+    caretLeft: "<svg viewBox=\"0 0 16 16\"><path d=\"M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z\"/></svg>",
+    arrowClockwise: "<svg viewBox=\"0 0 16 16\"><path fill-rule=\"evenodd\" d=\"M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z\"/><path d=\"M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z\"/></svg>",
+    caretRight: "<svg viewBox=\"0 0 16 16\"><path d=\"M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z\"/></svg>",
+    caretDown: "<svg viewBox=\"0 0 16 16\"><path d=\"M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z\"/></svg>",
+    fullscreen: "<svg viewBox=\"0 0 16 16\"><path d=\"M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z\"/></svg>",
+    x: "<svg viewBox=\"0 0 16 16\"><path d=\"M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z\" /></svg>",
+    search: "<svg viewBox=\"0 0 16 16\"><path d=\"M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0\"/></svg>",
+    caretUpFill: "<svg viewBox=\"0 0 16 16\"><path d=\"m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z\"/></svg>",
+    caretDownFill: "<svg viewBox=\"0 0 16 16\"><path d=\"M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z\"/></svg>"
+  };
+
+  // 该配置项目是全部启用的列表
   var FullOption = {
     //最小高度
     minHeight: undefined,
@@ -2205,7 +3059,7 @@
       // 断点视口
       breakpoint: 576,
       // 小设备时隐藏的工具栏上的项目
-      hideToolbarItem: ['prev', 'next']
+      hideToolbarItem: ['prev', 'refresh', 'next', 'fullscreen']
     },
     //默认tab
     defaultTabs: [],
@@ -2217,12 +3071,12 @@
       position: 'top',
       // 左滚动
       prev: {
-        icon: "<svg viewBox=\"0 0 16 16\"><path d=\"M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z\"/></svg>",
+        icon: Icons.caretLeft,
         order: 10
       },
       // 刷新
       refresh: {
-        icon: "<svg viewBox=\"0 0 16 16\"><path fill-rule=\"evenodd\" d=\"M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z\"/><path d=\"M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z\"/></svg>",
+        icon: Icons.arrowClockwise,
         order: 20
       },
       // tab包裹区域
@@ -2231,18 +3085,41 @@
       },
       // 右滚动
       next: {
-        icon: "<svg viewBox=\"0 0 16 16\"><path d=\"M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z\"/></svg>",
+        icon: Icons.caretRight,
         order: 40
       },
       // 搜索tab、打开的标签、最近关闭的标签
       dropdown: {
-        icon: "<svg viewBox=\"0 0 16 16\"><path d=\"M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z\"/></svg>",
-        order: 50
+        icon: Icons.caretDown,
+        order: 50,
+        searchInput: {
+          placeholder: '',
+          prefixIcon: Icons.search
+        },
+        openedTabs: {
+          text: '',
+          itemIcon: Icons.x
+        },
+        recentlyClosedTabs: {
+          text: '',
+          showIcon: Icons.caretDownFill,
+          hideIcon: Icons.caretUpFill
+        },
+        timeFormat: {
+          year: '',
+          months: '',
+          days: '',
+          hours: '',
+          minutes: '',
+          seconds: ''
+        },
+        //没有搜索结果时的提示文本
+        searchNoResultsText: ''
       },
       // 全屏
       fullscreen: {
         //图标
-        icon: "<svg viewBox=\"0 0 16 16\"><path d=\"M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z\"/></svg>",
+        icon: Icons.fullscreen,
         //排序
         order: 60
       }
@@ -2312,7 +3189,7 @@
       closeBtn: {
         //关闭按钮是否鼠标移入时才显示 true:启用 false:一直显示
         showOnHover: false,
-        icon: "<svg viewBox=\"0 0 16 16\"><path d=\"M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z\" /></svg>"
+        icon: Icons.x
       },
       //当插件宽高改变时,当前激活的tab是否居中 false:不启用 true:启用
       resizeCenterActive: true,
@@ -2423,12 +3300,12 @@
    * Check if a value is an iterator.
    */
   function isIterable(x) {
-      return isObject(x) && typeof x[Symbol.iterator] === 'function';
+      return isObject$1(x) && typeof x[Symbol.iterator] === 'function';
   }
   /**
    * Check if a value is a plain object.
    */
-  function isObject(x) {
+  function isObject$1(x) {
       return typeof x === 'object' && x != null;
   }
   /**
@@ -2500,8 +3377,8 @@
           value = struct.coercer(value, ctx);
           if (mask &&
               struct.type !== 'type' &&
-              isObject(struct.schema) &&
-              isObject(value) &&
+              isObject$1(struct.schema) &&
+              isObject$1(value) &&
               !Array.isArray(value)) {
               for (const key in value) {
                   if (struct.schema[key] === undefined) {
@@ -2540,7 +3417,7 @@
                   else if (value instanceof Set) {
                       value.add(v);
                   }
-                  else if (isObject(value)) {
+                  else if (isObject$1(value)) {
                       if (v !== undefined || k in value)
                           value[k] = v;
                   }
@@ -2772,17 +3649,17 @@
           type: 'type',
           schema,
           *entries(value) {
-              if (isObject(value)) {
+              if (isObject$1(value)) {
                   for (const k of keys) {
                       yield [k, value[k], schema[k]];
                   }
               }
           },
           validator(value) {
-              return (isObject(value) || `Expected an object, but received: ${print(value)}`);
+              return (isObject$1(value) || `Expected an object, but received: ${print(value)}`);
           },
           coercer(value) {
-              return isObject(value) ? { ...value } : value;
+              return isObject$1(value) ? { ...value } : value;
           },
       });
   }
@@ -2807,383 +3684,20 @@
       });
   }
 
-  var $$2 = _export;
-  var $includes = arrayIncludes.includes;
-  var fails$4 = fails$l;
-  var addToUnscopables = addToUnscopables$2;
-
-  // FF99+ bug
-  var BROKEN_ON_SPARSE = fails$4(function () {
-    // eslint-disable-next-line es/no-array-prototype-includes -- detection
-    return !Array(1).includes();
-  });
-
-  // `Array.prototype.includes` method
-  // https://tc39.es/ecma262/#sec-array.prototype.includes
-  $$2({ target: 'Array', proto: true, forced: BROKEN_ON_SPARSE }, {
-    includes: function includes(el /* , fromIndex = 0 */) {
-      return $includes(this, el, arguments.length > 1 ? arguments[1] : undefined);
-    }
-  });
-
-  // https://tc39.es/ecma262/#sec-array.prototype-@@unscopables
-  addToUnscopables('includes');
-
-  var classofRaw = classofRaw$2;
-  var uncurryThis$5 = functionUncurryThis;
-
-  var functionUncurryThisClause = function (fn) {
-    // Nashorn bug:
-    //   https://github.com/zloirock/core-js/issues/1128
-    //   https://github.com/zloirock/core-js/issues/1130
-    if (classofRaw(fn) === 'Function') return uncurryThis$5(fn);
-  };
-
-  // TODO: Remove from `core-js@4` since it's moved to entry points
-
-  var uncurryThis$4 = functionUncurryThisClause;
-  var defineBuiltIn = defineBuiltIn$4;
-  var regexpExec$1 = regexpExec$2;
-  var fails$3 = fails$l;
-  var wellKnownSymbol$1 = wellKnownSymbol$a;
-  var createNonEnumerableProperty = createNonEnumerableProperty$5;
-
-  var SPECIES = wellKnownSymbol$1('species');
-  var RegExpPrototype = RegExp.prototype;
-
-  var fixRegexpWellKnownSymbolLogic = function (KEY, exec, FORCED, SHAM) {
-    var SYMBOL = wellKnownSymbol$1(KEY);
-
-    var DELEGATES_TO_SYMBOL = !fails$3(function () {
-      // String methods call symbol-named RegEp methods
-      var O = {};
-      O[SYMBOL] = function () { return 7; };
-      return ''[KEY](O) !== 7;
-    });
-
-    var DELEGATES_TO_EXEC = DELEGATES_TO_SYMBOL && !fails$3(function () {
-      // Symbol-named RegExp methods call .exec
-      var execCalled = false;
-      var re = /a/;
-
-      if (KEY === 'split') {
-        // We can't use real regex here since it causes deoptimization
-        // and serious performance degradation in V8
-        // https://github.com/zloirock/core-js/issues/306
-        re = {};
-        // RegExp[@@split] doesn't call the regex's exec method, but first creates
-        // a new one. We need to return the patched regex when creating the new one.
-        re.constructor = {};
-        re.constructor[SPECIES] = function () { return re; };
-        re.flags = '';
-        re[SYMBOL] = /./[SYMBOL];
-      }
-
-      re.exec = function () {
-        execCalled = true;
-        return null;
-      };
-
-      re[SYMBOL]('');
-      return !execCalled;
-    });
-
-    if (
-      !DELEGATES_TO_SYMBOL ||
-      !DELEGATES_TO_EXEC ||
-      FORCED
-    ) {
-      var uncurriedNativeRegExpMethod = uncurryThis$4(/./[SYMBOL]);
-      var methods = exec(SYMBOL, ''[KEY], function (nativeMethod, regexp, str, arg2, forceStringMethod) {
-        var uncurriedNativeMethod = uncurryThis$4(nativeMethod);
-        var $exec = regexp.exec;
-        if ($exec === regexpExec$1 || $exec === RegExpPrototype.exec) {
-          if (DELEGATES_TO_SYMBOL && !forceStringMethod) {
-            // The native String method already delegates to @@method (this
-            // polyfilled function), leasing to infinite recursion.
-            // We avoid it by directly calling the native @@method method.
-            return { done: true, value: uncurriedNativeRegExpMethod(regexp, str, arg2) };
-          }
-          return { done: true, value: uncurriedNativeMethod(str, regexp, arg2) };
-        }
-        return { done: false };
-      });
-
-      defineBuiltIn(String.prototype, KEY, methods[0]);
-      defineBuiltIn(RegExpPrototype, SYMBOL, methods[1]);
-    }
-
-    if (SHAM) createNonEnumerableProperty(RegExpPrototype[SYMBOL], 'sham', true);
-  };
-
-  var uncurryThis$3 = functionUncurryThis;
-  var toIntegerOrInfinity$1 = toIntegerOrInfinity$4;
-  var toString$2 = toString$6;
-  var requireObjectCoercible$1 = requireObjectCoercible$5;
-
-  var charAt$2 = uncurryThis$3(''.charAt);
-  var charCodeAt = uncurryThis$3(''.charCodeAt);
-  var stringSlice$2 = uncurryThis$3(''.slice);
-
-  var createMethod$1 = function (CONVERT_TO_STRING) {
-    return function ($this, pos) {
-      var S = toString$2(requireObjectCoercible$1($this));
-      var position = toIntegerOrInfinity$1(pos);
-      var size = S.length;
-      var first, second;
-      if (position < 0 || position >= size) return CONVERT_TO_STRING ? '' : undefined;
-      first = charCodeAt(S, position);
-      return first < 0xD800 || first > 0xDBFF || position + 1 === size
-        || (second = charCodeAt(S, position + 1)) < 0xDC00 || second > 0xDFFF
-          ? CONVERT_TO_STRING
-            ? charAt$2(S, position)
-            : first
-          : CONVERT_TO_STRING
-            ? stringSlice$2(S, position, position + 2)
-            : (first - 0xD800 << 10) + (second - 0xDC00) + 0x10000;
-    };
-  };
-
-  var stringMultibyte = {
-    // `String.prototype.codePointAt` method
-    // https://tc39.es/ecma262/#sec-string.prototype.codepointat
-    codeAt: createMethod$1(false),
-    // `String.prototype.at` method
-    // https://github.com/mathiasbynens/String.prototype.at
-    charAt: createMethod$1(true)
-  };
-
-  var charAt$1 = stringMultibyte.charAt;
-
-  // `AdvanceStringIndex` abstract operation
-  // https://tc39.es/ecma262/#sec-advancestringindex
-  var advanceStringIndex$1 = function (S, index, unicode) {
-    return index + (unicode ? charAt$1(S, index).length : 1);
-  };
-
-  var uncurryThis$2 = functionUncurryThis;
-  var toObject$2 = toObject$7;
-
-  var floor$2 = Math.floor;
-  var charAt = uncurryThis$2(''.charAt);
-  var replace = uncurryThis$2(''.replace);
-  var stringSlice$1 = uncurryThis$2(''.slice);
-  // eslint-disable-next-line redos/no-vulnerable -- safe
-  var SUBSTITUTION_SYMBOLS = /\$([$&'`]|\d{1,2}|<[^>]*>)/g;
-  var SUBSTITUTION_SYMBOLS_NO_NAMED = /\$([$&'`]|\d{1,2})/g;
-
-  // `GetSubstitution` abstract operation
-  // https://tc39.es/ecma262/#sec-getsubstitution
-  var getSubstitution$1 = function (matched, str, position, captures, namedCaptures, replacement) {
-    var tailPos = position + matched.length;
-    var m = captures.length;
-    var symbols = SUBSTITUTION_SYMBOLS_NO_NAMED;
-    if (namedCaptures !== undefined) {
-      namedCaptures = toObject$2(namedCaptures);
-      symbols = SUBSTITUTION_SYMBOLS;
-    }
-    return replace(replacement, symbols, function (match, ch) {
-      var capture;
-      switch (charAt(ch, 0)) {
-        case '$': return '$';
-        case '&': return matched;
-        case '`': return stringSlice$1(str, 0, position);
-        case "'": return stringSlice$1(str, tailPos);
-        case '<':
-          capture = namedCaptures[stringSlice$1(ch, 1, -1)];
-          break;
-        default: // \d\d?
-          var n = +ch;
-          if (n === 0) return match;
-          if (n > m) {
-            var f = floor$2(n / 10);
-            if (f === 0) return match;
-            if (f <= m) return captures[f - 1] === undefined ? charAt(ch, 1) : captures[f - 1] + charAt(ch, 1);
-            return match;
-          }
-          capture = captures[n - 1];
-      }
-      return capture === undefined ? '' : capture;
-    });
-  };
-
-  var call$1 = functionCall;
-  var anObject$1 = anObject$8;
-  var isCallable$1 = isCallable$i;
-  var classof$1 = classofRaw$2;
-  var regexpExec = regexpExec$2;
-
-  var $TypeError$1 = TypeError;
-
-  // `RegExpExec` abstract operation
-  // https://tc39.es/ecma262/#sec-regexpexec
-  var regexpExecAbstract = function (R, S) {
-    var exec = R.exec;
-    if (isCallable$1(exec)) {
-      var result = call$1(exec, R, S);
-      if (result !== null) anObject$1(result);
-      return result;
-    }
-    if (classof$1(R) === 'RegExp') return call$1(regexpExec, R, S);
-    throw new $TypeError$1('RegExp#exec called on incompatible receiver');
-  };
-
-  var apply = functionApply;
-  var call = functionCall;
-  var uncurryThis$1 = functionUncurryThis;
-  var fixRegExpWellKnownSymbolLogic = fixRegexpWellKnownSymbolLogic;
-  var fails$2 = fails$l;
-  var anObject = anObject$8;
-  var isCallable = isCallable$i;
-  var isNullOrUndefined = isNullOrUndefined$3;
-  var toIntegerOrInfinity = toIntegerOrInfinity$4;
-  var toLength = toLength$2;
-  var toString$1 = toString$6;
-  var requireObjectCoercible = requireObjectCoercible$5;
-  var advanceStringIndex = advanceStringIndex$1;
-  var getMethod = getMethod$2;
-  var getSubstitution = getSubstitution$1;
-  var regExpExec = regexpExecAbstract;
-  var wellKnownSymbol = wellKnownSymbol$a;
-
-  var REPLACE = wellKnownSymbol('replace');
-  var max$1 = Math.max;
-  var min$1 = Math.min;
-  var concat = uncurryThis$1([].concat);
-  var push$1 = uncurryThis$1([].push);
-  var stringIndexOf = uncurryThis$1(''.indexOf);
-  var stringSlice = uncurryThis$1(''.slice);
-
-  var maybeToString = function (it) {
-    return it === undefined ? it : String(it);
-  };
-
-  // IE <= 11 replaces $0 with the whole match, as if it was $&
-  // https://stackoverflow.com/questions/6024666/getting-ie-to-replace-a-regex-with-the-literal-string-0
-  var REPLACE_KEEPS_$0 = (function () {
-    // eslint-disable-next-line regexp/prefer-escape-replacement-dollar-char -- required for testing
-    return 'a'.replace(/./, '$0') === '$0';
-  })();
-
-  // Safari <= 13.0.3(?) substitutes nth capture where n>m with an empty string
-  var REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE = (function () {
-    if (/./[REPLACE]) {
-      return /./[REPLACE]('a', '$0') === '';
-    }
-    return false;
-  })();
-
-  var REPLACE_SUPPORTS_NAMED_GROUPS = !fails$2(function () {
-    var re = /./;
-    re.exec = function () {
-      var result = [];
-      result.groups = { a: '7' };
-      return result;
-    };
-    // eslint-disable-next-line regexp/no-useless-dollar-replacements -- false positive
-    return ''.replace(re, '$<a>') !== '7';
-  });
-
-  // @@replace logic
-  fixRegExpWellKnownSymbolLogic('replace', function (_, nativeReplace, maybeCallNative) {
-    var UNSAFE_SUBSTITUTE = REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE ? '$' : '$0';
-
-    return [
-      // `String.prototype.replace` method
-      // https://tc39.es/ecma262/#sec-string.prototype.replace
-      function replace(searchValue, replaceValue) {
-        var O = requireObjectCoercible(this);
-        var replacer = isNullOrUndefined(searchValue) ? undefined : getMethod(searchValue, REPLACE);
-        return replacer
-          ? call(replacer, searchValue, O, replaceValue)
-          : call(nativeReplace, toString$1(O), searchValue, replaceValue);
-      },
-      // `RegExp.prototype[@@replace]` method
-      // https://tc39.es/ecma262/#sec-regexp.prototype-@@replace
-      function (string, replaceValue) {
-        var rx = anObject(this);
-        var S = toString$1(string);
-
-        if (
-          typeof replaceValue == 'string' &&
-          stringIndexOf(replaceValue, UNSAFE_SUBSTITUTE) === -1 &&
-          stringIndexOf(replaceValue, '$<') === -1
-        ) {
-          var res = maybeCallNative(nativeReplace, rx, S, replaceValue);
-          if (res.done) return res.value;
-        }
-
-        var functionalReplace = isCallable(replaceValue);
-        if (!functionalReplace) replaceValue = toString$1(replaceValue);
-
-        var global = rx.global;
-        var fullUnicode;
-        if (global) {
-          fullUnicode = rx.unicode;
-          rx.lastIndex = 0;
-        }
-
-        var results = [];
-        var result;
-        while (true) {
-          result = regExpExec(rx, S);
-          if (result === null) break;
-
-          push$1(results, result);
-          if (!global) break;
-
-          var matchStr = toString$1(result[0]);
-          if (matchStr === '') rx.lastIndex = advanceStringIndex(S, toLength(rx.lastIndex), fullUnicode);
-        }
-
-        var accumulatedResult = '';
-        var nextSourcePosition = 0;
-        for (var i = 0; i < results.length; i++) {
-          result = results[i];
-
-          var matched = toString$1(result[0]);
-          var position = max$1(min$1(toIntegerOrInfinity(result.index), S.length), 0);
-          var captures = [];
-          var replacement;
-          // NOTE: This is equivalent to
-          //   captures = result.slice(1).map(maybeToString)
-          // but for some reason `nativeSlice.call(result, 1, result.length)` (called in
-          // the slice polyfill when slicing native arrays) "doesn't work" in safari 9 and
-          // causes a crash (https://pastebin.com/N21QzeQA) when trying to debug it.
-          for (var j = 1; j < result.length; j++) push$1(captures, maybeToString(result[j]));
-          var namedCaptures = result.groups;
-          if (functionalReplace) {
-            var replacerArgs = concat([matched], captures, position, S);
-            if (namedCaptures !== undefined) push$1(replacerArgs, namedCaptures);
-            replacement = toString$1(apply(replaceValue, undefined, replacerArgs));
-          } else {
-            replacement = getSubstitution(matched, S, position, captures, namedCaptures, replaceValue);
-          }
-          if (position >= nextSourcePosition) {
-            accumulatedResult += stringSlice(S, nextSourcePosition, position) + replacement;
-            nextSourcePosition = position + matched.length;
-          }
-        }
-
-        return accumulatedResult + stringSlice(S, nextSourcePosition);
-      }
-    ];
-  }, !REPLACE_SUPPORTS_NAMED_GROUPS || !REPLACE_KEEPS_$0 || REGEXP_REPLACE_SUBSTITUTES_UNDEFINED_CAPTURE);
-
-  var aCallable$1 = aCallable$4;
-  var toObject$1 = toObject$7;
+  var aCallable = aCallable$4;
+  var toObject = toObject$7;
   var IndexedObject = indexedObject;
-  var lengthOfArrayLike$1 = lengthOfArrayLike$5;
+  var lengthOfArrayLike = lengthOfArrayLike$5;
 
   var $TypeError = TypeError;
 
   // `Array.prototype.{ reduce, reduceRight }` methods implementation
   var createMethod = function (IS_RIGHT) {
     return function (that, callbackfn, argumentsLength, memo) {
-      var O = toObject$1(that);
+      var O = toObject(that);
       var self = IndexedObject(O);
-      var length = lengthOfArrayLike$1(O);
-      aCallable$1(callbackfn);
+      var length = lengthOfArrayLike(O);
+      aCallable(callbackfn);
       var index = IS_RIGHT ? length - 1 : 0;
       var i = IS_RIGHT ? -1 : 1;
       if (argumentsLength < 2) while (true) {
@@ -3213,202 +3727,28 @@
     right: createMethod(true)
   };
 
-  var fails$1 = fails$l;
-
-  var arrayMethodIsStrict$2 = function (METHOD_NAME, argument) {
-    var method = [][METHOD_NAME];
-    return !!method && fails$1(function () {
-      // eslint-disable-next-line no-useless-call -- required for testing
-      method.call(null, argument || function () { return 1; }, 1);
-    });
-  };
-
-  var global$1 = global$g;
+  var global$1 = global$h;
   var classof = classofRaw$2;
 
   var engineIsNode = classof(global$1.process) === 'process';
 
-  var $$1 = _export;
+  var $ = _export;
   var $reduce = arrayReduce.left;
-  var arrayMethodIsStrict$1 = arrayMethodIsStrict$2;
+  var arrayMethodIsStrict = arrayMethodIsStrict$2;
   var CHROME_VERSION = engineV8Version;
   var IS_NODE = engineIsNode;
 
   // Chrome 80-82 has a critical bug
   // https://bugs.chromium.org/p/chromium/issues/detail?id=1049982
   var CHROME_BUG = !IS_NODE && CHROME_VERSION > 79 && CHROME_VERSION < 83;
-  var FORCED$1 = CHROME_BUG || !arrayMethodIsStrict$1('reduce');
+  var FORCED = CHROME_BUG || !arrayMethodIsStrict('reduce');
 
   // `Array.prototype.reduce` method
   // https://tc39.es/ecma262/#sec-array.prototype.reduce
-  $$1({ target: 'Array', proto: true, forced: FORCED$1 }, {
+  $({ target: 'Array', proto: true, forced: FORCED }, {
     reduce: function reduce(callbackfn /* , initialValue */) {
       var length = arguments.length;
       return $reduce(this, callbackfn, length, length > 1 ? arguments[1] : undefined);
-    }
-  });
-
-  var arraySlice = arraySlice$2;
-
-  var floor$1 = Math.floor;
-
-  var sort = function (array, comparefn) {
-    var length = array.length;
-
-    if (length < 8) {
-      // insertion sort
-      var i = 1;
-      var element, j;
-
-      while (i < length) {
-        j = i;
-        element = array[i];
-        while (j && comparefn(array[j - 1], element) > 0) {
-          array[j] = array[--j];
-        }
-        if (j !== i++) array[j] = element;
-      }
-    } else {
-      // merge sort
-      var middle = floor$1(length / 2);
-      var left = sort(arraySlice(array, 0, middle), comparefn);
-      var right = sort(arraySlice(array, middle), comparefn);
-      var llength = left.length;
-      var rlength = right.length;
-      var lindex = 0;
-      var rindex = 0;
-
-      while (lindex < llength || rindex < rlength) {
-        array[lindex + rindex] = (lindex < llength && rindex < rlength)
-          ? comparefn(left[lindex], right[rindex]) <= 0 ? left[lindex++] : right[rindex++]
-          : lindex < llength ? left[lindex++] : right[rindex++];
-      }
-    }
-
-    return array;
-  };
-
-  var arraySort = sort;
-
-  var userAgent$1 = engineUserAgent;
-
-  var firefox = userAgent$1.match(/firefox\/(\d+)/i);
-
-  var engineFfVersion = !!firefox && +firefox[1];
-
-  var UA = engineUserAgent;
-
-  var engineIsIeOrEdge = /MSIE|Trident/.test(UA);
-
-  var userAgent = engineUserAgent;
-
-  var webkit = userAgent.match(/AppleWebKit\/(\d+)\./);
-
-  var engineWebkitVersion = !!webkit && +webkit[1];
-
-  var $ = _export;
-  var uncurryThis = functionUncurryThis;
-  var aCallable = aCallable$4;
-  var toObject = toObject$7;
-  var lengthOfArrayLike = lengthOfArrayLike$5;
-  var deletePropertyOrThrow = deletePropertyOrThrow$2;
-  var toString = toString$6;
-  var fails = fails$l;
-  var internalSort = arraySort;
-  var arrayMethodIsStrict = arrayMethodIsStrict$2;
-  var FF = engineFfVersion;
-  var IE_OR_EDGE = engineIsIeOrEdge;
-  var V8 = engineV8Version;
-  var WEBKIT = engineWebkitVersion;
-
-  var test = [];
-  var nativeSort = uncurryThis(test.sort);
-  var push = uncurryThis(test.push);
-
-  // IE8-
-  var FAILS_ON_UNDEFINED = fails(function () {
-    test.sort(undefined);
-  });
-  // V8 bug
-  var FAILS_ON_NULL = fails(function () {
-    test.sort(null);
-  });
-  // Old WebKit
-  var STRICT_METHOD = arrayMethodIsStrict('sort');
-
-  var STABLE_SORT = !fails(function () {
-    // feature detection can be too slow, so check engines versions
-    if (V8) return V8 < 70;
-    if (FF && FF > 3) return;
-    if (IE_OR_EDGE) return true;
-    if (WEBKIT) return WEBKIT < 603;
-
-    var result = '';
-    var code, chr, value, index;
-
-    // generate an array with more 512 elements (Chakra and old V8 fails only in this case)
-    for (code = 65; code < 76; code++) {
-      chr = String.fromCharCode(code);
-
-      switch (code) {
-        case 66: case 69: case 70: case 72: value = 3; break;
-        case 68: case 71: value = 4; break;
-        default: value = 2;
-      }
-
-      for (index = 0; index < 47; index++) {
-        test.push({ k: chr + index, v: value });
-      }
-    }
-
-    test.sort(function (a, b) { return b.v - a.v; });
-
-    for (index = 0; index < test.length; index++) {
-      chr = test[index].k.charAt(0);
-      if (result.charAt(result.length - 1) !== chr) result += chr;
-    }
-
-    return result !== 'DGBEFHACIJK';
-  });
-
-  var FORCED = FAILS_ON_UNDEFINED || !FAILS_ON_NULL || !STRICT_METHOD || !STABLE_SORT;
-
-  var getSortCompare = function (comparefn) {
-    return function (x, y) {
-      if (y === undefined) return -1;
-      if (x === undefined) return 1;
-      if (comparefn !== undefined) return +comparefn(x, y) || 0;
-      return toString(x) > toString(y) ? 1 : -1;
-    };
-  };
-
-  // `Array.prototype.sort` method
-  // https://tc39.es/ecma262/#sec-array.prototype.sort
-  $({ target: 'Array', proto: true, forced: FORCED }, {
-    sort: function sort(comparefn) {
-      if (comparefn !== undefined) aCallable(comparefn);
-
-      var array = toObject(this);
-
-      if (STABLE_SORT) return comparefn === undefined ? nativeSort(array) : nativeSort(array, comparefn);
-
-      var items = [];
-      var arrayLength = lengthOfArrayLike(array);
-      var itemsLength, index;
-
-      for (index = 0; index < arrayLength; index++) {
-        if (index in array) push(items, array[index]);
-      }
-
-      internalSort(items, getSortCompare(comparefn));
-
-      itemsLength = lengthOfArrayLike(items);
-      index = 0;
-
-      while (index < itemsLength) array[index] = items[index++];
-      while (index < arrayLength) deletePropertyOrThrow(array, index++);
-
-      return array;
     }
   });
 
@@ -3420,8 +3760,8 @@
      */
     createNode(htmlStr) {
       const node = document.createElement('div');
-      node.innerHTML = htmlStr;
-      return node.firstChild;
+      node.innerHTML = htmlStr.trim(); // 去除字符串两端的空白
+      return node.firstElementChild;
     },
     //防抖
     debounce(func) {
@@ -3789,6 +4129,49 @@
           target.animated = false;
         }, ms);
       }
+    },
+    /**
+     * 把时间戳转换成人类友好的时间
+     * @param {Number} timestamp 微妙时间戳
+     * @returns {String} 
+     */
+    timeAgo(timestamp) {
+      let customText = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
+        second: '秒前',
+        minutes: '分钟前',
+        hours: '小时前',
+        days: '天前',
+        months: '月前',
+        years: '年前'
+      };
+      const seconds = Math.floor((Date.now() - Math.floor(timestamp)) / 1000);
+      const minute = 60;
+      const hour = 60 * minute;
+      const day = 24 * hour;
+      const month = 30 * day;
+      const year = 365 * day;
+      if (seconds < minute) {
+        return "".concat(seconds, " ").concat(customText.second);
+      } else if (seconds < hour) {
+        const minutes = Math.floor(seconds / minute);
+        return "".concat(minutes, " ").concat(customText.minutes);
+      } else if (seconds < day) {
+        const hours = Math.floor(seconds / hour);
+        return "".concat(hours, " ").concat(customText.hours);
+      } else if (seconds < month) {
+        const days = Math.floor(seconds / day);
+        return "".concat(days, " ").concat(customText.days);
+      } else if (seconds < year) {
+        const months = Math.floor(seconds / month);
+        return "".concat(months, " ").concat(customText.months);
+      } else {
+        const years = Math.floor(seconds / year);
+        return "".concat(years, " ").concat(customText.years);
+      }
+    },
+    //判断数字是否有小数点
+    hasDecimal(number) {
+      return !Number.isInteger(number);
     }
   };
 
@@ -3905,10 +4288,10 @@
     height: optional(string()),
     width: optional(string()),
     lang: optional(string()),
-    cacheType: Struct.enums(["local", "session"]),
+    cacheType: Struct.enums(['local', 'session']),
     responsive: Struct.falseOrObject({
       breakpoint: Struct.positive(),
-      hideToolbarItem: Struct.uniqueArray(Struct.enums(["prev", "refresh", "next", "dropdown", "fullscreen"]))
+      hideToolbarItem: Struct.uniqueArray(Struct.enums(['prev', 'refresh', 'next', 'dropdown', 'fullscreen']))
     }),
     defaultTabs: array(TabOptionStruct),
     toolbar: Struct.object({
@@ -3920,7 +4303,32 @@
         order: number()
       }),
       next: toolbarItemStruct,
-      dropdown: toolbarItemStruct,
+      dropdown: Struct.falseOrObject({
+        icon: string(),
+        order: number(),
+        searchInput: Struct.falseOrObject({
+          placeholder: string(),
+          prefixIcon: string()
+        }),
+        openedTabs: Struct.falseOrObject({
+          text: string(),
+          itemIcon: string()
+        }),
+        recentlyClosedTabs: Struct.falseOrObject({
+          text: string(),
+          showIcon: string(),
+          hideIcon: string()
+        }),
+        timeFormat: Struct.falseOrObject({
+          year: string(),
+          months: string(),
+          days: string(),
+          hours: string(),
+          minutes: string(),
+          seconds: string()
+        }),
+        searchNoResultsText: string()
+      }),
       fullscreen: toolbarItemStruct
     }),
     tab: Struct.object({
@@ -3987,12 +4395,15 @@
   var DataKeys = {
     tabUrl: 'data-tab-url',
     contextmenu: 'data-quicktab-contextmenu',
+    dropdown: 'data-quicktab-dropdown',
     //记录iframe的状态 true:表示已经加载完毕
     iframeLoaded: 'loaded',
     singleTab: 'data-qt-tab',
     singleTabTarget: 'data-qt-target',
     //iframe的超时句柄
-    iframeTimeoutTimer: 'timer'
+    iframeTimeoutTimer: 'timer',
+    //每个tab的选项数据存储在dom上的key
+    tabOptionDataKey: 'qtab'
   };
 
   var Classes = {
@@ -4006,8 +4417,6 @@
     toolbarDropdownItem: 'dropdown',
     toolbarFullscreenItem: 'fullscreen',
     tabBody: 'tab-body',
-    //该类名实现iframe的鼠标事件穿透问题
-    pointerEventsNnoe: 'pen',
     tabActive: 'active',
     tabDisabled: 'disabled',
     tabPaneActive: 'active',
@@ -4024,7 +4433,13 @@
     listGroupNewBlankItem: 'new-blank',
     listGroupFullscreenItem: 'fullscreen',
     //遮罩层
-    overlays: 'mask'
+    overlays: 'mask',
+    //下拉菜单粘性标题部分有图标时的类
+    dropdownBodyStickyHasIcon: 'has-icon',
+    //用于阻止事件被iframe无视的问题(增强用户体验)
+    contextmenuPEN: 'pen-contextmenu',
+    dropdownPEN: 'pen-dropdown',
+    dropdownActive: 'active'
   };
 
   var Html = {
@@ -4044,11 +4459,25 @@
     //单个tab结构
     tab: "<button %s class=\"%s\" ".concat(DataKeys.tabUrl, "=%s ><span>%s</span>%s</button>"),
     //列表组
-    listGroup: ["<ul %s=\"%s\" class=\"quicktab-list-group\">", '</ul>'],
+    listGroup: ["<ul ".concat(DataKeys.contextmenu, "=\"%s\" class=\"quicktab-list-group\">"), '</ul>'],
     //列表关闭item
     listGroupItem: "<li class=\"%s\"><span>%s</span></li>",
     //分隔线
-    listGroupSeparatorItem: '<li class="separator"></li>'
+    listGroupSeparatorItem: '<li class="separator"></li>',
+    //下拉菜单
+    dropdown: ["<div ".concat(DataKeys.dropdown, "=\"%s\" class=\"quicktab-dropdown\">"), '</div>'],
+    //头部
+    dropdownHeader: "<div class=\"header\">%s<input type=\"text\" autocomplete=\"off\" placeholder=\"%s\"></div>",
+    dropdownBody: ['<div class="body">', '</div>'],
+    //粘性布局(第一个占位符表示是否是有图标的项目，最后一个是图标容器)
+    dropdownBodySticky: "<div class=\"sticky %s\"><div class=\"subheader\"><div class=\"subheader-text\">%s</div>%s</div></div>",
+    //列表容器单元
+    dropdownBodySection: "<ul class=\"section\"></ul>",
+    //图标容器(第一个占位是表示是否需要聚焦状态)
+    iconWrapper: "<div class=\"icon-wrapper\" %s>%s</div>",
+    dropdownEmpty: "<div class=\"empty\">%s</div>",
+    //每个tab的条目(最后一个占位表示图标容器部分)
+    sectionItem: "<li class=\"%s\">\n                    <div class=\"details\">\n                        <p class=\"title\">%s</p>\n                        <p><span class=\"url\">%s</span><span class=\"dot\">\xB7</span>%s </p>\n                    </div>\n                    %s\n                </li>"
   };
 
   var Lang = {
@@ -4081,6 +4510,36 @@
     },
     formatContextmenuNewBlank() {
       return "\u65B0\u7A97\u53E3\u6253\u5F00";
+    },
+    formatSearchInputPlaceholder() {
+      return "\u641C\u7D22\u6807\u7B7E\u9875";
+    },
+    formatOpenedTabs() {
+      return "\u6253\u5F00\u7684\u6807\u7B7E\u9875";
+    },
+    formatRecentlyClosedTabs() {
+      return "\u6700\u8FD1\u5173\u95ED\u7684\u6807\u7B7E\u9875";
+    },
+    formatSearchNoResults() {
+      return "\u627E\u4E0D\u5230\u4EFB\u4F55\u7ED3\u679C";
+    },
+    formatTimeYear() {
+      return "\u5E74\u524D";
+    },
+    formatTimeMonths() {
+      return "\u4E2A\u6708\u524D";
+    },
+    formatTimeDays() {
+      return "\u5929\u524D";
+    },
+    formatTimeHours() {
+      return "\u5C0F\u65F6\u524D";
+    },
+    formatTimeMinutes() {
+      return "\u5206\u949F\u524D";
+    },
+    formatTimeSeconds() {
+      return "\u79D2\u524D";
     }
   };
 
@@ -8020,6 +8479,11 @@
 
   var jQuery = jQueryFactory( window);
 
+  /**
+   * Custom positioning reference element.
+   * @see https://floating-ui.com/docs/virtual-elements
+   */
+
   const min = Math.min;
   const max = Math.max;
   const round = Math.round;
@@ -8198,7 +8662,7 @@
 
   /**
    * Computes the `x` and `y` coordinates that will place the floating element
-   * next to a reference element when it is given a certain positioning strategy.
+   * next to a given reference element.
    *
    * This export does not have any `platform` interface logic. You will need to
    * write one for the platform you are using Floating UI with.
@@ -8357,7 +8821,7 @@
    * clipping boundary. Alternative to `autoPlacement`.
    * @see https://floating-ui.com/docs/flip
    */
-  const flip = function (options) {
+  const flip$1 = function (options) {
     if (options === void 0) {
       options = {};
     }
@@ -8468,6 +8932,7 @@
 
   // For type backwards-compatibility, the `OffsetOptions` type was also
   // Derivable.
+
   async function convertValueToCoords(state, options) {
     const {
       placement,
@@ -8555,7 +9020,7 @@
    * keep it in view when it will overflow the clipping boundary.
    * @see https://floating-ui.com/docs/shift
    */
-  const shift = function (options) {
+  const shift$1 = function (options) {
     if (options === void 0) {
       options = {};
     }
@@ -8635,7 +9100,7 @@
   }
   function getWindow(node) {
     var _node$ownerDocument;
-    return (node == null ? void 0 : (_node$ownerDocument = node.ownerDocument) == null ? void 0 : _node$ownerDocument.defaultView) || window;
+    return (node == null || (_node$ownerDocument = node.ownerDocument) == null ? void 0 : _node$ownerDocument.defaultView) || window;
   }
   function getDocumentElement(node) {
     var _ref;
@@ -8663,7 +9128,7 @@
       overflowX,
       overflowY,
       display
-    } = getComputedStyle(element);
+    } = getComputedStyle$1(element);
     return /auto|scroll|overlay|hidden|clip/.test(overflow + overflowY + overflowX) && !['inline', 'contents'].includes(display);
   }
   function isTableElement(element) {
@@ -8671,7 +9136,7 @@
   }
   function isContainingBlock(element) {
     const webkit = isWebKit();
-    const css = getComputedStyle(element);
+    const css = getComputedStyle$1(element);
 
     // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
     return css.transform !== 'none' || css.perspective !== 'none' || (css.containerType ? css.containerType !== 'normal' : false) || !webkit && (css.backdropFilter ? css.backdropFilter !== 'none' : false) || !webkit && (css.filter ? css.filter !== 'none' : false) || ['transform', 'perspective', 'filter'].some(value => (css.willChange || '').includes(value)) || ['paint', 'layout', 'strict', 'content'].some(value => (css.contain || '').includes(value));
@@ -8694,7 +9159,7 @@
   function isLastTraversableNode(node) {
     return ['html', 'body', '#document'].includes(getNodeName(node));
   }
-  function getComputedStyle(element) {
+  function getComputedStyle$1(element) {
     return getWindow(element).getComputedStyle(element);
   }
   function getNodeScroll(element) {
@@ -8752,7 +9217,7 @@
   }
 
   function getCssDimensions(element) {
-    const css = getComputedStyle(element);
+    const css = getComputedStyle$1(element);
     // In testing environments, the `width` and `height` properties are empty
     // strings for SVG elements, returning NaN. Fallback to `0` in this case.
     let width = parseFloat(css.width) || 0;
@@ -8856,7 +9321,7 @@
       while (currentIFrame && offsetParent && offsetWin !== win) {
         const iframeScale = getScale(currentIFrame);
         const iframeRect = currentIFrame.getBoundingClientRect();
-        const css = getComputedStyle(currentIFrame);
+        const css = getComputedStyle$1(currentIFrame);
         const left = iframeRect.left + (currentIFrame.clientLeft + parseFloat(css.paddingLeft)) * iframeScale.x;
         const top = iframeRect.top + (currentIFrame.clientTop + parseFloat(css.paddingTop)) * iframeScale.y;
         x *= iframeScale.x;
@@ -8932,7 +9397,7 @@
     const height = max(html.scrollHeight, html.clientHeight, body.scrollHeight, body.clientHeight);
     let x = -scroll.scrollLeft + getWindowScrollBarX(element);
     const y = -scroll.scrollTop;
-    if (getComputedStyle(body).direction === 'rtl') {
+    if (getComputedStyle$1(body).direction === 'rtl') {
       x += max(html.clientWidth, body.clientWidth) - width;
     }
     return {
@@ -9008,7 +9473,7 @@
     if (parentNode === stopNode || !isElement(parentNode) || isLastTraversableNode(parentNode)) {
       return false;
     }
-    return getComputedStyle(parentNode).position === 'fixed' || hasFixedPositionAncestor(parentNode, stopNode);
+    return getComputedStyle$1(parentNode).position === 'fixed' || hasFixedPositionAncestor(parentNode, stopNode);
   }
 
   // A "clipping ancestor" is an `overflow` element with the characteristic of
@@ -9021,12 +9486,12 @@
     }
     let result = getOverflowAncestors(element, [], false).filter(el => isElement(el) && getNodeName(el) !== 'body');
     let currentContainingBlockComputedStyle = null;
-    const elementIsFixed = getComputedStyle(element).position === 'fixed';
+    const elementIsFixed = getComputedStyle$1(element).position === 'fixed';
     let currentNode = elementIsFixed ? getParentNode(element) : element;
 
     // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
     while (isElement(currentNode) && !isLastTraversableNode(currentNode)) {
-      const computedStyle = getComputedStyle(currentNode);
+      const computedStyle = getComputedStyle$1(currentNode);
       const currentNodeIsContaining = isContainingBlock(currentNode);
       if (!currentNodeIsContaining && computedStyle.position === 'fixed') {
         currentContainingBlockComputedStyle = null;
@@ -9074,7 +9539,14 @@
   }
 
   function getDimensions(element) {
-    return getCssDimensions(element);
+    const {
+      width,
+      height
+    } = getCssDimensions(element);
+    return {
+      width,
+      height
+    };
   }
 
   function getRectRelativeToOffsetParent(element, offsetParent, strategy) {
@@ -9108,7 +9580,7 @@
   }
 
   function getTrueOffsetParent(element, polyfill) {
-    if (!isHTMLElement(element) || getComputedStyle(element).position === 'fixed') {
+    if (!isHTMLElement(element) || getComputedStyle$1(element).position === 'fixed') {
       return null;
     }
     if (polyfill) {
@@ -9125,10 +9597,10 @@
       return window;
     }
     let offsetParent = getTrueOffsetParent(element, polyfill);
-    while (offsetParent && isTableElement(offsetParent) && getComputedStyle(offsetParent).position === 'static') {
+    while (offsetParent && isTableElement(offsetParent) && getComputedStyle$1(offsetParent).position === 'static') {
       offsetParent = getTrueOffsetParent(offsetParent, polyfill);
     }
-    if (offsetParent && (getNodeName(offsetParent) === 'html' || getNodeName(offsetParent) === 'body' && getComputedStyle(offsetParent).position === 'static' && !isContainingBlock(offsetParent))) {
+    if (offsetParent && (getNodeName(offsetParent) === 'html' || getNodeName(offsetParent) === 'body' && getComputedStyle$1(offsetParent).position === 'static' && !isContainingBlock(offsetParent))) {
       return window;
     }
     return offsetParent || getContainingBlock(element) || window;
@@ -9153,7 +9625,7 @@
   };
 
   function isRTL(element) {
-    return getComputedStyle(element).direction === 'rtl';
+    return getComputedStyle$1(element).direction === 'rtl';
   }
 
   const platform = {
@@ -9321,9 +9793,23 @@
   }
 
   /**
+   * Optimizes the visibility of the floating element by shifting it in order to
+   * keep it in view when it will overflow the clipping boundary.
+   * @see https://floating-ui.com/docs/shift
+   */
+  const shift = shift$1;
+
+  /**
+   * Optimizes the visibility of the floating element by flipping the `placement`
+   * in order to keep it in view when the preferred placement(s) will overflow the
+   * clipping boundary. Alternative to `autoPlacement`.
+   * @see https://floating-ui.com/docs/flip
+   */
+  const flip = flip$1;
+
+  /**
    * Computes the `x` and `y` coordinates that will place the floating element
-   * next to a reference element when it is given a certain CSS positioning
-   * strategy.
+   * next to a given reference element.
    */
   const computePosition = (reference, floating, options) => {
     // This caches the expensive `getClippingElementAncestors` function so that
@@ -9344,31 +9830,1714 @@
     });
   };
 
+  var canUseDOM = !!(
+    typeof window !== 'undefined' &&
+    window.document &&
+    window.document.createElement
+  );
+
+  var canUseDom = canUseDOM;
+
+  var canUseDOM$1 = /*@__PURE__*/getDefaultExportFromCjs(canUseDom);
+
+  /** Detect free variable `global` from Node.js. */
+  var freeGlobal = typeof global == 'object' && global && global.Object === Object && global;
+
+  /** Detect free variable `self`. */
+  var freeSelf = typeof self == 'object' && self && self.Object === Object && self;
+
+  /** Used as a reference to the global object. */
+  var root = freeGlobal || freeSelf || Function('return this')();
+
+  /** Built-in value references. */
+  var Symbol$1 = root.Symbol;
+
+  /** Used for built-in method references. */
+  var objectProto$1 = Object.prototype;
+
+  /** Used to check objects for own properties. */
+  var hasOwnProperty = objectProto$1.hasOwnProperty;
+
+  /**
+   * Used to resolve the
+   * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+   * of values.
+   */
+  var nativeObjectToString$1 = objectProto$1.toString;
+
+  /** Built-in value references. */
+  var symToStringTag$1 = Symbol$1 ? Symbol$1.toStringTag : undefined;
+
+  /**
+   * A specialized version of `baseGetTag` which ignores `Symbol.toStringTag` values.
+   *
+   * @private
+   * @param {*} value The value to query.
+   * @returns {string} Returns the raw `toStringTag`.
+   */
+  function getRawTag(value) {
+    var isOwn = hasOwnProperty.call(value, symToStringTag$1),
+        tag = value[symToStringTag$1];
+
+    try {
+      value[symToStringTag$1] = undefined;
+      var unmasked = true;
+    } catch (e) {}
+
+    var result = nativeObjectToString$1.call(value);
+    if (unmasked) {
+      if (isOwn) {
+        value[symToStringTag$1] = tag;
+      } else {
+        delete value[symToStringTag$1];
+      }
+    }
+    return result;
+  }
+
+  /** Used for built-in method references. */
+  var objectProto = Object.prototype;
+
+  /**
+   * Used to resolve the
+   * [`toStringTag`](http://ecma-international.org/ecma-262/7.0/#sec-object.prototype.tostring)
+   * of values.
+   */
+  var nativeObjectToString = objectProto.toString;
+
+  /**
+   * Converts `value` to a string using `Object.prototype.toString`.
+   *
+   * @private
+   * @param {*} value The value to convert.
+   * @returns {string} Returns the converted string.
+   */
+  function objectToString(value) {
+    return nativeObjectToString.call(value);
+  }
+
+  /** `Object#toString` result references. */
+  var nullTag = '[object Null]',
+      undefinedTag = '[object Undefined]';
+
+  /** Built-in value references. */
+  var symToStringTag = Symbol$1 ? Symbol$1.toStringTag : undefined;
+
+  /**
+   * The base implementation of `getTag` without fallbacks for buggy environments.
+   *
+   * @private
+   * @param {*} value The value to query.
+   * @returns {string} Returns the `toStringTag`.
+   */
+  function baseGetTag(value) {
+    if (value == null) {
+      return value === undefined ? undefinedTag : nullTag;
+    }
+    return (symToStringTag && symToStringTag in Object(value))
+      ? getRawTag(value)
+      : objectToString(value);
+  }
+
+  /**
+   * Checks if `value` is object-like. A value is object-like if it's not `null`
+   * and has a `typeof` result of "object".
+   *
+   * @static
+   * @memberOf _
+   * @since 4.0.0
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+   * @example
+   *
+   * _.isObjectLike({});
+   * // => true
+   *
+   * _.isObjectLike([1, 2, 3]);
+   * // => true
+   *
+   * _.isObjectLike(_.noop);
+   * // => false
+   *
+   * _.isObjectLike(null);
+   * // => false
+   */
+  function isObjectLike(value) {
+    return value != null && typeof value == 'object';
+  }
+
+  /** `Object#toString` result references. */
+  var symbolTag = '[object Symbol]';
+
+  /**
+   * Checks if `value` is classified as a `Symbol` primitive or object.
+   *
+   * @static
+   * @memberOf _
+   * @since 4.0.0
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is a symbol, else `false`.
+   * @example
+   *
+   * _.isSymbol(Symbol.iterator);
+   * // => true
+   *
+   * _.isSymbol('abc');
+   * // => false
+   */
+  function isSymbol(value) {
+    return typeof value == 'symbol' ||
+      (isObjectLike(value) && baseGetTag(value) == symbolTag);
+  }
+
+  /** Used to match a single whitespace character. */
+  var reWhitespace = /\s/;
+
+  /**
+   * Used by `_.trim` and `_.trimEnd` to get the index of the last non-whitespace
+   * character of `string`.
+   *
+   * @private
+   * @param {string} string The string to inspect.
+   * @returns {number} Returns the index of the last non-whitespace character.
+   */
+  function trimmedEndIndex(string) {
+    var index = string.length;
+
+    while (index-- && reWhitespace.test(string.charAt(index))) {}
+    return index;
+  }
+
+  /** Used to match leading whitespace. */
+  var reTrimStart = /^\s+/;
+
+  /**
+   * The base implementation of `_.trim`.
+   *
+   * @private
+   * @param {string} string The string to trim.
+   * @returns {string} Returns the trimmed string.
+   */
+  function baseTrim(string) {
+    return string
+      ? string.slice(0, trimmedEndIndex(string) + 1).replace(reTrimStart, '')
+      : string;
+  }
+
+  /**
+   * Checks if `value` is the
+   * [language type](http://www.ecma-international.org/ecma-262/7.0/#sec-ecmascript-language-types)
+   * of `Object`. (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Lang
+   * @param {*} value The value to check.
+   * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+   * @example
+   *
+   * _.isObject({});
+   * // => true
+   *
+   * _.isObject([1, 2, 3]);
+   * // => true
+   *
+   * _.isObject(_.noop);
+   * // => true
+   *
+   * _.isObject(null);
+   * // => false
+   */
+  function isObject(value) {
+    var type = typeof value;
+    return value != null && (type == 'object' || type == 'function');
+  }
+
+  /** Used as references for various `Number` constants. */
+  var NAN = 0 / 0;
+
+  /** Used to detect bad signed hexadecimal string values. */
+  var reIsBadHex = /^[-+]0x[0-9a-f]+$/i;
+
+  /** Used to detect binary string values. */
+  var reIsBinary = /^0b[01]+$/i;
+
+  /** Used to detect octal string values. */
+  var reIsOctal = /^0o[0-7]+$/i;
+
+  /** Built-in method references without a dependency on `root`. */
+  var freeParseInt = parseInt;
+
+  /**
+   * Converts `value` to a number.
+   *
+   * @static
+   * @memberOf _
+   * @since 4.0.0
+   * @category Lang
+   * @param {*} value The value to process.
+   * @returns {number} Returns the number.
+   * @example
+   *
+   * _.toNumber(3.2);
+   * // => 3.2
+   *
+   * _.toNumber(Number.MIN_VALUE);
+   * // => 5e-324
+   *
+   * _.toNumber(Infinity);
+   * // => Infinity
+   *
+   * _.toNumber('3.2');
+   * // => 3.2
+   */
+  function toNumber(value) {
+    if (typeof value == 'number') {
+      return value;
+    }
+    if (isSymbol(value)) {
+      return NAN;
+    }
+    if (isObject(value)) {
+      var other = typeof value.valueOf == 'function' ? value.valueOf() : value;
+      value = isObject(other) ? (other + '') : other;
+    }
+    if (typeof value != 'string') {
+      return value === 0 ? value : +value;
+    }
+    value = baseTrim(value);
+    var isBinary = reIsBinary.test(value);
+    return (isBinary || reIsOctal.test(value))
+      ? freeParseInt(value.slice(2), isBinary ? 2 : 8)
+      : (reIsBadHex.test(value) ? NAN : +value);
+  }
+
+  /**
+   * Gets the timestamp of the number of milliseconds that have elapsed since
+   * the Unix epoch (1 January 1970 00:00:00 UTC).
+   *
+   * @static
+   * @memberOf _
+   * @since 2.4.0
+   * @category Date
+   * @returns {number} Returns the timestamp.
+   * @example
+   *
+   * _.defer(function(stamp) {
+   *   console.log(_.now() - stamp);
+   * }, _.now());
+   * // => Logs the number of milliseconds it took for the deferred invocation.
+   */
+  var now = function() {
+    return root.Date.now();
+  };
+
+  /** Error message constants. */
+  var FUNC_ERROR_TEXT$1 = 'Expected a function';
+
+  /* Built-in method references for those with the same name as other `lodash` methods. */
+  var nativeMax = Math.max,
+      nativeMin = Math.min;
+
+  /**
+   * Creates a debounced function that delays invoking `func` until after `wait`
+   * milliseconds have elapsed since the last time the debounced function was
+   * invoked. The debounced function comes with a `cancel` method to cancel
+   * delayed `func` invocations and a `flush` method to immediately invoke them.
+   * Provide `options` to indicate whether `func` should be invoked on the
+   * leading and/or trailing edge of the `wait` timeout. The `func` is invoked
+   * with the last arguments provided to the debounced function. Subsequent
+   * calls to the debounced function return the result of the last `func`
+   * invocation.
+   *
+   * **Note:** If `leading` and `trailing` options are `true`, `func` is
+   * invoked on the trailing edge of the timeout only if the debounced function
+   * is invoked more than once during the `wait` timeout.
+   *
+   * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+   * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+   *
+   * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+   * for details over the differences between `_.debounce` and `_.throttle`.
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Function
+   * @param {Function} func The function to debounce.
+   * @param {number} [wait=0] The number of milliseconds to delay.
+   * @param {Object} [options={}] The options object.
+   * @param {boolean} [options.leading=false]
+   *  Specify invoking on the leading edge of the timeout.
+   * @param {number} [options.maxWait]
+   *  The maximum time `func` is allowed to be delayed before it's invoked.
+   * @param {boolean} [options.trailing=true]
+   *  Specify invoking on the trailing edge of the timeout.
+   * @returns {Function} Returns the new debounced function.
+   * @example
+   *
+   * // Avoid costly calculations while the window size is in flux.
+   * jQuery(window).on('resize', _.debounce(calculateLayout, 150));
+   *
+   * // Invoke `sendMail` when clicked, debouncing subsequent calls.
+   * jQuery(element).on('click', _.debounce(sendMail, 300, {
+   *   'leading': true,
+   *   'trailing': false
+   * }));
+   *
+   * // Ensure `batchLog` is invoked once after 1 second of debounced calls.
+   * var debounced = _.debounce(batchLog, 250, { 'maxWait': 1000 });
+   * var source = new EventSource('/stream');
+   * jQuery(source).on('message', debounced);
+   *
+   * // Cancel the trailing debounced invocation.
+   * jQuery(window).on('popstate', debounced.cancel);
+   */
+  function debounce(func, wait, options) {
+    var lastArgs,
+        lastThis,
+        maxWait,
+        result,
+        timerId,
+        lastCallTime,
+        lastInvokeTime = 0,
+        leading = false,
+        maxing = false,
+        trailing = true;
+
+    if (typeof func != 'function') {
+      throw new TypeError(FUNC_ERROR_TEXT$1);
+    }
+    wait = toNumber(wait) || 0;
+    if (isObject(options)) {
+      leading = !!options.leading;
+      maxing = 'maxWait' in options;
+      maxWait = maxing ? nativeMax(toNumber(options.maxWait) || 0, wait) : maxWait;
+      trailing = 'trailing' in options ? !!options.trailing : trailing;
+    }
+
+    function invokeFunc(time) {
+      var args = lastArgs,
+          thisArg = lastThis;
+
+      lastArgs = lastThis = undefined;
+      lastInvokeTime = time;
+      result = func.apply(thisArg, args);
+      return result;
+    }
+
+    function leadingEdge(time) {
+      // Reset any `maxWait` timer.
+      lastInvokeTime = time;
+      // Start the timer for the trailing edge.
+      timerId = setTimeout(timerExpired, wait);
+      // Invoke the leading edge.
+      return leading ? invokeFunc(time) : result;
+    }
+
+    function remainingWait(time) {
+      var timeSinceLastCall = time - lastCallTime,
+          timeSinceLastInvoke = time - lastInvokeTime,
+          timeWaiting = wait - timeSinceLastCall;
+
+      return maxing
+        ? nativeMin(timeWaiting, maxWait - timeSinceLastInvoke)
+        : timeWaiting;
+    }
+
+    function shouldInvoke(time) {
+      var timeSinceLastCall = time - lastCallTime,
+          timeSinceLastInvoke = time - lastInvokeTime;
+
+      // Either this is the first call, activity has stopped and we're at the
+      // trailing edge, the system time has gone backwards and we're treating
+      // it as the trailing edge, or we've hit the `maxWait` limit.
+      return (lastCallTime === undefined || (timeSinceLastCall >= wait) ||
+        (timeSinceLastCall < 0) || (maxing && timeSinceLastInvoke >= maxWait));
+    }
+
+    function timerExpired() {
+      var time = now();
+      if (shouldInvoke(time)) {
+        return trailingEdge(time);
+      }
+      // Restart the timer.
+      timerId = setTimeout(timerExpired, remainingWait(time));
+    }
+
+    function trailingEdge(time) {
+      timerId = undefined;
+
+      // Only invoke if we have `lastArgs` which means `func` has been
+      // debounced at least once.
+      if (trailing && lastArgs) {
+        return invokeFunc(time);
+      }
+      lastArgs = lastThis = undefined;
+      return result;
+    }
+
+    function cancel() {
+      if (timerId !== undefined) {
+        clearTimeout(timerId);
+      }
+      lastInvokeTime = 0;
+      lastArgs = lastCallTime = lastThis = timerId = undefined;
+    }
+
+    function flush() {
+      return timerId === undefined ? result : trailingEdge(now());
+    }
+
+    function debounced() {
+      var time = now(),
+          isInvoking = shouldInvoke(time);
+
+      lastArgs = arguments;
+      lastThis = this;
+      lastCallTime = time;
+
+      if (isInvoking) {
+        if (timerId === undefined) {
+          return leadingEdge(lastCallTime);
+        }
+        if (maxing) {
+          // Handle invocations in a tight loop.
+          clearTimeout(timerId);
+          timerId = setTimeout(timerExpired, wait);
+          return invokeFunc(lastCallTime);
+        }
+      }
+      if (timerId === undefined) {
+        timerId = setTimeout(timerExpired, wait);
+      }
+      return result;
+    }
+    debounced.cancel = cancel;
+    debounced.flush = flush;
+    return debounced;
+  }
+
+  /** Error message constants. */
+  var FUNC_ERROR_TEXT = 'Expected a function';
+
+  /**
+   * Creates a throttled function that only invokes `func` at most once per
+   * every `wait` milliseconds. The throttled function comes with a `cancel`
+   * method to cancel delayed `func` invocations and a `flush` method to
+   * immediately invoke them. Provide `options` to indicate whether `func`
+   * should be invoked on the leading and/or trailing edge of the `wait`
+   * timeout. The `func` is invoked with the last arguments provided to the
+   * throttled function. Subsequent calls to the throttled function return the
+   * result of the last `func` invocation.
+   *
+   * **Note:** If `leading` and `trailing` options are `true`, `func` is
+   * invoked on the trailing edge of the timeout only if the throttled function
+   * is invoked more than once during the `wait` timeout.
+   *
+   * If `wait` is `0` and `leading` is `false`, `func` invocation is deferred
+   * until to the next tick, similar to `setTimeout` with a timeout of `0`.
+   *
+   * See [David Corbacho's article](https://css-tricks.com/debouncing-throttling-explained-examples/)
+   * for details over the differences between `_.throttle` and `_.debounce`.
+   *
+   * @static
+   * @memberOf _
+   * @since 0.1.0
+   * @category Function
+   * @param {Function} func The function to throttle.
+   * @param {number} [wait=0] The number of milliseconds to throttle invocations to.
+   * @param {Object} [options={}] The options object.
+   * @param {boolean} [options.leading=true]
+   *  Specify invoking on the leading edge of the timeout.
+   * @param {boolean} [options.trailing=true]
+   *  Specify invoking on the trailing edge of the timeout.
+   * @returns {Function} Returns the new throttled function.
+   * @example
+   *
+   * // Avoid excessively updating the position while scrolling.
+   * jQuery(window).on('scroll', _.throttle(updatePosition, 100));
+   *
+   * // Invoke `renewToken` when the click event is fired, but not more than once every 5 minutes.
+   * var throttled = _.throttle(renewToken, 300000, { 'trailing': false });
+   * jQuery(element).on('click', throttled);
+   *
+   * // Cancel the trailing throttled invocation.
+   * jQuery(window).on('popstate', throttled.cancel);
+   */
+  function throttle(func, wait, options) {
+    var leading = true,
+        trailing = true;
+
+    if (typeof func != 'function') {
+      throw new TypeError(FUNC_ERROR_TEXT);
+    }
+    if (isObject(options)) {
+      leading = 'leading' in options ? !!options.leading : leading;
+      trailing = 'trailing' in options ? !!options.trailing : trailing;
+    }
+    return debounce(func, wait, {
+      'leading': leading,
+      'maxWait': wait,
+      'trailing': trailing
+    });
+  }
+
+  /**
+   * simplebar-core - v1.2.4
+   * Scrollbars, simpler.
+   * https://grsmto.github.io/simplebar/
+   *
+   * Made by Adrien Denat from a fork by Jonathan Nicol
+   * Under MIT License
+   */
+
+
+  /******************************************************************************
+  Copyright (c) Microsoft Corporation.
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+  AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+  PERFORMANCE OF THIS SOFTWARE.
+  ***************************************************************************** */
+
+  var __assign = function() {
+      __assign = Object.assign || function __assign(t) {
+          for (var s, i = 1, n = arguments.length; i < n; i++) {
+              s = arguments[i];
+              for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+          }
+          return t;
+      };
+      return __assign.apply(this, arguments);
+  };
+
+  var cachedScrollbarWidth = null;
+  var cachedDevicePixelRatio = null;
+  if (canUseDOM$1) {
+      window.addEventListener('resize', function () {
+          if (cachedDevicePixelRatio !== window.devicePixelRatio) {
+              cachedDevicePixelRatio = window.devicePixelRatio;
+              cachedScrollbarWidth = null;
+          }
+      });
+  }
+  function scrollbarWidth() {
+      if (cachedScrollbarWidth === null) {
+          if (typeof document === 'undefined') {
+              cachedScrollbarWidth = 0;
+              return cachedScrollbarWidth;
+          }
+          var body = document.body;
+          var box = document.createElement('div');
+          box.classList.add('simplebar-hide-scrollbar');
+          body.appendChild(box);
+          var width = box.getBoundingClientRect().right;
+          body.removeChild(box);
+          cachedScrollbarWidth = width;
+      }
+      return cachedScrollbarWidth;
+  }
+
+  function getElementWindow$1(element) {
+      if (!element ||
+          !element.ownerDocument ||
+          !element.ownerDocument.defaultView) {
+          return window;
+      }
+      return element.ownerDocument.defaultView;
+  }
+  function getElementDocument$1(element) {
+      if (!element || !element.ownerDocument) {
+          return document;
+      }
+      return element.ownerDocument;
+  }
+  // Helper function to retrieve options from element attributes
+  var getOptions$1 = function (obj) {
+      var initialObj = {};
+      var options = Array.prototype.reduce.call(obj, function (acc, attribute) {
+          var option = attribute.name.match(/data-simplebar-(.+)/);
+          if (option) {
+              var key = option[1].replace(/\W+(.)/g, function (_, chr) { return chr.toUpperCase(); });
+              switch (attribute.value) {
+                  case 'true':
+                      acc[key] = true;
+                      break;
+                  case 'false':
+                      acc[key] = false;
+                      break;
+                  case undefined:
+                      acc[key] = true;
+                      break;
+                  default:
+                      acc[key] = attribute.value;
+              }
+          }
+          return acc;
+      }, initialObj);
+      return options;
+  };
+  function addClasses$1(el, classes) {
+      var _a;
+      if (!el)
+          return;
+      (_a = el.classList).add.apply(_a, classes.split(' '));
+  }
+  function removeClasses$1(el, classes) {
+      if (!el)
+          return;
+      classes.split(' ').forEach(function (className) {
+          el.classList.remove(className);
+      });
+  }
+  function classNamesToQuery$1(classNames) {
+      return ".".concat(classNames.split(' ').join('.'));
+  }
+
+  var helpers = /*#__PURE__*/Object.freeze({
+      __proto__: null,
+      getElementWindow: getElementWindow$1,
+      getElementDocument: getElementDocument$1,
+      getOptions: getOptions$1,
+      addClasses: addClasses$1,
+      removeClasses: removeClasses$1,
+      classNamesToQuery: classNamesToQuery$1
+  });
+
+  var getElementWindow = getElementWindow$1, getElementDocument = getElementDocument$1, getOptions$2 = getOptions$1, addClasses$2 = addClasses$1, removeClasses = removeClasses$1, classNamesToQuery = classNamesToQuery$1;
+  var SimpleBarCore = /** @class */ (function () {
+      function SimpleBarCore(element, options) {
+          if (options === void 0) { options = {}; }
+          var _this = this;
+          this.removePreventClickId = null;
+          this.minScrollbarWidth = 20;
+          this.stopScrollDelay = 175;
+          this.isScrolling = false;
+          this.isMouseEntering = false;
+          this.scrollXTicking = false;
+          this.scrollYTicking = false;
+          this.wrapperEl = null;
+          this.contentWrapperEl = null;
+          this.contentEl = null;
+          this.offsetEl = null;
+          this.maskEl = null;
+          this.placeholderEl = null;
+          this.heightAutoObserverWrapperEl = null;
+          this.heightAutoObserverEl = null;
+          this.rtlHelpers = null;
+          this.scrollbarWidth = 0;
+          this.resizeObserver = null;
+          this.mutationObserver = null;
+          this.elStyles = null;
+          this.isRtl = null;
+          this.mouseX = 0;
+          this.mouseY = 0;
+          this.onMouseMove = function () { };
+          this.onWindowResize = function () { };
+          this.onStopScrolling = function () { };
+          this.onMouseEntered = function () { };
+          /**
+           * On scroll event handling
+           */
+          this.onScroll = function () {
+              var elWindow = getElementWindow(_this.el);
+              if (!_this.scrollXTicking) {
+                  elWindow.requestAnimationFrame(_this.scrollX);
+                  _this.scrollXTicking = true;
+              }
+              if (!_this.scrollYTicking) {
+                  elWindow.requestAnimationFrame(_this.scrollY);
+                  _this.scrollYTicking = true;
+              }
+              if (!_this.isScrolling) {
+                  _this.isScrolling = true;
+                  addClasses$2(_this.el, _this.classNames.scrolling);
+              }
+              _this.showScrollbar('x');
+              _this.showScrollbar('y');
+              _this.onStopScrolling();
+          };
+          this.scrollX = function () {
+              if (_this.axis.x.isOverflowing) {
+                  _this.positionScrollbar('x');
+              }
+              _this.scrollXTicking = false;
+          };
+          this.scrollY = function () {
+              if (_this.axis.y.isOverflowing) {
+                  _this.positionScrollbar('y');
+              }
+              _this.scrollYTicking = false;
+          };
+          this._onStopScrolling = function () {
+              removeClasses(_this.el, _this.classNames.scrolling);
+              if (_this.options.autoHide) {
+                  _this.hideScrollbar('x');
+                  _this.hideScrollbar('y');
+              }
+              _this.isScrolling = false;
+          };
+          this.onMouseEnter = function () {
+              if (!_this.isMouseEntering) {
+                  addClasses$2(_this.el, _this.classNames.mouseEntered);
+                  _this.showScrollbar('x');
+                  _this.showScrollbar('y');
+                  _this.isMouseEntering = true;
+              }
+              _this.onMouseEntered();
+          };
+          this._onMouseEntered = function () {
+              removeClasses(_this.el, _this.classNames.mouseEntered);
+              if (_this.options.autoHide) {
+                  _this.hideScrollbar('x');
+                  _this.hideScrollbar('y');
+              }
+              _this.isMouseEntering = false;
+          };
+          this._onMouseMove = function (e) {
+              _this.mouseX = e.clientX;
+              _this.mouseY = e.clientY;
+              if (_this.axis.x.isOverflowing || _this.axis.x.forceVisible) {
+                  _this.onMouseMoveForAxis('x');
+              }
+              if (_this.axis.y.isOverflowing || _this.axis.y.forceVisible) {
+                  _this.onMouseMoveForAxis('y');
+              }
+          };
+          this.onMouseLeave = function () {
+              _this.onMouseMove.cancel();
+              if (_this.axis.x.isOverflowing || _this.axis.x.forceVisible) {
+                  _this.onMouseLeaveForAxis('x');
+              }
+              if (_this.axis.y.isOverflowing || _this.axis.y.forceVisible) {
+                  _this.onMouseLeaveForAxis('y');
+              }
+              _this.mouseX = -1;
+              _this.mouseY = -1;
+          };
+          this._onWindowResize = function () {
+              // Recalculate scrollbarWidth in case it's a zoom
+              _this.scrollbarWidth = _this.getScrollbarWidth();
+              _this.hideNativeScrollbar();
+          };
+          this.onPointerEvent = function (e) {
+              if (!_this.axis.x.track.el ||
+                  !_this.axis.y.track.el ||
+                  !_this.axis.x.scrollbar.el ||
+                  !_this.axis.y.scrollbar.el)
+                  return;
+              var isWithinTrackXBounds, isWithinTrackYBounds;
+              _this.axis.x.track.rect = _this.axis.x.track.el.getBoundingClientRect();
+              _this.axis.y.track.rect = _this.axis.y.track.el.getBoundingClientRect();
+              if (_this.axis.x.isOverflowing || _this.axis.x.forceVisible) {
+                  isWithinTrackXBounds = _this.isWithinBounds(_this.axis.x.track.rect);
+              }
+              if (_this.axis.y.isOverflowing || _this.axis.y.forceVisible) {
+                  isWithinTrackYBounds = _this.isWithinBounds(_this.axis.y.track.rect);
+              }
+              // If any pointer event is called on the scrollbar
+              if (isWithinTrackXBounds || isWithinTrackYBounds) {
+                  // Prevent event leaking
+                  e.stopPropagation();
+                  if (e.type === 'pointerdown' && e.pointerType !== 'touch') {
+                      if (isWithinTrackXBounds) {
+                          _this.axis.x.scrollbar.rect =
+                              _this.axis.x.scrollbar.el.getBoundingClientRect();
+                          if (_this.isWithinBounds(_this.axis.x.scrollbar.rect)) {
+                              _this.onDragStart(e, 'x');
+                          }
+                          else {
+                              _this.onTrackClick(e, 'x');
+                          }
+                      }
+                      if (isWithinTrackYBounds) {
+                          _this.axis.y.scrollbar.rect =
+                              _this.axis.y.scrollbar.el.getBoundingClientRect();
+                          if (_this.isWithinBounds(_this.axis.y.scrollbar.rect)) {
+                              _this.onDragStart(e, 'y');
+                          }
+                          else {
+                              _this.onTrackClick(e, 'y');
+                          }
+                      }
+                  }
+              }
+          };
+          /**
+           * Drag scrollbar handle
+           */
+          this.drag = function (e) {
+              var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
+              if (!_this.draggedAxis || !_this.contentWrapperEl)
+                  return;
+              var eventOffset;
+              var track = _this.axis[_this.draggedAxis].track;
+              var trackSize = (_b = (_a = track.rect) === null || _a === void 0 ? void 0 : _a[_this.axis[_this.draggedAxis].sizeAttr]) !== null && _b !== void 0 ? _b : 0;
+              var scrollbar = _this.axis[_this.draggedAxis].scrollbar;
+              var contentSize = (_d = (_c = _this.contentWrapperEl) === null || _c === void 0 ? void 0 : _c[_this.axis[_this.draggedAxis].scrollSizeAttr]) !== null && _d !== void 0 ? _d : 0;
+              var hostSize = parseInt((_f = (_e = _this.elStyles) === null || _e === void 0 ? void 0 : _e[_this.axis[_this.draggedAxis].sizeAttr]) !== null && _f !== void 0 ? _f : '0px', 10);
+              e.preventDefault();
+              e.stopPropagation();
+              if (_this.draggedAxis === 'y') {
+                  eventOffset = e.pageY;
+              }
+              else {
+                  eventOffset = e.pageX;
+              }
+              // Calculate how far the user's mouse is from the top/left of the scrollbar (minus the dragOffset).
+              var dragPos = eventOffset -
+                  ((_h = (_g = track.rect) === null || _g === void 0 ? void 0 : _g[_this.axis[_this.draggedAxis].offsetAttr]) !== null && _h !== void 0 ? _h : 0) -
+                  _this.axis[_this.draggedAxis].dragOffset;
+              dragPos = _this.draggedAxis === 'x' && _this.isRtl
+                  ? ((_k = (_j = track.rect) === null || _j === void 0 ? void 0 : _j[_this.axis[_this.draggedAxis].sizeAttr]) !== null && _k !== void 0 ? _k : 0) -
+                      scrollbar.size -
+                      dragPos
+                  : dragPos;
+              // Convert the mouse position into a percentage of the scrollbar height/width.
+              var dragPerc = dragPos / (trackSize - scrollbar.size);
+              // Scroll the content by the same percentage.
+              var scrollPos = dragPerc * (contentSize - hostSize);
+              // Fix browsers inconsistency on RTL
+              if (_this.draggedAxis === 'x' && _this.isRtl) {
+                  scrollPos = ((_l = SimpleBarCore.getRtlHelpers()) === null || _l === void 0 ? void 0 : _l.isScrollingToNegative)
+                      ? -scrollPos
+                      : scrollPos;
+              }
+              _this.contentWrapperEl[_this.axis[_this.draggedAxis].scrollOffsetAttr] =
+                  scrollPos;
+          };
+          /**
+           * End scroll handle drag
+           */
+          this.onEndDrag = function (e) {
+              var elDocument = getElementDocument(_this.el);
+              var elWindow = getElementWindow(_this.el);
+              e.preventDefault();
+              e.stopPropagation();
+              removeClasses(_this.el, _this.classNames.dragging);
+              elDocument.removeEventListener('mousemove', _this.drag, true);
+              elDocument.removeEventListener('mouseup', _this.onEndDrag, true);
+              _this.removePreventClickId = elWindow.setTimeout(function () {
+                  // Remove these asynchronously so we still suppress click events
+                  // generated simultaneously with mouseup.
+                  elDocument.removeEventListener('click', _this.preventClick, true);
+                  elDocument.removeEventListener('dblclick', _this.preventClick, true);
+                  _this.removePreventClickId = null;
+              });
+          };
+          /**
+           * Handler to ignore click events during drag
+           */
+          this.preventClick = function (e) {
+              e.preventDefault();
+              e.stopPropagation();
+          };
+          this.el = element;
+          this.options = __assign(__assign({}, SimpleBarCore.defaultOptions), options);
+          this.classNames = __assign(__assign({}, SimpleBarCore.defaultOptions.classNames), options.classNames);
+          this.axis = {
+              x: {
+                  scrollOffsetAttr: 'scrollLeft',
+                  sizeAttr: 'width',
+                  scrollSizeAttr: 'scrollWidth',
+                  offsetSizeAttr: 'offsetWidth',
+                  offsetAttr: 'left',
+                  overflowAttr: 'overflowX',
+                  dragOffset: 0,
+                  isOverflowing: true,
+                  forceVisible: false,
+                  track: { size: null, el: null, rect: null, isVisible: false },
+                  scrollbar: { size: null, el: null, rect: null, isVisible: false }
+              },
+              y: {
+                  scrollOffsetAttr: 'scrollTop',
+                  sizeAttr: 'height',
+                  scrollSizeAttr: 'scrollHeight',
+                  offsetSizeAttr: 'offsetHeight',
+                  offsetAttr: 'top',
+                  overflowAttr: 'overflowY',
+                  dragOffset: 0,
+                  isOverflowing: true,
+                  forceVisible: false,
+                  track: { size: null, el: null, rect: null, isVisible: false },
+                  scrollbar: { size: null, el: null, rect: null, isVisible: false }
+              }
+          };
+          if (typeof this.el !== 'object' || !this.el.nodeName) {
+              throw new Error("Argument passed to SimpleBar must be an HTML element instead of ".concat(this.el));
+          }
+          this.onMouseMove = throttle(this._onMouseMove, 64);
+          this.onWindowResize = debounce(this._onWindowResize, 64, { leading: true });
+          this.onStopScrolling = debounce(this._onStopScrolling, this.stopScrollDelay);
+          this.onMouseEntered = debounce(this._onMouseEntered, this.stopScrollDelay);
+          this.init();
+      }
+      /**
+       * Helper to fix browsers inconsistency on RTL:
+       *  - Firefox inverts the scrollbar initial position
+       *  - IE11 inverts both scrollbar position and scrolling offset
+       * Directly inspired by @KingSora's OverlayScrollbars https://github.com/KingSora/OverlayScrollbars/blob/master/js/OverlayScrollbars.js#L1634
+       */
+      SimpleBarCore.getRtlHelpers = function () {
+          if (SimpleBarCore.rtlHelpers) {
+              return SimpleBarCore.rtlHelpers;
+          }
+          var dummyDiv = document.createElement('div');
+          dummyDiv.innerHTML =
+              '<div class="simplebar-dummy-scrollbar-size"><div></div></div>';
+          var scrollbarDummyEl = dummyDiv.firstElementChild;
+          var dummyChild = scrollbarDummyEl === null || scrollbarDummyEl === void 0 ? void 0 : scrollbarDummyEl.firstElementChild;
+          if (!dummyChild)
+              return null;
+          document.body.appendChild(scrollbarDummyEl);
+          scrollbarDummyEl.scrollLeft = 0;
+          var dummyContainerOffset = SimpleBarCore.getOffset(scrollbarDummyEl);
+          var dummyChildOffset = SimpleBarCore.getOffset(dummyChild);
+          scrollbarDummyEl.scrollLeft = -999;
+          var dummyChildOffsetAfterScroll = SimpleBarCore.getOffset(dummyChild);
+          document.body.removeChild(scrollbarDummyEl);
+          SimpleBarCore.rtlHelpers = {
+              // determines if the scrolling is responding with negative values
+              isScrollOriginAtZero: dummyContainerOffset.left !== dummyChildOffset.left,
+              // determines if the origin scrollbar position is inverted or not (positioned on left or right)
+              isScrollingToNegative: dummyChildOffset.left !== dummyChildOffsetAfterScroll.left
+          };
+          return SimpleBarCore.rtlHelpers;
+      };
+      SimpleBarCore.prototype.getScrollbarWidth = function () {
+          // Try/catch for FF 56 throwing on undefined computedStyles
+          try {
+              // Detect browsers supporting CSS scrollbar styling and do not calculate
+              if ((this.contentWrapperEl &&
+                  getComputedStyle(this.contentWrapperEl, '::-webkit-scrollbar')
+                      .display === 'none') ||
+                  'scrollbarWidth' in document.documentElement.style ||
+                  '-ms-overflow-style' in document.documentElement.style) {
+                  return 0;
+              }
+              else {
+                  return scrollbarWidth();
+              }
+          }
+          catch (e) {
+              return scrollbarWidth();
+          }
+      };
+      SimpleBarCore.getOffset = function (el) {
+          var rect = el.getBoundingClientRect();
+          var elDocument = getElementDocument(el);
+          var elWindow = getElementWindow(el);
+          return {
+              top: rect.top +
+                  (elWindow.pageYOffset || elDocument.documentElement.scrollTop),
+              left: rect.left +
+                  (elWindow.pageXOffset || elDocument.documentElement.scrollLeft)
+          };
+      };
+      SimpleBarCore.prototype.init = function () {
+          // We stop here on server-side
+          if (canUseDOM$1) {
+              this.initDOM();
+              this.rtlHelpers = SimpleBarCore.getRtlHelpers();
+              this.scrollbarWidth = this.getScrollbarWidth();
+              this.recalculate();
+              this.initListeners();
+          }
+      };
+      SimpleBarCore.prototype.initDOM = function () {
+          var _a, _b;
+          // assume that element has his DOM already initiated
+          this.wrapperEl = this.el.querySelector(classNamesToQuery(this.classNames.wrapper));
+          this.contentWrapperEl =
+              this.options.scrollableNode ||
+                  this.el.querySelector(classNamesToQuery(this.classNames.contentWrapper));
+          this.contentEl =
+              this.options.contentNode ||
+                  this.el.querySelector(classNamesToQuery(this.classNames.contentEl));
+          this.offsetEl = this.el.querySelector(classNamesToQuery(this.classNames.offset));
+          this.maskEl = this.el.querySelector(classNamesToQuery(this.classNames.mask));
+          this.placeholderEl = this.findChild(this.wrapperEl, classNamesToQuery(this.classNames.placeholder));
+          this.heightAutoObserverWrapperEl = this.el.querySelector(classNamesToQuery(this.classNames.heightAutoObserverWrapperEl));
+          this.heightAutoObserverEl = this.el.querySelector(classNamesToQuery(this.classNames.heightAutoObserverEl));
+          this.axis.x.track.el = this.findChild(this.el, "".concat(classNamesToQuery(this.classNames.track)).concat(classNamesToQuery(this.classNames.horizontal)));
+          this.axis.y.track.el = this.findChild(this.el, "".concat(classNamesToQuery(this.classNames.track)).concat(classNamesToQuery(this.classNames.vertical)));
+          this.axis.x.scrollbar.el =
+              ((_a = this.axis.x.track.el) === null || _a === void 0 ? void 0 : _a.querySelector(classNamesToQuery(this.classNames.scrollbar))) || null;
+          this.axis.y.scrollbar.el =
+              ((_b = this.axis.y.track.el) === null || _b === void 0 ? void 0 : _b.querySelector(classNamesToQuery(this.classNames.scrollbar))) || null;
+          if (!this.options.autoHide) {
+              addClasses$2(this.axis.x.scrollbar.el, this.classNames.visible);
+              addClasses$2(this.axis.y.scrollbar.el, this.classNames.visible);
+          }
+      };
+      SimpleBarCore.prototype.initListeners = function () {
+          var _this = this;
+          var _a;
+          var elWindow = getElementWindow(this.el);
+          // Event listeners
+          this.el.addEventListener('mouseenter', this.onMouseEnter);
+          this.el.addEventListener('pointerdown', this.onPointerEvent, true);
+          this.el.addEventListener('mousemove', this.onMouseMove);
+          this.el.addEventListener('mouseleave', this.onMouseLeave);
+          (_a = this.contentWrapperEl) === null || _a === void 0 ? void 0 : _a.addEventListener('scroll', this.onScroll);
+          // Browser zoom triggers a window resize
+          elWindow.addEventListener('resize', this.onWindowResize);
+          if (!this.contentEl)
+              return;
+          if (window.ResizeObserver) {
+              // Hack for https://github.com/WICG/ResizeObserver/issues/38
+              var resizeObserverStarted_1 = false;
+              var resizeObserver = elWindow.ResizeObserver || ResizeObserver;
+              this.resizeObserver = new resizeObserver(function () {
+                  if (!resizeObserverStarted_1)
+                      return;
+                  elWindow.requestAnimationFrame(function () {
+                      _this.recalculate();
+                  });
+              });
+              this.resizeObserver.observe(this.el);
+              this.resizeObserver.observe(this.contentEl);
+              elWindow.requestAnimationFrame(function () {
+                  resizeObserverStarted_1 = true;
+              });
+          }
+          // This is required to detect horizontal scroll. Vertical scroll only needs the resizeObserver.
+          this.mutationObserver = new elWindow.MutationObserver(function () {
+              elWindow.requestAnimationFrame(function () {
+                  _this.recalculate();
+              });
+          });
+          this.mutationObserver.observe(this.contentEl, {
+              childList: true,
+              subtree: true,
+              characterData: true
+          });
+      };
+      SimpleBarCore.prototype.recalculate = function () {
+          if (!this.heightAutoObserverEl ||
+              !this.contentEl ||
+              !this.contentWrapperEl ||
+              !this.wrapperEl ||
+              !this.placeholderEl)
+              return;
+          var elWindow = getElementWindow(this.el);
+          this.elStyles = elWindow.getComputedStyle(this.el);
+          this.isRtl = this.elStyles.direction === 'rtl';
+          var contentElOffsetWidth = this.contentEl.offsetWidth;
+          var isHeightAuto = this.heightAutoObserverEl.offsetHeight <= 1;
+          var isWidthAuto = this.heightAutoObserverEl.offsetWidth <= 1 || contentElOffsetWidth > 0;
+          var contentWrapperElOffsetWidth = this.contentWrapperEl.offsetWidth;
+          var elOverflowX = this.elStyles.overflowX;
+          var elOverflowY = this.elStyles.overflowY;
+          this.contentEl.style.padding = "".concat(this.elStyles.paddingTop, " ").concat(this.elStyles.paddingRight, " ").concat(this.elStyles.paddingBottom, " ").concat(this.elStyles.paddingLeft);
+          this.wrapperEl.style.margin = "-".concat(this.elStyles.paddingTop, " -").concat(this.elStyles.paddingRight, " -").concat(this.elStyles.paddingBottom, " -").concat(this.elStyles.paddingLeft);
+          var contentElScrollHeight = this.contentEl.scrollHeight;
+          var contentElScrollWidth = this.contentEl.scrollWidth;
+          this.contentWrapperEl.style.height = isHeightAuto ? 'auto' : '100%';
+          // Determine placeholder size
+          this.placeholderEl.style.width = isWidthAuto
+              ? "".concat(contentElOffsetWidth || contentElScrollWidth, "px")
+              : 'auto';
+          this.placeholderEl.style.height = "".concat(contentElScrollHeight, "px");
+          var contentWrapperElOffsetHeight = this.contentWrapperEl.offsetHeight;
+          this.axis.x.isOverflowing =
+              contentElOffsetWidth !== 0 && contentElScrollWidth > contentElOffsetWidth;
+          this.axis.y.isOverflowing =
+              contentElScrollHeight > contentWrapperElOffsetHeight;
+          // Set isOverflowing to false if user explicitely set hidden overflow
+          this.axis.x.isOverflowing =
+              elOverflowX === 'hidden' ? false : this.axis.x.isOverflowing;
+          this.axis.y.isOverflowing =
+              elOverflowY === 'hidden' ? false : this.axis.y.isOverflowing;
+          this.axis.x.forceVisible =
+              this.options.forceVisible === 'x' || this.options.forceVisible === true;
+          this.axis.y.forceVisible =
+              this.options.forceVisible === 'y' || this.options.forceVisible === true;
+          this.hideNativeScrollbar();
+          // Set isOverflowing to false if scrollbar is not necessary (content is shorter than offset)
+          var offsetForXScrollbar = this.axis.x.isOverflowing
+              ? this.scrollbarWidth
+              : 0;
+          var offsetForYScrollbar = this.axis.y.isOverflowing
+              ? this.scrollbarWidth
+              : 0;
+          this.axis.x.isOverflowing =
+              this.axis.x.isOverflowing &&
+                  contentElScrollWidth > contentWrapperElOffsetWidth - offsetForYScrollbar;
+          this.axis.y.isOverflowing =
+              this.axis.y.isOverflowing &&
+                  contentElScrollHeight >
+                      contentWrapperElOffsetHeight - offsetForXScrollbar;
+          this.axis.x.scrollbar.size = this.getScrollbarSize('x');
+          this.axis.y.scrollbar.size = this.getScrollbarSize('y');
+          if (this.axis.x.scrollbar.el)
+              this.axis.x.scrollbar.el.style.width = "".concat(this.axis.x.scrollbar.size, "px");
+          if (this.axis.y.scrollbar.el)
+              this.axis.y.scrollbar.el.style.height = "".concat(this.axis.y.scrollbar.size, "px");
+          this.positionScrollbar('x');
+          this.positionScrollbar('y');
+          this.toggleTrackVisibility('x');
+          this.toggleTrackVisibility('y');
+      };
+      /**
+       * Calculate scrollbar size
+       */
+      SimpleBarCore.prototype.getScrollbarSize = function (axis) {
+          var _a, _b;
+          if (axis === void 0) { axis = 'y'; }
+          if (!this.axis[axis].isOverflowing || !this.contentEl) {
+              return 0;
+          }
+          var contentSize = this.contentEl[this.axis[axis].scrollSizeAttr];
+          var trackSize = (_b = (_a = this.axis[axis].track.el) === null || _a === void 0 ? void 0 : _a[this.axis[axis].offsetSizeAttr]) !== null && _b !== void 0 ? _b : 0;
+          var scrollbarRatio = trackSize / contentSize;
+          var scrollbarSize;
+          // Calculate new height/position of drag handle.
+          scrollbarSize = Math.max(~~(scrollbarRatio * trackSize), this.options.scrollbarMinSize);
+          if (this.options.scrollbarMaxSize) {
+              scrollbarSize = Math.min(scrollbarSize, this.options.scrollbarMaxSize);
+          }
+          return scrollbarSize;
+      };
+      SimpleBarCore.prototype.positionScrollbar = function (axis) {
+          var _a, _b, _c;
+          if (axis === void 0) { axis = 'y'; }
+          var scrollbar = this.axis[axis].scrollbar;
+          if (!this.axis[axis].isOverflowing ||
+              !this.contentWrapperEl ||
+              !scrollbar.el ||
+              !this.elStyles) {
+              return;
+          }
+          var contentSize = this.contentWrapperEl[this.axis[axis].scrollSizeAttr];
+          var trackSize = ((_a = this.axis[axis].track.el) === null || _a === void 0 ? void 0 : _a[this.axis[axis].offsetSizeAttr]) || 0;
+          var hostSize = parseInt(this.elStyles[this.axis[axis].sizeAttr], 10);
+          var scrollOffset = this.contentWrapperEl[this.axis[axis].scrollOffsetAttr];
+          scrollOffset =
+              axis === 'x' &&
+                  this.isRtl &&
+                  ((_b = SimpleBarCore.getRtlHelpers()) === null || _b === void 0 ? void 0 : _b.isScrollOriginAtZero)
+                  ? -scrollOffset
+                  : scrollOffset;
+          if (axis === 'x' && this.isRtl) {
+              scrollOffset = ((_c = SimpleBarCore.getRtlHelpers()) === null || _c === void 0 ? void 0 : _c.isScrollingToNegative)
+                  ? scrollOffset
+                  : -scrollOffset;
+          }
+          var scrollPourcent = scrollOffset / (contentSize - hostSize);
+          var handleOffset = ~~((trackSize - scrollbar.size) * scrollPourcent);
+          handleOffset =
+              axis === 'x' && this.isRtl
+                  ? -handleOffset + (trackSize - scrollbar.size)
+                  : handleOffset;
+          scrollbar.el.style.transform =
+              axis === 'x'
+                  ? "translate3d(".concat(handleOffset, "px, 0, 0)")
+                  : "translate3d(0, ".concat(handleOffset, "px, 0)");
+      };
+      SimpleBarCore.prototype.toggleTrackVisibility = function (axis) {
+          if (axis === void 0) { axis = 'y'; }
+          var track = this.axis[axis].track.el;
+          var scrollbar = this.axis[axis].scrollbar.el;
+          if (!track || !scrollbar || !this.contentWrapperEl)
+              return;
+          if (this.axis[axis].isOverflowing || this.axis[axis].forceVisible) {
+              track.style.visibility = 'visible';
+              this.contentWrapperEl.style[this.axis[axis].overflowAttr] = 'scroll';
+              this.el.classList.add("".concat(this.classNames.scrollable, "-").concat(axis));
+          }
+          else {
+              track.style.visibility = 'hidden';
+              this.contentWrapperEl.style[this.axis[axis].overflowAttr] = 'hidden';
+              this.el.classList.remove("".concat(this.classNames.scrollable, "-").concat(axis));
+          }
+          // Even if forceVisible is enabled, scrollbar itself should be hidden
+          if (this.axis[axis].isOverflowing) {
+              scrollbar.style.display = 'block';
+          }
+          else {
+              scrollbar.style.display = 'none';
+          }
+      };
+      SimpleBarCore.prototype.showScrollbar = function (axis) {
+          if (axis === void 0) { axis = 'y'; }
+          if (this.axis[axis].isOverflowing && !this.axis[axis].scrollbar.isVisible) {
+              addClasses$2(this.axis[axis].scrollbar.el, this.classNames.visible);
+              this.axis[axis].scrollbar.isVisible = true;
+          }
+      };
+      SimpleBarCore.prototype.hideScrollbar = function (axis) {
+          if (axis === void 0) { axis = 'y'; }
+          if (this.axis[axis].isOverflowing && this.axis[axis].scrollbar.isVisible) {
+              removeClasses(this.axis[axis].scrollbar.el, this.classNames.visible);
+              this.axis[axis].scrollbar.isVisible = false;
+          }
+      };
+      SimpleBarCore.prototype.hideNativeScrollbar = function () {
+          if (!this.offsetEl)
+              return;
+          this.offsetEl.style[this.isRtl ? 'left' : 'right'] =
+              this.axis.y.isOverflowing || this.axis.y.forceVisible
+                  ? "-".concat(this.scrollbarWidth, "px")
+                  : '0px';
+          this.offsetEl.style.bottom =
+              this.axis.x.isOverflowing || this.axis.x.forceVisible
+                  ? "-".concat(this.scrollbarWidth, "px")
+                  : '0px';
+      };
+      SimpleBarCore.prototype.onMouseMoveForAxis = function (axis) {
+          if (axis === void 0) { axis = 'y'; }
+          var currentAxis = this.axis[axis];
+          if (!currentAxis.track.el || !currentAxis.scrollbar.el)
+              return;
+          currentAxis.track.rect = currentAxis.track.el.getBoundingClientRect();
+          currentAxis.scrollbar.rect =
+              currentAxis.scrollbar.el.getBoundingClientRect();
+          if (this.isWithinBounds(currentAxis.track.rect)) {
+              this.showScrollbar(axis);
+              addClasses$2(currentAxis.track.el, this.classNames.hover);
+              if (this.isWithinBounds(currentAxis.scrollbar.rect)) {
+                  addClasses$2(currentAxis.scrollbar.el, this.classNames.hover);
+              }
+              else {
+                  removeClasses(currentAxis.scrollbar.el, this.classNames.hover);
+              }
+          }
+          else {
+              removeClasses(currentAxis.track.el, this.classNames.hover);
+              if (this.options.autoHide) {
+                  this.hideScrollbar(axis);
+              }
+          }
+      };
+      SimpleBarCore.prototype.onMouseLeaveForAxis = function (axis) {
+          if (axis === void 0) { axis = 'y'; }
+          removeClasses(this.axis[axis].track.el, this.classNames.hover);
+          removeClasses(this.axis[axis].scrollbar.el, this.classNames.hover);
+          if (this.options.autoHide) {
+              this.hideScrollbar(axis);
+          }
+      };
+      /**
+       * on scrollbar handle drag movement starts
+       */
+      SimpleBarCore.prototype.onDragStart = function (e, axis) {
+          var _a;
+          if (axis === void 0) { axis = 'y'; }
+          var elDocument = getElementDocument(this.el);
+          var elWindow = getElementWindow(this.el);
+          var scrollbar = this.axis[axis].scrollbar;
+          // Measure how far the user's mouse is from the top of the scrollbar drag handle.
+          var eventOffset = axis === 'y' ? e.pageY : e.pageX;
+          this.axis[axis].dragOffset =
+              eventOffset - (((_a = scrollbar.rect) === null || _a === void 0 ? void 0 : _a[this.axis[axis].offsetAttr]) || 0);
+          this.draggedAxis = axis;
+          addClasses$2(this.el, this.classNames.dragging);
+          elDocument.addEventListener('mousemove', this.drag, true);
+          elDocument.addEventListener('mouseup', this.onEndDrag, true);
+          if (this.removePreventClickId === null) {
+              elDocument.addEventListener('click', this.preventClick, true);
+              elDocument.addEventListener('dblclick', this.preventClick, true);
+          }
+          else {
+              elWindow.clearTimeout(this.removePreventClickId);
+              this.removePreventClickId = null;
+          }
+      };
+      SimpleBarCore.prototype.onTrackClick = function (e, axis) {
+          var _this = this;
+          var _a, _b, _c, _d;
+          if (axis === void 0) { axis = 'y'; }
+          var currentAxis = this.axis[axis];
+          if (!this.options.clickOnTrack ||
+              !currentAxis.scrollbar.el ||
+              !this.contentWrapperEl)
+              return;
+          // Preventing the event's default to trigger click underneath
+          e.preventDefault();
+          var elWindow = getElementWindow(this.el);
+          this.axis[axis].scrollbar.rect =
+              currentAxis.scrollbar.el.getBoundingClientRect();
+          var scrollbar = this.axis[axis].scrollbar;
+          var scrollbarOffset = (_b = (_a = scrollbar.rect) === null || _a === void 0 ? void 0 : _a[this.axis[axis].offsetAttr]) !== null && _b !== void 0 ? _b : 0;
+          var hostSize = parseInt((_d = (_c = this.elStyles) === null || _c === void 0 ? void 0 : _c[this.axis[axis].sizeAttr]) !== null && _d !== void 0 ? _d : '0px', 10);
+          var scrolled = this.contentWrapperEl[this.axis[axis].scrollOffsetAttr];
+          var t = axis === 'y'
+              ? this.mouseY - scrollbarOffset
+              : this.mouseX - scrollbarOffset;
+          var dir = t < 0 ? -1 : 1;
+          var scrollSize = dir === -1 ? scrolled - hostSize : scrolled + hostSize;
+          var speed = 40;
+          var scrollTo = function () {
+              if (!_this.contentWrapperEl)
+                  return;
+              if (dir === -1) {
+                  if (scrolled > scrollSize) {
+                      scrolled -= speed;
+                      _this.contentWrapperEl[_this.axis[axis].scrollOffsetAttr] = scrolled;
+                      elWindow.requestAnimationFrame(scrollTo);
+                  }
+              }
+              else {
+                  if (scrolled < scrollSize) {
+                      scrolled += speed;
+                      _this.contentWrapperEl[_this.axis[axis].scrollOffsetAttr] = scrolled;
+                      elWindow.requestAnimationFrame(scrollTo);
+                  }
+              }
+          };
+          scrollTo();
+      };
+      /**
+       * Getter for content element
+       */
+      SimpleBarCore.prototype.getContentElement = function () {
+          return this.contentEl;
+      };
+      /**
+       * Getter for original scrolling element
+       */
+      SimpleBarCore.prototype.getScrollElement = function () {
+          return this.contentWrapperEl;
+      };
+      SimpleBarCore.prototype.removeListeners = function () {
+          var elWindow = getElementWindow(this.el);
+          // Event listeners
+          this.el.removeEventListener('mouseenter', this.onMouseEnter);
+          this.el.removeEventListener('pointerdown', this.onPointerEvent, true);
+          this.el.removeEventListener('mousemove', this.onMouseMove);
+          this.el.removeEventListener('mouseleave', this.onMouseLeave);
+          if (this.contentWrapperEl) {
+              this.contentWrapperEl.removeEventListener('scroll', this.onScroll);
+          }
+          elWindow.removeEventListener('resize', this.onWindowResize);
+          if (this.mutationObserver) {
+              this.mutationObserver.disconnect();
+          }
+          if (this.resizeObserver) {
+              this.resizeObserver.disconnect();
+          }
+          // Cancel all debounced functions
+          this.onMouseMove.cancel();
+          this.onWindowResize.cancel();
+          this.onStopScrolling.cancel();
+          this.onMouseEntered.cancel();
+      };
+      /**
+       * Remove all listeners from DOM nodes
+       */
+      SimpleBarCore.prototype.unMount = function () {
+          this.removeListeners();
+      };
+      /**
+       * Check if mouse is within bounds
+       */
+      SimpleBarCore.prototype.isWithinBounds = function (bbox) {
+          return (this.mouseX >= bbox.left &&
+              this.mouseX <= bbox.left + bbox.width &&
+              this.mouseY >= bbox.top &&
+              this.mouseY <= bbox.top + bbox.height);
+      };
+      /**
+       * Find element children matches query
+       */
+      SimpleBarCore.prototype.findChild = function (el, query) {
+          var matches = el.matches ||
+              el.webkitMatchesSelector ||
+              el.mozMatchesSelector ||
+              el.msMatchesSelector;
+          return Array.prototype.filter.call(el.children, function (child) {
+              return matches.call(child, query);
+          })[0];
+      };
+      SimpleBarCore.rtlHelpers = null;
+      SimpleBarCore.defaultOptions = {
+          forceVisible: false,
+          clickOnTrack: true,
+          scrollbarMinSize: 25,
+          scrollbarMaxSize: 0,
+          ariaLabel: 'scrollable content',
+          classNames: {
+              contentEl: 'simplebar-content',
+              contentWrapper: 'simplebar-content-wrapper',
+              offset: 'simplebar-offset',
+              mask: 'simplebar-mask',
+              wrapper: 'simplebar-wrapper',
+              placeholder: 'simplebar-placeholder',
+              scrollbar: 'simplebar-scrollbar',
+              track: 'simplebar-track',
+              heightAutoObserverWrapperEl: 'simplebar-height-auto-observer-wrapper',
+              heightAutoObserverEl: 'simplebar-height-auto-observer',
+              visible: 'simplebar-visible',
+              horizontal: 'simplebar-horizontal',
+              vertical: 'simplebar-vertical',
+              hover: 'simplebar-hover',
+              dragging: 'simplebar-dragging',
+              scrolling: 'simplebar-scrolling',
+              scrollable: 'simplebar-scrollable',
+              mouseEntered: 'simplebar-mouse-entered'
+          },
+          scrollableNode: null,
+          contentNode: null,
+          autoHide: true
+      };
+      /**
+       * Static functions
+       */
+      SimpleBarCore.getOptions = getOptions$2;
+      SimpleBarCore.helpers = helpers;
+      return SimpleBarCore;
+  }());
+
+  /**
+   * simplebar - v6.2.5
+   * Scrollbars, simpler.
+   * https://grsmto.github.io/simplebar/
+   *
+   * Made by Adrien Denat from a fork by Jonathan Nicol
+   * Under MIT License
+   */
+
+
+  /******************************************************************************
+  Copyright (c) Microsoft Corporation.
+
+  Permission to use, copy, modify, and/or distribute this software for any
+  purpose with or without fee is hereby granted.
+
+  THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+  REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+  AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+  INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+  LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+  OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+  PERFORMANCE OF THIS SOFTWARE.
+  ***************************************************************************** */
+  /* global Reflect, Promise */
+
+  var extendStatics = function(d, b) {
+      extendStatics = Object.setPrototypeOf ||
+          ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+          function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+      return extendStatics(d, b);
+  };
+
+  function __extends(d, b) {
+      if (typeof b !== "function" && b !== null)
+          throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+      extendStatics(d, b);
+      function __() { this.constructor = d; }
+      d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+  }
+
+  var _a = SimpleBarCore.helpers, getOptions = _a.getOptions, addClasses = _a.addClasses;
+  var SimpleBar = /** @class */ (function (_super) {
+      __extends(SimpleBar, _super);
+      function SimpleBar() {
+          var args = [];
+          for (var _i = 0; _i < arguments.length; _i++) {
+              args[_i] = arguments[_i];
+          }
+          var _this = _super.apply(this, args) || this;
+          // // Save a reference to the instance, so we know this DOM node has already been instancied
+          SimpleBar.instances.set(args[0], _this);
+          return _this;
+      }
+      SimpleBar.initDOMLoadedElements = function () {
+          document.removeEventListener('DOMContentLoaded', this.initDOMLoadedElements);
+          window.removeEventListener('load', this.initDOMLoadedElements);
+          Array.prototype.forEach.call(document.querySelectorAll('[data-simplebar]'), function (el) {
+              if (el.getAttribute('data-simplebar') !== 'init' &&
+                  !SimpleBar.instances.has(el))
+                  new SimpleBar(el, getOptions(el.attributes));
+          });
+      };
+      SimpleBar.removeObserver = function () {
+          var _a;
+          (_a = SimpleBar.globalObserver) === null || _a === void 0 ? void 0 : _a.disconnect();
+      };
+      SimpleBar.prototype.initDOM = function () {
+          var _this = this;
+          var _a, _b, _c;
+          // make sure this element doesn't have the elements yet
+          if (!Array.prototype.filter.call(this.el.children, function (child) {
+              return child.classList.contains(_this.classNames.wrapper);
+          }).length) {
+              // Prepare DOM
+              this.wrapperEl = document.createElement('div');
+              this.contentWrapperEl = document.createElement('div');
+              this.offsetEl = document.createElement('div');
+              this.maskEl = document.createElement('div');
+              this.contentEl = document.createElement('div');
+              this.placeholderEl = document.createElement('div');
+              this.heightAutoObserverWrapperEl = document.createElement('div');
+              this.heightAutoObserverEl = document.createElement('div');
+              addClasses(this.wrapperEl, this.classNames.wrapper);
+              addClasses(this.contentWrapperEl, this.classNames.contentWrapper);
+              addClasses(this.offsetEl, this.classNames.offset);
+              addClasses(this.maskEl, this.classNames.mask);
+              addClasses(this.contentEl, this.classNames.contentEl);
+              addClasses(this.placeholderEl, this.classNames.placeholder);
+              addClasses(this.heightAutoObserverWrapperEl, this.classNames.heightAutoObserverWrapperEl);
+              addClasses(this.heightAutoObserverEl, this.classNames.heightAutoObserverEl);
+              while (this.el.firstChild) {
+                  this.contentEl.appendChild(this.el.firstChild);
+              }
+              this.contentWrapperEl.appendChild(this.contentEl);
+              this.offsetEl.appendChild(this.contentWrapperEl);
+              this.maskEl.appendChild(this.offsetEl);
+              this.heightAutoObserverWrapperEl.appendChild(this.heightAutoObserverEl);
+              this.wrapperEl.appendChild(this.heightAutoObserverWrapperEl);
+              this.wrapperEl.appendChild(this.maskEl);
+              this.wrapperEl.appendChild(this.placeholderEl);
+              this.el.appendChild(this.wrapperEl);
+              (_a = this.contentWrapperEl) === null || _a === void 0 ? void 0 : _a.setAttribute('tabindex', '0');
+              (_b = this.contentWrapperEl) === null || _b === void 0 ? void 0 : _b.setAttribute('role', 'region');
+              (_c = this.contentWrapperEl) === null || _c === void 0 ? void 0 : _c.setAttribute('aria-label', this.options.ariaLabel);
+          }
+          if (!this.axis.x.track.el || !this.axis.y.track.el) {
+              var track = document.createElement('div');
+              var scrollbar = document.createElement('div');
+              addClasses(track, this.classNames.track);
+              addClasses(scrollbar, this.classNames.scrollbar);
+              track.appendChild(scrollbar);
+              this.axis.x.track.el = track.cloneNode(true);
+              addClasses(this.axis.x.track.el, this.classNames.horizontal);
+              this.axis.y.track.el = track.cloneNode(true);
+              addClasses(this.axis.y.track.el, this.classNames.vertical);
+              this.el.appendChild(this.axis.x.track.el);
+              this.el.appendChild(this.axis.y.track.el);
+          }
+          SimpleBarCore.prototype.initDOM.call(this);
+          this.el.setAttribute('data-simplebar', 'init');
+      };
+      SimpleBar.prototype.unMount = function () {
+          SimpleBarCore.prototype.unMount.call(this);
+          SimpleBar.instances["delete"](this.el);
+      };
+      SimpleBar.initHtmlApi = function () {
+          this.initDOMLoadedElements = this.initDOMLoadedElements.bind(this);
+          // MutationObserver is IE11+
+          if (typeof MutationObserver !== 'undefined') {
+              // Mutation observer to observe dynamically added elements
+              this.globalObserver = new MutationObserver(SimpleBar.handleMutations);
+              this.globalObserver.observe(document, { childList: true, subtree: true });
+          }
+          // Taken from jQuery `ready` function
+          // Instantiate elements already present on the page
+          if (document.readyState === 'complete' || // @ts-ignore: IE specific
+              (document.readyState !== 'loading' && !document.documentElement.doScroll)) {
+              // Handle it asynchronously to allow scripts the opportunity to delay init
+              window.setTimeout(this.initDOMLoadedElements);
+          }
+          else {
+              document.addEventListener('DOMContentLoaded', this.initDOMLoadedElements);
+              window.addEventListener('load', this.initDOMLoadedElements);
+          }
+      };
+      SimpleBar.handleMutations = function (mutations) {
+          mutations.forEach(function (mutation) {
+              mutation.addedNodes.forEach(function (addedNode) {
+                  if (addedNode.nodeType === 1) {
+                      if (addedNode.hasAttribute('data-simplebar')) {
+                          !SimpleBar.instances.has(addedNode) &&
+                              document.documentElement.contains(addedNode) &&
+                              new SimpleBar(addedNode, getOptions(addedNode.attributes));
+                      }
+                      else {
+                          addedNode
+                              .querySelectorAll('[data-simplebar]')
+                              .forEach(function (el) {
+                              if (el.getAttribute('data-simplebar') !== 'init' &&
+                                  !SimpleBar.instances.has(el) &&
+                                  document.documentElement.contains(el))
+                                  new SimpleBar(el, getOptions(el.attributes));
+                          });
+                      }
+                  }
+              });
+              mutation.removedNodes.forEach(function (removedNode) {
+                  if (removedNode.nodeType === 1) {
+                      if (removedNode.getAttribute('data-simplebar') === 'init') {
+                          SimpleBar.instances.has(removedNode) &&
+                              !document.documentElement.contains(removedNode) &&
+                              SimpleBar.instances.get(removedNode).unMount();
+                      }
+                      else {
+                          Array.prototype.forEach.call(removedNode.querySelectorAll('[data-simplebar="init"]'), function (el) {
+                              SimpleBar.instances.has(el) &&
+                                  !document.documentElement.contains(el) &&
+                                  SimpleBar.instances.get(el).unMount();
+                          });
+                      }
+                  }
+              });
+          });
+      };
+      SimpleBar.instances = new WeakMap();
+      return SimpleBar;
+  }(SimpleBarCore));
+  /**
+   * HTML API
+   * Called only in a browser env.
+   */
+  if (canUseDOM$1) {
+      SimpleBar.initHtmlApi();
+  }
+
   var _class;
   var _id = /*#__PURE__*/new WeakMap();
   var _options = /*#__PURE__*/new WeakMap();
   var _container = /*#__PURE__*/new WeakMap();
   var _toolbarEl = /*#__PURE__*/new WeakMap();
   var _toolbarItemTabWrapperEl = /*#__PURE__*/new WeakMap();
+  var _toolbarItemDropdownEl = /*#__PURE__*/new WeakMap();
   var _tabBodyEl = /*#__PURE__*/new WeakMap();
   var _cacheHandle = /*#__PURE__*/new WeakMap();
   var _cacheKey = /*#__PURE__*/new WeakMap();
   var _cacheDefaultTabsKey = /*#__PURE__*/new WeakMap();
   var _contextmenuEl = /*#__PURE__*/new WeakMap();
+  var _dropdownEl = /*#__PURE__*/new WeakMap();
   var _contextmenuCleanup = /*#__PURE__*/new WeakMap();
-  var _canRemovePenClass = /*#__PURE__*/new WeakMap();
+  var _dropdownCleanup = /*#__PURE__*/new WeakMap();
   var _hideItemSelector = /*#__PURE__*/new WeakMap();
+  var _debounceCenterActive = /*#__PURE__*/new WeakMap();
+  var _openTabsSubtitleEl = /*#__PURE__*/new WeakMap();
+  var _openTabsOriginalListEl = /*#__PURE__*/new WeakMap();
+  var _openTabsearchResultsEl = /*#__PURE__*/new WeakMap();
+  var _recentlyClosedTabsSubtitleEl = /*#__PURE__*/new WeakMap();
+  var _recentlyClosedTabsOriginalListEl = /*#__PURE__*/new WeakMap();
+  var _recentlyClosedTabssearchResultsEl = /*#__PURE__*/new WeakMap();
+  var _noResultsMessageEl = /*#__PURE__*/new WeakMap();
+  var _cacheRecentlyClosedTabsKey = /*#__PURE__*/new WeakMap();
   var _init = /*#__PURE__*/new WeakSet();
+  var _initDropdown = /*#__PURE__*/new WeakSet();
   var _initLocale = /*#__PURE__*/new WeakSet();
   var _parsedefaultTabs = /*#__PURE__*/new WeakSet();
   var _tabOptionExtend = /*#__PURE__*/new WeakSet();
   var _initCache = /*#__PURE__*/new WeakSet();
   var _initEvent = /*#__PURE__*/new WeakSet();
+  var _restoreBodyElement = /*#__PURE__*/new WeakSet();
+  var _highlightKeyword = /*#__PURE__*/new WeakSet();
+  var _matchKeyword = /*#__PURE__*/new WeakSet();
   var _getTabUrl = /*#__PURE__*/new WeakSet();
+  var _toggleDropdown = /*#__PURE__*/new WeakSet();
+  var _prepareDropdownData = /*#__PURE__*/new WeakSet();
+  var _showDropdown = /*#__PURE__*/new WeakSet();
+  var _closeDropdown = /*#__PURE__*/new WeakSet();
   var _showContextmenuByUrl = /*#__PURE__*/new WeakSet();
   var _closeContextmenu = /*#__PURE__*/new WeakSet();
-  var _addPenClass = /*#__PURE__*/new WeakSet();
-  var _removePenClass = /*#__PURE__*/new WeakSet();
   var _updatePosition = /*#__PURE__*/new WeakSet();
   var _initContainer = /*#__PURE__*/new WeakSet();
   var _initContextmenu = /*#__PURE__*/new WeakSet();
@@ -9376,8 +11545,10 @@
   var _cacheTabsCheck = /*#__PURE__*/new WeakSet();
   var _restoreTabs = /*#__PURE__*/new WeakSet();
   var _removeTabByUrl = /*#__PURE__*/new WeakSet();
+  var _cacheRecentlyClosedByUrl = /*#__PURE__*/new WeakSet();
   var _removeTabPaneByUrl = /*#__PURE__*/new WeakSet();
   var _removeCacheTabByUrl = /*#__PURE__*/new WeakSet();
+  var _activeTabByUrl = /*#__PURE__*/new WeakSet();
   var _addTabPaneByUrl = /*#__PURE__*/new WeakSet();
   var _addIFrameByUrl = /*#__PURE__*/new WeakSet();
   var _iFrameTimeoutHandle = /*#__PURE__*/new WeakSet();
@@ -9389,8 +11560,8 @@
   var _addCacheTab = /*#__PURE__*/new WeakSet();
   var _activeCacheTabByUrl = /*#__PURE__*/new WeakSet();
   var _scrollToTabByUrl = /*#__PURE__*/new WeakSet();
-  var _tabClickHandle = /*#__PURE__*/new WeakSet();
   var _getCacheActiveTab = /*#__PURE__*/new WeakSet();
+  var _updateCacheTabByUrl = /*#__PURE__*/new WeakSet();
   var _getTabLoadingByUrl = /*#__PURE__*/new WeakSet();
   var _addLoadingByUrl = /*#__PURE__*/new WeakSet();
   var _getIFrames = /*#__PURE__*/new WeakSet();
@@ -9404,10 +11575,10 @@
       // 添加遮罩层
       _classPrivateMethodInitSpec(this, _addLoadingByUrl);
       _classPrivateMethodInitSpec(this, _getTabLoadingByUrl);
+      //根据url来修改数据
+      _classPrivateMethodInitSpec(this, _updateCacheTabByUrl);
       //获取缓存中激活的tab项
       _classPrivateMethodInitSpec(this, _getCacheActiveTab);
-      //tab被单击时的事件处理
-      _classPrivateMethodInitSpec(this, _tabClickHandle);
       _classPrivateMethodInitSpec(this, _scrollToTabByUrl);
       _classPrivateMethodInitSpec(this, _activeCacheTabByUrl);
       _classPrivateMethodInitSpec(this, _addCacheTab);
@@ -9425,17 +11596,30 @@
       _classPrivateMethodInitSpec(this, _addIFrameByUrl);
       //根据url来添加面板
       _classPrivateMethodInitSpec(this, _addTabPaneByUrl);
+      // activeTabByUrl(url) {
+      //   this.#activeTabByUrl(url)
+      // }
+      /**
+       * 私有的激活tab的方法
+       * @param {String} url 
+       * @param {Boolean} fromAddTabMethod 激活tab的方法方法是否来自addTab()
+       * @param {Boolean} timestamp 是否需要更新自动时间戳
+       * @returns 
+       */
+      _classPrivateMethodInitSpec(this, _activeTabByUrl);
       //根据url删除缓存里的tab
       _classPrivateMethodInitSpec(this, _removeCacheTabByUrl);
       // 删除面板
       _classPrivateMethodInitSpec(this, _removeTabPaneByUrl);
+      _classPrivateMethodInitSpec(this, _cacheRecentlyClosedByUrl);
       //单纯的只做删除的工作
       _classPrivateMethodInitSpec(this, _removeTabByUrl);
       /**
        * 恢复tab
-       * @param {Array} tabs 数组 
-       * @param {String} url 将要激活tab的url,不传将设置tabs中的最后一项 
-       * @returns 
+       * @param {Array} options tab选项数组
+       * @param {String} url 将要激活tab的url,不传将设置options中的最后一项
+       * @param {Boolean} cache 是否要添加进缓存 true:添加进缓存 false:不添加缓存
+       * @returns
        */
       _classPrivateMethodInitSpec(this, _restoreTabs);
       //检测缓存中的tab的合法性
@@ -9444,20 +11628,30 @@
       _classPrivateMethodInitSpec(this, _initContextmenu);
       _classPrivateMethodInitSpec(this, _initContainer);
       _classPrivateMethodInitSpec(this, _updatePosition);
-      _classPrivateMethodInitSpec(this, _removePenClass);
-      _classPrivateMethodInitSpec(this, _addPenClass);
       //关闭右键菜单
       _classPrivateMethodInitSpec(this, _closeContextmenu);
       //显示右键菜单
       _classPrivateMethodInitSpec(this, _showContextmenuByUrl);
+      //关闭右键菜单
+      _classPrivateMethodInitSpec(this, _closeDropdown);
+      //显示下拉菜单
+      _classPrivateMethodInitSpec(this, _showDropdown);
+      // 准备下拉菜单的数据
+      _classPrivateMethodInitSpec(this, _prepareDropdownData);
+      _classPrivateMethodInitSpec(this, _toggleDropdown);
       // 从元素的data属性上获取Url
       _classPrivateMethodInitSpec(this, _getTabUrl);
+      // 匹配关键词高亮
+      _classPrivateMethodInitSpec(this, _matchKeyword);
+      _classPrivateMethodInitSpec(this, _highlightKeyword);
+      _classPrivateMethodInitSpec(this, _restoreBodyElement);
       _classPrivateMethodInitSpec(this, _initEvent);
       _classPrivateMethodInitSpec(this, _initCache);
       //合并单个tab的选项
       _classPrivateMethodInitSpec(this, _tabOptionExtend);
       _classPrivateMethodInitSpec(this, _parsedefaultTabs);
       _classPrivateMethodInitSpec(this, _initLocale);
+      _classPrivateMethodInitSpec(this, _initDropdown);
       _classPrivateMethodInitSpec(this, _init);
       _classPrivateFieldInitSpec(this, _id, {
         writable: true,
@@ -9480,6 +11674,11 @@
       });
       // tab滚动区域包裹层
       _classPrivateFieldInitSpec(this, _toolbarItemTabWrapperEl, {
+        writable: true,
+        value: void 0
+      });
+      // 工具栏-item-下拉菜单按钮
+      _classPrivateFieldInitSpec(this, _toolbarItemDropdownEl, {
         writable: true,
         value: void 0
       });
@@ -9508,18 +11707,62 @@
         writable: true,
         value: void 0
       });
+      //下拉菜单的元素
+      _classPrivateFieldInitSpec(this, _dropdownEl, {
+        writable: true,
+        value: void 0
+      });
       //tab右键菜单floatui自动更新的监听器
       _classPrivateFieldInitSpec(this, _contextmenuCleanup, {
         writable: true,
         value: void 0
       });
-      //可否关闭pen
-      _classPrivateFieldInitSpec(this, _canRemovePenClass, {
+      //下拉菜单floatui自动更新的监听器
+      _classPrivateFieldInitSpec(this, _dropdownCleanup, {
         writable: true,
-        value: 0
+        value: void 0
       });
       //工具栏需要隐藏的项目
       _classPrivateFieldInitSpec(this, _hideItemSelector, {
+        writable: true,
+        value: void 0
+      });
+      //激活tab居中防抖函数
+      _classPrivateFieldInitSpec(this, _debounceCenterActive, {
+        writable: true,
+        value: void 0
+      });
+      // 下拉菜单的一些组成部分
+      _classPrivateFieldInitSpec(this, _openTabsSubtitleEl, {
+        writable: true,
+        value: void 0
+      });
+      _classPrivateFieldInitSpec(this, _openTabsOriginalListEl, {
+        writable: true,
+        value: void 0
+      });
+      _classPrivateFieldInitSpec(this, _openTabsearchResultsEl, {
+        writable: true,
+        value: void 0
+      });
+      _classPrivateFieldInitSpec(this, _recentlyClosedTabsSubtitleEl, {
+        writable: true,
+        value: void 0
+      });
+      _classPrivateFieldInitSpec(this, _recentlyClosedTabsOriginalListEl, {
+        writable: true,
+        value: void 0
+      });
+      _classPrivateFieldInitSpec(this, _recentlyClosedTabssearchResultsEl, {
+        writable: true,
+        value: void 0
+      });
+      _classPrivateFieldInitSpec(this, _noResultsMessageEl, {
+        writable: true,
+        value: void 0
+      });
+      // 用以存储最近关闭的缓存的key
+      _classPrivateFieldInitSpec(this, _cacheRecentlyClosedTabsKey, {
         writable: true,
         value: void 0
       });
@@ -9543,13 +11786,16 @@
 
       //额外处理defaultTabs参数
       _classPrivateFieldSet(this, _options, _classPrivateMethodGet(this, _parsedefaultTabs, _parsedefaultTabs2).call(this, _classPrivateFieldGet(this, _options)));
-      console.log(_classPrivateFieldGet(this, _options));
       _classPrivateFieldSet(this, _id, id);
       _classPrivateFieldSet(this, _cacheKey, "".concat(Constants.CLASSES.container, "-").concat(id));
       _classPrivateFieldSet(this, _cacheDefaultTabsKey, "".concat(_classPrivateFieldGet(this, _cacheKey), "-defaultTabs"));
+      _classPrivateFieldSet(this, _cacheRecentlyClosedTabsKey, "".concat(_classPrivateFieldGet(this, _cacheKey), "-recentlyClosed"));
       _classPrivateFieldSet(this, _hideItemSelector, (_classPrivateFieldGet2 = _classPrivateFieldGet(this, _options).responsive.hideToolbarItem) === null || _classPrivateFieldGet2 === void 0 ? void 0 : _classPrivateFieldGet2.map(item => {
         return ".".concat(Constants.CLASSES.toolbar, " li.").concat(item);
       }));
+      _classPrivateFieldSet(this, _debounceCenterActive, Utils.debounce(() => {
+        this.scrollToTabByUrl(_classPrivateMethodGet(this, _getTabUrl, _getTabUrl2).call(this, this.getActiveTab()));
+      }, 500));
 
       //初始化
       _classPrivateMethodGet(this, _init, _init2).call(this);
@@ -9590,7 +11836,6 @@
       if (result !== true) {
         return console.error(result);
       }
-      console.log(option);
       const url = option.url;
       if (!this.getTabByUrl(url)) {
         //如果这个tab不存在
@@ -9616,14 +11861,22 @@
         }
 
         //如果没有该tab则添加这个tab
-        _classPrivateFieldGet(this, _toolbarItemTabWrapperEl).insertAdjacentHTML('beforeEnd', _classPrivateMethodGet(this, _generateTabHtml, _generateTabHtml2).call(this, option));
+        // this.#toolbarItemTabWrapperEl.insertAdjacentHTML(
+        //   'beforeEnd',
+        //   this.#generateTabHtml(option),
+        // )
+
+        const tabEl = Utils.createNode(_classPrivateMethodGet(this, _generateTabHtml, _generateTabHtml2).call(this, option));
+        option.timestamp = Date.now();
+        tabEl[Constants.DATAKEYS.tabOptionDataKey] = option;
+        _classPrivateFieldGet(this, _toolbarItemTabWrapperEl).appendChild(tabEl);
 
         //添加进缓存
         _classPrivateMethodGet(this, _addCacheTab, _addCacheTab2).call(this, option);
       }
 
       //激活这个被添加的tab
-      this.activeTabByUrl(url, true);
+      _classPrivateMethodGet(this, _activeTabByUrl, _activeTabByUrl2).call(this, url, true);
 
       //滚动到tab所在位置
       this.scrollToTabByUrl(url);
@@ -9646,44 +11899,9 @@
         _classPrivateMethodGet(this, _removeTabByUrl, _removeTabByUrl2).call(this, url);
 
         //激活tab
-        this.activeTabByUrl(_classPrivateMethodGet(this, _getTabUrl, _getTabUrl2).call(this, nextTab));
+        _classPrivateMethodGet(this, _activeTabByUrl, _activeTabByUrl2).call(this, _classPrivateMethodGet(this, _getTabUrl, _getTabUrl2).call(this, nextTab));
       } else {
         _classPrivateMethodGet(this, _removeTabByUrl, _removeTabByUrl2).call(this, url);
-      }
-    }
-    activeTabByUrl(url) {
-      var _this$getActiveTab, _this$getTabByUrl, _this$getActiveTabPan, _this$getTabPaneByUrl;
-      let fromAddTabMethod = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-      //过滤掉不存在的tab,或者已经激活的tab
-      if (!this.getTabByUrl(url) || this.isTabActiveByUrl(url)) {
-        return;
-      }
-
-      //把之前激活的tab的激活状态类给删掉
-      (_this$getActiveTab = this.getActiveTab()) === null || _this$getActiveTab === void 0 || _this$getActiveTab.classList.remove(Constants.CLASSES.tabActive);
-
-      //添加上激活的类
-      (_this$getTabByUrl = this.getTabByUrl(url)) === null || _this$getTabByUrl === void 0 || _this$getTabByUrl.classList.add(Constants.CLASSES.tabActive);
-
-      //激活缓存中的tab
-      _classPrivateMethodGet(this, _activeCacheTabByUrl, _activeCacheTabByUrl2).call(this, url);
-
-      //判断tab面板是否已经存在,不存在则添加
-      if (!this.getTabPaneByUrl(url)) {
-        _classPrivateMethodGet(this, _addTabPaneByUrl, _addTabPaneByUrl2).call(this, url);
-      }
-
-      //激活面板
-      //把之前激活的面板给移除掉
-      (_this$getActiveTabPan = this.getActiveTabPane()) === null || _this$getActiveTabPan === void 0 || _this$getActiveTabPan.classList.remove(Constants.CLASSES.tabPaneActive);
-      //把当前的tab面板给添加激活类
-      (_this$getTabPaneByUrl = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl === void 0 || _this$getTabPaneByUrl.classList.add(Constants.CLASSES.tabPaneActive);
-
-      //激活逻辑完成调用激活事件
-      if (fromAddTabMethod) {
-        typeof _classPrivateFieldGet(this, _options).onTabAddActivated === 'function' && _classPrivateFieldGet(this, _options).onTabAddActivated.call(this, this);
-      } else {
-        typeof _classPrivateFieldGet(this, _options).onTabActivated === 'function' && _classPrivateFieldGet(this, _options).onTabActivated.call(this, this);
       }
     }
     scrollToTabByUrl(url) {
@@ -9691,8 +11909,8 @@
     }
     // 关闭loading层
     clsoeLoadingByUrl(url) {
-      var _this$getTabPaneByUrl2;
-      (_this$getTabPaneByUrl2 = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl2 === void 0 || (_this$getTabPaneByUrl2 = _this$getTabPaneByUrl2.querySelector(".".concat(Constants.CLASSES.overlays))) === null || _this$getTabPaneByUrl2 === void 0 || _this$getTabPaneByUrl2.remove();
+      var _this$getTabPaneByUrl;
+      (_this$getTabPaneByUrl = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl === void 0 || (_this$getTabPaneByUrl = _this$getTabPaneByUrl.querySelector(".".concat(Constants.CLASSES.overlays))) === null || _this$getTabPaneByUrl === void 0 || _this$getTabPaneByUrl.remove();
     }
     getTabPaneByUrl(url) {
       return _classPrivateFieldGet(this, _tabBodyEl).querySelector("[".concat(Constants.DATAKEYS.tabUrl, "=\"").concat(url, "\"]"));
@@ -9726,14 +11944,14 @@
 
     //判断tab是否可以被关闭
     isTabClosableByUrl(url) {
-      var _this$getTabByUrl2;
-      return (_this$getTabByUrl2 = this.getTabByUrl(url)) !== null && _this$getTabByUrl2 !== void 0 && _this$getTabByUrl2.querySelector('svg') ? true : false;
+      var _this$getTabByUrl;
+      return (_this$getTabByUrl = this.getTabByUrl(url)) !== null && _this$getTabByUrl !== void 0 && _this$getTabByUrl.querySelector('svg') ? true : false;
     }
 
     //判断tab是否已激活
     isTabActiveByUrl(url) {
-      var _this$getTabByUrl3;
-      return (_this$getTabByUrl3 = this.getTabByUrl(url)) !== null && _this$getTabByUrl3 !== void 0 && _this$getTabByUrl3.classList.contains(Constants.CLASSES.tabActive) ? true : false;
+      var _this$getTabByUrl2;
+      return (_this$getTabByUrl2 = this.getTabByUrl(url)) !== null && _this$getTabByUrl2 !== void 0 && _this$getTabByUrl2.classList.contains(Constants.CLASSES.tabActive) ? true : false;
     }
 
     // 上滑动
@@ -9790,8 +12008,69 @@
     _classPrivateMethodGet(this, _initCache, _initCache2).call(this);
     _classPrivateMethodGet(this, _initContainer, _initContainer2).call(this);
     _classPrivateMethodGet(this, _initContextmenu, _initContextmenu2).call(this);
+    _classPrivateMethodGet(this, _initDropdown, _initDropdown2).call(this);
     _classPrivateMethodGet(this, _initEvent, _initEvent2).call(this);
     _classPrivateMethodGet(this, _initTabs, _initTabs2).call(this);
+  }
+  function _initDropdown2() {
+    if (_classPrivateFieldGet(this, _options).toolbar.hide === true || _classPrivateFieldGet(this, _options).tab.dropdown === false) return;
+    const dropdownOptions = _classPrivateFieldGet(this, _options).toolbar.dropdown;
+
+    //组织html
+    const html = [Utils.sprintf(Constants.HTML.dropdown[0], _classPrivateFieldGet(this, _id))];
+    const placeholderText = dropdownOptions.searchInput.placeholder.trim() !== '' ? dropdownOptions.searchInput.placeholder : _classPrivateFieldGet(this, _options).formatSearchInputPlaceholder();
+    html.push(Utils.sprintf(Constants.HTML.dropdownHeader, dropdownOptions.searchInput.prefixIcon, placeholderText));
+
+    // 加入body的开始标记
+    html.push(Constants.HTML.dropdownBody[0]);
+
+    //打开的标签的副标题
+    const openedTabsText = dropdownOptions.openedTabs.text.trim() !== '' ? dropdownOptions.openedTabs.text : _classPrivateFieldGet(this, _options).formatOpenedTabs();
+    html.push(Utils.sprintf(Constants.HTML.dropdownBodySticky, '', openedTabsText, ''));
+
+    //插入两个section(一个存储原来的结果，一个是展示搜索结果，展示搜索结果的默认要隐藏)
+    html.push(Constants.HTML.dropdownBodySection);
+    html.push(Utils.setProperty(Constants.HTML.dropdownBodySection, ['.section'], 'display', 'none'));
+
+    //插入第二个副标题
+    const recentlyClosedTabsText = dropdownOptions.recentlyClosedTabs.text.trim() !== '' ? dropdownOptions.recentlyClosedTabs.text : _classPrivateFieldGet(this, _options).formatRecentlyClosedTabs();
+    html.push(Utils.sprintf(Constants.HTML.dropdownBodySticky, Constants.CLASSES.dropdownBodyStickyHasIcon, recentlyClosedTabsText, Utils.sprintf(Constants.HTML.iconWrapper, 'tabindex="0"', dropdownOptions.recentlyClosedTabs.hideIcon)));
+
+    //这两个section外面再套一个div
+    html.push('<div>');
+    //再插入两个section
+    html.push(Constants.HTML.dropdownBodySection);
+    html.push(Utils.setProperty(Constants.HTML.dropdownBodySection, ['.section'], 'display', 'none'));
+    html.push('</div>');
+
+    //再插入一个无数据时的dom
+    const noResultsText = dropdownOptions.searchNoResultsText.trim() !== '' ? dropdownOptions.searchNoResultsText : _classPrivateFieldGet(this, _options).formatSearchNoResults();
+    html.push(Utils.sprintf(Constants.HTML.dropdownEmpty, noResultsText));
+    html.push(Constants.HTML.dropdownBody[1]);
+    html.push(Constants.HTML.dropdown[1]);
+
+    //插入到body中去
+    document.body.insertAdjacentHTML('beforeEnd', html.join(''));
+
+    //查找右键菜单
+    _classPrivateFieldSet(this, _dropdownEl, document.querySelector("[".concat(Constants.DATAKEYS.dropdown, "=\"").concat(_classPrivateFieldGet(this, _id), "\"]")));
+
+    //查找一些必须的元素
+
+    const allSticky = _classPrivateFieldGet(this, _dropdownEl).querySelectorAll('.sticky');
+    const allSection = _classPrivateFieldGet(this, _dropdownEl).querySelectorAll('ul.section');
+    _classPrivateFieldSet(this, _openTabsSubtitleEl, allSticky[0]);
+    _classPrivateFieldSet(this, _openTabsOriginalListEl, allSection[0]);
+    _classPrivateFieldSet(this, _openTabsearchResultsEl, allSection[1]);
+    _classPrivateFieldSet(this, _recentlyClosedTabsSubtitleEl, allSticky[1]);
+    _classPrivateFieldSet(this, _recentlyClosedTabsOriginalListEl, allSection[2]);
+    _classPrivateFieldSet(this, _recentlyClosedTabssearchResultsEl, allSection[3]);
+    _classPrivateFieldSet(this, _noResultsMessageEl, _classPrivateFieldGet(this, _dropdownEl).querySelector('.empty'));
+
+    //初始化滚动条插件
+    new SimpleBar(_classPrivateFieldGet(this, _dropdownEl).querySelector('.body'), {
+      autoHide: true
+    });
   }
   function _initLocale2() {
     if (_classPrivateFieldGet(this, _options).lang) {
@@ -9843,23 +12122,38 @@
   }
   function _initEvent2() {
     let that = this;
-    const resizeCenterActiveDebounce = Utils.debounce(() => {
-      this.scrollToTabByUrl(_classPrivateMethodGet(this, _getTabUrl, _getTabUrl2).call(this, this.getActiveTab()));
-    }, 500);
+
+    //用以处理tab右键菜单和下拉菜单的关闭处理
+    jQuery(document).on('click contextmenu touchstart scroll dragstart', function (event) {
+      const clickedElement = event.target;
+      const eventType = event.type;
+
+      //上面的这几种事件全部都要关闭tab的右键菜单
+      _classPrivateMethodGet(that, _closeContextmenu, _closeContextmenu2).call(that);
+      if (["click", "dragstart"].includes(eventType)) {
+        //对于下拉菜单只处理点击和拖拽用户体验比较好
+        if (!_classPrivateFieldGet(that, _dropdownEl).contains(clickedElement) && !_classPrivateFieldGet(that, _toolbarItemDropdownEl).contains(clickedElement)) {
+          _classPrivateMethodGet(that, _closeDropdown, _closeDropdown2).call(that);
+        }
+      }
+    });
 
     //响应式处理
     Utils.onResize(_classPrivateFieldGet(this, _container).parentNode, function (rect) {
+      //关闭tab右键菜单和下拉菜单
+      _classPrivateMethodGet(that, _closeContextmenu, _closeContextmenu2).call(that);
+      _classPrivateMethodGet(that, _closeDropdown, _closeDropdown2).call(that);
       if (_classPrivateFieldGet(that, _options).responsive !== false) {
         //如果启用了响应式就动态设置显示和隐藏
         Utils.setProperty(_classPrivateFieldGet(that, _container), _classPrivateFieldGet(that, _hideItemSelector), 'display', rect.width < _classPrivateFieldGet(that, _options).responsive.breakpoint ? 'none' : null);
       }
       if (_classPrivateFieldGet(that, _options).toolbar.hide === false && _classPrivateFieldGet(that, _options).tab.resizeCenterActive === true) {
-        resizeCenterActiveDebounce();
+        _classPrivateFieldGet(that, _debounceCenterActive).call(that);
       }
     });
 
     //添加通过html属性添加tab的能力(这个非常方便)
-    jQuery(document.body).on('click', "[".concat(Constants.DATAKEYS.singleTab, "][").concat(Constants.DATAKEYS.singleTabTarget, "]"), function (event) {
+    jQuery(document).on('click', "[".concat(Constants.DATAKEYS.singleTab, "][").concat(Constants.DATAKEYS.singleTabTarget, "]"), function (event) {
       event.preventDefault();
       if (this.getAttribute(Constants.DATAKEYS.singleTabTarget) === _classPrivateFieldGet(that, _id)) {
         try {
@@ -9886,7 +12180,18 @@
       click: {
         stopPropagation: false,
         handle: function () {
-          _classPrivateMethodGet(that, _tabClickHandle, _tabClickHandle2).call(that, _classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, this));
+          let url = _classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, this);
+
+          //tab被单击的回调
+          typeof _classPrivateFieldGet(that, _options).onTabClick === 'function' && _classPrivateFieldGet(that, _options).onTabClick.call(that, url, that);
+
+          //激活
+          _classPrivateMethodGet(that, _activeTabByUrl, _activeTabByUrl2).call(that, url);
+
+          //滚动到tab所在位置
+          if (_classPrivateFieldGet(that, _options).tab.clickCenterActive === true) {
+            that.scrollToTabByUrl(url);
+          }
         }
       },
       dbclick: {
@@ -9902,9 +12207,11 @@
     //tab关闭事件
     if (_classPrivateFieldGet(this, _options).tab.closeBtn !== false) {
       jQuery(_classPrivateFieldGet(this, _toolbarItemTabWrapperEl)).on('click', "button > svg", function (event) {
-        event.stopPropagation(); //必须要阻止事件的冒泡
+        event.stopPropagation(); //必须要阻止事件的冒泡,否则会冲突
 
         let tab = this.parentNode;
+        //因为阻止了事件的冒泡传递，因此，需要手动关闭右键菜单
+        _classPrivateMethodGet(that, _closeContextmenu, _closeContextmenu2).call(that);
         that.closeTabByUrl(_classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, tab));
       });
     }
@@ -9926,6 +12233,9 @@
         case 'next':
           that.nextScroll();
           break;
+        case 'dropdown':
+          _classPrivateMethodGet(that, _toggleDropdown, _toggleDropdown2).call(that);
+          break;
       }
     });
 
@@ -9946,10 +12256,10 @@
         // 判断滚轮方向，负值表示向上滚动，正值表示向下滚动
         const direction = Math.sign(event.deltaY);
         if (direction === -1 && prev) {
-          that.activeTabByUrl(_classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, prev));
+          _classPrivateMethodGet(that, _activeTabByUrl, _activeTabByUrl2).call(that, _classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, prev));
           centerTabEl = prev;
         } else if (direction === 1 && next) {
-          that.activeTabByUrl(_classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, next));
+          _classPrivateMethodGet(that, _activeTabByUrl, _activeTabByUrl2).call(that, _classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, next));
           centerTabEl = next;
         }
         if (centerActive === true && centerTabEl) {
@@ -9961,7 +12271,7 @@
         event.preventDefault(); //阻止默认事件，否则它会被外部的滚动条影响
 
         //判断是否启用右键菜单，如果启用就要关闭
-        if (_classPrivateFieldGet(that, _options).tab.contextmenu.enable === true) {
+        if (_classPrivateFieldGet(that, _options).tab.contextmenu !== false) {
           _classPrivateMethodGet(that, _closeContextmenu, _closeContextmenu2).call(that);
         }
         if (onlyScroll === true) {
@@ -9986,16 +12296,12 @@
         //显示右键菜单
         _classPrivateMethodGet(that, _showContextmenuByUrl, _showContextmenuByUrl2).call(that, _classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, tabEl));
       });
-      jQuery(document).on('click contextmenu touchstart scroll dragstart', function () {
-        _classPrivateMethodGet(that, _closeContextmenu, _closeContextmenu2).call(that);
-      });
       jQuery(_classPrivateFieldGet(this, _contextmenuEl)).on('click contextmenu touchstart', "li[data-tab-url]", function (event) {
         if (event.type === 'contextmenu') {
           event.preventDefault();
         }
         const url = _classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, this);
         const itemClass = this.getAttribute('class');
-        console.log(itemClass);
         switch (itemClass) {
           case 'refresh':
             that.refreshTabByUrl(url);
@@ -10016,7 +12322,7 @@
             window.open(url, '_blank');
             break;
           case 'fullscreen':
-            that.activeTabByUrl(url);
+            _classPrivateMethodGet(that, _activeTabByUrl, _activeTabByUrl2).call(that, url);
             that.getTabPaneByUrl(url).requestFullscreen();
             break;
           case 'center-active':
@@ -10073,61 +12379,226 @@
         dragging = null;
       });
     }
+
+    //下拉菜单的相关事件
+    if (_classPrivateFieldGet(this, _options).toolbar.dropdown !== false) {
+      //点击最近关闭折叠
+      jQuery(_classPrivateFieldGet(this, _dropdownEl)).on('click', '.has-icon', function (event) {
+        const ul = this.nextElementSibling;
+        const iconWrapper = this.querySelector('.icon-wrapper');
+        iconWrapper.focus();
+        if (ul.style.display === "none") {
+          iconWrapper.innerHTML = _classPrivateFieldGet(that, _options).toolbar.dropdown.recentlyClosedTabs.hideIcon;
+          ul.style.display = "block";
+        } else {
+          iconWrapper.innerHTML = _classPrivateFieldGet(that, _options).toolbar.dropdown.recentlyClosedTabs.showIcon;
+          ul.style.display = "none";
+        }
+      });
+
+      //input框的事件
+      jQuery(_classPrivateFieldGet(this, _dropdownEl)).on('input', '.header input', function (event) {
+        const keyword = this.value.toLowerCase();
+
+        //先清空
+        _classPrivateFieldGet(that, _openTabsearchResultsEl).innerHTML = '';
+        _classPrivateFieldGet(that, _recentlyClosedTabssearchResultsEl).innerHTML = '';
+        if (keyword.trim() !== '') {
+          let results1 = false;
+          let results2 = false;
+          results1 = _classPrivateMethodGet(that, _matchKeyword, _matchKeyword2).call(that, keyword, _classPrivateFieldGet(that, _openTabsOriginalListEl), _classPrivateFieldGet(that, _openTabsearchResultsEl), _classPrivateFieldGet(that, _openTabsSubtitleEl));
+          results2 = _classPrivateMethodGet(that, _matchKeyword, _matchKeyword2).call(that, keyword, _classPrivateFieldGet(that, _recentlyClosedTabsOriginalListEl), _classPrivateFieldGet(that, _recentlyClosedTabssearchResultsEl), _classPrivateFieldGet(that, _recentlyClosedTabsSubtitleEl));
+          if (results1 === false && results2 === false) {
+            //说明两个都没找到结果
+            _classPrivateFieldGet(that, _noResultsMessageEl).style.display = 'block';
+          } else {
+            _classPrivateFieldGet(that, _noResultsMessageEl).style.display = 'none';
+          }
+        } else {
+          //隐藏结果
+          _classPrivateFieldGet(that, _noResultsMessageEl).style.display = 'none';
+          _classPrivateMethodGet(that, _restoreBodyElement, _restoreBodyElement2).call(that, _classPrivateFieldGet(that, _openTabsOriginalListEl), _classPrivateFieldGet(that, _openTabsearchResultsEl), _classPrivateFieldGet(that, _openTabsSubtitleEl));
+          _classPrivateMethodGet(that, _restoreBodyElement, _restoreBodyElement2).call(that, _classPrivateFieldGet(that, _recentlyClosedTabsOriginalListEl), _classPrivateFieldGet(that, _recentlyClosedTabssearchResultsEl), _classPrivateFieldGet(that, _recentlyClosedTabsSubtitleEl));
+        }
+      });
+
+      //每个tab的点击事件
+      jQuery(_classPrivateFieldGet(this, _dropdownEl)).on('click', '.section li', function (event) {
+        const option = this[Constants.DATAKEYS.tabOptionDataKey];
+        that.addTab({
+          title: option.title,
+          url: option.url,
+          closable: option.closable
+        });
+
+        //点击完毕后关闭下拉菜单
+        _classPrivateMethodGet(that, _closeDropdown, _closeDropdown2).call(that);
+      });
+
+      //tab的关闭按钮被单击
+      jQuery(_classPrivateFieldGet(this, _dropdownEl)).on('click', '.section li .icon-wrapper', function (event) {
+        event.stopPropagation();
+        const tabLiEl = this.parentNode;
+        const option = tabLiEl[Constants.DATAKEYS.tabOptionDataKey];
+        that.closeTabByUrl(option.url);
+        tabLiEl.remove();
+      });
+    }
+  }
+  function _restoreBodyElement2(element, resultsEl, subtitleEl) {
+    element.style.display = 'block';
+    subtitleEl.style.display = 'block';
+    resultsEl.style.display = 'none';
+  }
+  function _highlightKeyword2(text, keyword) {
+    const regex = new RegExp("(".concat(keyword, ")"), 'gi');
+    return text.replace(regex, '<span class="highlighted">$1</span>');
+  }
+  function _matchKeyword2(keyword, element, resultsEl, subtitleEl) {
+    let hasResults = false;
+    Array.from(element.children).forEach(li => {
+      const title = li.querySelector('.title').textContent;
+      const url = li.querySelector('.url').textContent.toLowerCase();
+      if (title.toLowerCase().includes(keyword) || url.toLowerCase().includes(keyword)) {
+        hasResults = true;
+
+        // console.log(li[Constants.DATAKEYS.tabOptionDataKey]);
+
+        let matchLi = li.cloneNode(true);
+
+        //bugfix:克隆会导致自定义属性丢失,重新赋值
+        matchLi[Constants.DATAKEYS.tabOptionDataKey] = li[Constants.DATAKEYS.tabOptionDataKey];
+        matchLi.querySelector('.title').innerHTML = _classPrivateMethodGet(this, _highlightKeyword, _highlightKeyword2).call(this, title, keyword);
+        matchLi.querySelector('.url').innerHTML = _classPrivateMethodGet(this, _highlightKeyword, _highlightKeyword2).call(this, url, keyword);
+        resultsEl.appendChild(matchLi);
+      }
+    });
+    if (hasResults) {
+      resultsEl.style.display = 'block';
+      subtitleEl.style.display = 'block';
+      element.style.display = 'none';
+    } else {
+      resultsEl.style.display = 'none';
+      element.style.display = 'none';
+      subtitleEl.style.display = 'none';
+    }
+    return hasResults;
   }
   function _getTabUrl2(element) {
     return element === null || element === void 0 ? void 0 : element.getAttribute(Constants.DATAKEYS.tabUrl);
   }
-  function _showContextmenuByUrl2(url) {
-    var _classPrivateFieldGet5;
-    const listGroupCloseItemEl = _classPrivateFieldGet(this, _contextmenuEl).querySelector(".".concat(Constants.CLASSES.listGroupCloseItem));
-    if (this.isTabClosableByUrl(url)) {
-      listGroupCloseItemEl === null || listGroupCloseItemEl === void 0 || listGroupCloseItemEl.style.setProperty('display', null); //是可关闭的，因此需要显示右键菜单的关闭当前
+  function _toggleDropdown2() {
+    if (_classPrivateFieldGet(this, _dropdownEl).classList.contains(Constants.CLASSES.dropdownActive)) {
+      _classPrivateMethodGet(this, _closeDropdown, _closeDropdown2).call(this);
     } else {
-      listGroupCloseItemEl === null || listGroupCloseItemEl === void 0 || listGroupCloseItemEl.style.setProperty('display', 'none');
+      _classPrivateMethodGet(this, _prepareDropdownData, _prepareDropdownData2).call(this);
+      _classPrivateMethodGet(this, _showDropdown, _showDropdown2).call(this);
     }
-    let tabEl = this.getTabByUrl(url);
-    (_classPrivateFieldGet5 = _classPrivateFieldGet(this, _contextmenuCleanup)) === null || _classPrivateFieldGet5 === void 0 || _classPrivateFieldGet5.call(this);
+  }
+  function _prepareDropdownData2() {
+    var _this$getTabs2, _classPrivateFieldGet5;
+    const allOpenedTabs = [];
+    (_this$getTabs2 = this.getTabs()) === null || _this$getTabs2 === void 0 || _this$getTabs2.forEach(tabEl => {
+      allOpenedTabs.push(tabEl[Constants.DATAKEYS.tabOptionDataKey]);
+    });
+
+    // 未激活的,按照timestamp从小到大排序
+    const notActiveTabs = allOpenedTabs.filter(tab => tab.active === false).sort((a, b) => b.timestamp - a.timestamp);
+    const ativeTabs = allOpenedTabs.find(tab => tab.active === true);
+    const newOrderTabs = [...notActiveTabs, ativeTabs];
+    const closeBtnTpl = Utils.sprintf(Constants.HTML.iconWrapper, '', _classPrivateFieldGet(this, _options).toolbar.dropdown.openedTabs.itemIcon);
+
+    //创建两个虚拟节点
+    const openTabsFrag = document.createDocumentFragment();
+    const timeFormatOptions = _classPrivateFieldGet(this, _options).toolbar.dropdown.timeFormat;
+
+    //国际化时间文本
+    const customText = {
+      second: timeFormatOptions.seconds.trim() !== '' ? timeFormatOptions.seconds : _classPrivateFieldGet(this, _options).formatTimeSeconds(),
+      minutes: timeFormatOptions.minutes.trim() !== '' ? timeFormatOptions.minutes : _classPrivateFieldGet(this, _options).formatTimeMinutes(),
+      hours: timeFormatOptions.hours.trim() !== '' ? timeFormatOptions.hours : _classPrivateFieldGet(this, _options).formatTimeHours(),
+      days: timeFormatOptions.days.trim() !== '' ? timeFormatOptions.days : _classPrivateFieldGet(this, _options).formatTimeDays(),
+      months: timeFormatOptions.months.trim() !== '' ? timeFormatOptions.months : _classPrivateFieldGet(this, _options).formatTimeMonths(),
+      years: timeFormatOptions.year.trim() !== '' ? timeFormatOptions.year : _classPrivateFieldGet(this, _options).formatTimeYear()
+    };
+    newOrderTabs.forEach((item, index) => {
+      const dropdownItemEl = Utils.createNode(Utils.sprintf(Constants.HTML.sectionItem, index === 0 ? Constants.CLASSES.dropdownActive : '', item.title, item.url, Utils.timeAgo(item.timestamp, customText), item.closable === true ? closeBtnTpl : ''));
+      dropdownItemEl[Constants.DATAKEYS.tabOptionDataKey] = item;
+      openTabsFrag.appendChild(dropdownItemEl);
+    });
+    _classPrivateFieldGet(this, _openTabsOriginalListEl).replaceChildren(openTabsFrag);
+
+    //然后准备最近关闭的标签
+    const recentlyClosedTabsFrag = document.createDocumentFragment();
+    //获取最近关闭的tabs
+    (_classPrivateFieldGet5 = _classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheRecentlyClosedTabsKey))) === null || _classPrivateFieldGet5 === void 0 || _classPrivateFieldGet5.sort((a, b) => b.timestamp - a.timestamp).forEach(item => {
+      const recentlyClosedTabEl = Utils.createNode(Utils.sprintf(Constants.HTML.sectionItem, '', item.title, item.url, Utils.timeAgo(item.timestamp, customText), ''));
+      recentlyClosedTabEl[Constants.DATAKEYS.tabOptionDataKey] = item;
+      recentlyClosedTabsFrag.appendChild(recentlyClosedTabEl);
+    });
+    _classPrivateFieldGet(this, _recentlyClosedTabsOriginalListEl).replaceChildren(recentlyClosedTabsFrag);
+  }
+  function _showDropdown2() {
+    var _classPrivateFieldGet6;
+    (_classPrivateFieldGet6 = _classPrivateFieldGet(this, _dropdownCleanup)) === null || _classPrivateFieldGet6 === void 0 || _classPrivateFieldGet6.call(this);
+    // 注册菜单自动更新位置
+    _classPrivateFieldSet(this, _dropdownCleanup, autoUpdate(_classPrivateFieldGet(this, _toolbarItemDropdownEl), _classPrivateFieldGet(this, _dropdownEl), _classPrivateMethodGet(this, _updatePosition, _updatePosition2).bind(this, _classPrivateFieldGet(this, _toolbarItemDropdownEl), _classPrivateFieldGet(this, _dropdownEl), 'bottom-end')));
+    _classPrivateFieldGet(this, _dropdownEl).classList.add(Constants.CLASSES.dropdownActive);
+    _classPrivateFieldGet(this, _container).classList.add(Constants.CLASSES.dropdownPEN);
+
+    //关闭tab的右键菜单
+    _classPrivateMethodGet(this, _closeContextmenu, _closeContextmenu2).call(this);
+  }
+  function _closeDropdown2() {
+    var _classPrivateFieldGet7;
+    (_classPrivateFieldGet7 = _classPrivateFieldGet(this, _dropdownCleanup)) === null || _classPrivateFieldGet7 === void 0 || _classPrivateFieldGet7.call(this);
+    _classPrivateFieldGet(this, _dropdownEl).classList.remove(Constants.CLASSES.dropdownActive);
+    _classPrivateFieldGet(this, _container).classList.remove(Constants.CLASSES.dropdownPEN);
+  }
+  function _showContextmenuByUrl2(url) {
+    var _classPrivateFieldGet8;
+    //判断关闭当前菜单选项是否被启用
+    if (_classPrivateFieldGet(this, _options).tab.contextmenu.close !== false) {
+      const listGroupCloseItemEl = _classPrivateFieldGet(this, _contextmenuEl).querySelector(".".concat(Constants.CLASSES.listGroupCloseItem));
+      const enableSeparator = _classPrivateFieldGet(this, _options).tab.contextmenu.close.separator === true;
+      if (this.isTabClosableByUrl(url)) {
+        listGroupCloseItemEl.style.setProperty('display', null); //是可关闭的，因此需要显示右键菜单的关闭当前
+        enableSeparator && listGroupCloseItemEl.nextElementSibling.style.setProperty('display', null);
+      } else {
+        listGroupCloseItemEl.style.setProperty('display', 'none');
+        enableSeparator && listGroupCloseItemEl.nextElementSibling.style.setProperty('display', 'none');
+      }
+    }
+    const tabEl = this.getTabByUrl(url);
+    (_classPrivateFieldGet8 = _classPrivateFieldGet(this, _contextmenuCleanup)) === null || _classPrivateFieldGet8 === void 0 || _classPrivateFieldGet8.call(this);
 
     // 注册菜单自动更新位置
-    _classPrivateFieldSet(this, _contextmenuCleanup, autoUpdate(tabEl, _classPrivateFieldGet(this, _contextmenuEl), _classPrivateMethodGet(this, _updatePosition, _updatePosition2).bind(this, tabEl, _classPrivateFieldGet(this, _contextmenuEl))));
+    _classPrivateFieldSet(this, _contextmenuCleanup, autoUpdate(tabEl, _classPrivateFieldGet(this, _contextmenuEl), _classPrivateMethodGet(this, _updatePosition, _updatePosition2).bind(this, tabEl, _classPrivateFieldGet(this, _contextmenuEl), 'top')));
 
     //显示右键菜单
     _classPrivateFieldGet(this, _contextmenuEl).classList.add(Constants.CLASSES.listGroupActive);
 
-    //给iframe添加防止鼠标事件穿透的class效果,增加用户体验
-    _classPrivateMethodGet(this, _addPenClass, _addPenClass2).call(this);
+    //给iframe添加蒙层
+    _classPrivateFieldGet(this, _container).classList.add(Constants.CLASSES.contextmenuPEN);
 
     //把url属性也给每一个列表项目设置一遍，方便后续事件的处理
     _classPrivateFieldGet(this, _contextmenuEl).querySelectorAll('li').forEach(function (li) {
       li.setAttribute(Constants.DATAKEYS.tabUrl, url);
     });
+
+    //关闭下拉菜单
+    _classPrivateMethodGet(this, _closeDropdown, _closeDropdown2).call(this);
   }
   function _closeContextmenu2() {
-    var _classPrivateFieldGet6;
-    (_classPrivateFieldGet6 = _classPrivateFieldGet(this, _contextmenuCleanup)) === null || _classPrivateFieldGet6 === void 0 || _classPrivateFieldGet6.call(this);
+    var _classPrivateFieldGet9;
+    (_classPrivateFieldGet9 = _classPrivateFieldGet(this, _contextmenuCleanup)) === null || _classPrivateFieldGet9 === void 0 || _classPrivateFieldGet9.call(this);
     _classPrivateFieldGet(this, _contextmenuEl).classList.remove(Constants.CLASSES.listGroupActive);
-    _classPrivateMethodGet(this, _removePenClass, _removePenClass2).call(this);
-  }
-  function _addPenClass2() {
-    //添加防止鼠标事件失效的类名称
-    _classPrivateFieldGet(this, _container).classList.add(Constants.CLASSES.pointerEventsNnoe);
-    if (!_classPrivateFieldGet(this, _contextmenuEl).classList.contains(Constants.CLASSES.listGroupShow)) {
-      var _this$canRemovePenCla;
-      _classPrivateFieldSet(this, _canRemovePenClass, (_this$canRemovePenCla = _classPrivateFieldGet(this, _canRemovePenClass), _this$canRemovePenCla++, _this$canRemovePenCla));
-    }
-  }
-  function _removePenClass2() {
-    if (_classPrivateFieldGet(this, _canRemovePenClass) > 0) {
-      var _this$canRemovePenCla3;
-      _classPrivateFieldSet(this, _canRemovePenClass, (_this$canRemovePenCla3 = _classPrivateFieldGet(this, _canRemovePenClass), _this$canRemovePenCla3--, _this$canRemovePenCla3));
-    }
-    if (_classPrivateFieldGet(this, _canRemovePenClass) === 0) {
-      _classPrivateFieldGet(this, _container).classList.remove(Constants.CLASSES.pointerEventsNnoe);
-    }
+    _classPrivateFieldGet(this, _container).classList.remove(Constants.CLASSES.contextmenuPEN);
   }
   function _updatePosition2(referenceEl, floatingEl) {
+    let placement = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'top';
     computePosition(referenceEl, floatingEl, {
-      placement: 'top',
+      placement: placement,
       strategy: 'fixed',
       // 默认是'absolute'
       middleware: [offset(3),
@@ -10174,7 +12645,7 @@
     };
     let html = [Utils.sprintf(Constants.HTML.toolbar[0], _classPrivateFieldGet(this, _options).toolbar.hide === true ? Constants.CLASSES.toolbarHide : '')];
     Utils.getEnabledAndSortedOpsKey(_classPrivateFieldGet(this, _options).toolbar, toolbarItemClassMap).map(key => {
-      html.push(Utils.sprintf(Constants.HTML.toolbarItem, toolbarItemClassMap[key], key === toolbarTabWrapperOpsKey ? "" : "<button>".concat(_classPrivateFieldGet(this, _options).toolbar[key].icon, "</button>")));
+      html.push(Utils.sprintf(Constants.HTML.toolbarItem, toolbarItemClassMap[key], key === toolbarTabWrapperOpsKey ? '' : "<button>".concat(_classPrivateFieldGet(this, _options).toolbar[key].icon, "</button>")));
     });
 
     //加入工具栏的结尾
@@ -10201,6 +12672,9 @@
     _classPrivateFieldSet(this, _toolbarEl, _classPrivateFieldGet(this, _container).querySelector(".".concat(Constants.CLASSES.toolbar)));
     _classPrivateFieldSet(this, _toolbarItemTabWrapperEl, _classPrivateFieldGet(this, _container).querySelector(".".concat(Constants.CLASSES.toolbar, " li.").concat(Constants.CLASSES.toolbarTabWrapperItem)));
     _classPrivateFieldSet(this, _tabBodyEl, _classPrivateFieldGet(this, _container).querySelector(".".concat(Constants.CLASSES.tabBody)));
+
+    //下拉菜单的按钮,弹出下拉菜单时需要使用
+    _classPrivateFieldSet(this, _toolbarItemDropdownEl, _classPrivateFieldGet(this, _toolbarEl).querySelector(".".concat(Constants.CLASSES.toolbarDropdownItem, " button")));
   }
   function _initContextmenu2() {
     if (_classPrivateFieldGet(this, _options).toolbar.hide === true || _classPrivateFieldGet(this, _options).tab.contextmenu === false) return;
@@ -10242,7 +12716,7 @@
         text: _classPrivateFieldGet(this, _options).formatContextmenuNewBlank()
       }
     };
-    const html = [Utils.sprintf(Constants.HTML.listGroup[0], Constants.DATAKEYS.contextmenu, _classPrivateFieldGet(this, _id))];
+    const html = [Utils.sprintf(Constants.HTML.listGroup[0], _classPrivateFieldGet(this, _id))];
     Utils.getEnabledAndSortedOpsKey(_classPrivateFieldGet(this, _options).tab.contextmenu, listGroupItemMap).map(key => {
       //开始组装字符串
 
@@ -10264,12 +12738,20 @@
 
     //查找右键菜单
     _classPrivateFieldSet(this, _contextmenuEl, document.querySelector("[".concat(Constants.DATAKEYS.contextmenu, "=\"").concat(_classPrivateFieldGet(this, _id), "\"]")));
+
+    //滚动条初始化
+    new SimpleBar(_classPrivateFieldGet(this, _contextmenuEl), {
+      autoHide: true,
+      // scrollbarMinSize:6,
+      scrollbarMaxSize: 200
+    });
   }
   function _initTabs2() {
     const defaultTabs = _classPrivateFieldGet(this, _options).defaultTabs;
-    if (_classPrivateFieldGet(this, _options).tab.remember === false) {
-      //没有启用tab的缓存
+    const cacheTabs = _classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheKey)); //获取缓存中的tab
+    const cacheDefaultTabs = _classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheDefaultTabsKey)); //获取缓存中的tab
 
+    if (_classPrivateFieldGet(this, _options).tab.remember === false) {
       const cacheStores = ['local', 'session'];
       const cacheKeys = [_classPrivateFieldGet(this, _cacheKey), _classPrivateFieldGet(this, _cacheDefaultTabsKey)];
       for (const store of cacheStores) {
@@ -10277,19 +12759,16 @@
           _classPrivateFieldGet(this, _cacheHandle).store(store).delete(key);
         }
       }
-      _classPrivateMethodGet(this, _restoreTabs, _restoreTabs2).call(this,
-      //直接恢复选项提供的默认tab
-      defaultTabs);
+      _classPrivateMethodGet(this, _restoreTabs, _restoreTabs2).call(this, defaultTabs);
       return;
     }
-    const cacheTabs = _classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheKey)); //获取缓存中的tab
-
-    if (cacheTabs && _classPrivateMethodGet(this, _cacheTabsCheck, _cacheTabsCheck2).call(this, cacheTabs) && JSON.stringify(defaultTabs) === JSON.stringify(_classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheDefaultTabsKey)))) {
+    if (cacheTabs !== null && cacheDefaultTabs !== null && _classPrivateMethodGet(this, _cacheTabsCheck, _cacheTabsCheck2).call(this, cacheTabs) && JSON.stringify(defaultTabs) === JSON.stringify(cacheDefaultTabs)) {
       var _classPrivateMethodGe;
+      //这里是缓存数据一切正常的情况下,直接回显就行
+
       _classPrivateMethodGet(this, _restoreTabs, _restoreTabs2).call(this, cacheTabs, (_classPrivateMethodGe = _classPrivateMethodGet(this, _getCacheActiveTab, _getCacheActiveTab2).call(this)) === null || _classPrivateMethodGe === void 0 ? void 0 : _classPrivateMethodGe.url);
     } else {
-      _classPrivateMethodGet(this, _restoreTabs, _restoreTabs2).call(this, defaultTabs);
-      _classPrivateFieldGet(this, _cacheHandle).set(_classPrivateFieldGet(this, _cacheKey), defaultTabs);
+      _classPrivateMethodGet(this, _restoreTabs, _restoreTabs2).call(this, defaultTabs, '', true);
       _classPrivateFieldGet(this, _cacheHandle).set(_classPrivateFieldGet(this, _cacheDefaultTabsKey), defaultTabs);
     }
   }
@@ -10298,9 +12777,11 @@
     let targetKeys = [...Object.keys(Constants.TABDEFAULTS), Constants.CLASSES.tabActive];
     return tabs.every(obj => targetKeys.every(key => Object.hasOwnProperty.call(obj, key)));
   }
-  function _restoreTabs2(tabs) {
+  function _restoreTabs2(options) {
+    var _options$slice;
     let url = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-    if (!Array.isArray(tabs) || tabs.length === 0) {
+    let cache = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    if (!Array.isArray(options) || options.length === 0) {
       return;
     }
 
@@ -10308,25 +12789,43 @@
     const tabFrag = document.createDocumentFragment();
 
     //这里只添加所有的tab，不添加iframe,否则全部加载iframe将会卡爆(重点优化)
-    tabs.forEach(tab => tabFrag.appendChild(Utils.createNode(_classPrivateMethodGet(this, _generateTabHtml, _generateTabHtml2).call(this, tab))));
+    options.forEach((option, index) => {
+      //克隆
+      option = Utils.extend(true, {}, option);
+      const tabNode = Utils.createNode(_classPrivateMethodGet(this, _generateTabHtml, _generateTabHtml2).call(this, option));
+
+      //插入一个时间参数，并把整个对象再次存到这个dom节点对象上,是下拉菜单功能需要使用
+      if (!Object.hasOwnProperty.call(option, 'timestamp')) {
+        option.timestamp = +"".concat(Date.now(), ".").concat(index + 1);
+      }
+      tabNode[Constants.DATAKEYS.tabOptionDataKey] = option;
+      tabFrag.appendChild(tabNode);
+
+      //是否存缓存
+      if (cache === true) {
+        _classPrivateMethodGet(this, _addCacheTab, _addCacheTab2).call(this, option);
+      }
+    });
 
     //添加虚拟节点到tab的容器里面
     _classPrivateFieldGet(this, _toolbarItemTabWrapperEl).appendChild(tabFrag);
-    if (url === '') {
-      var _tabs$slice$;
-      url = (_tabs$slice$ = tabs.slice(-1)[0]) === null || _tabs$slice$ === void 0 ? void 0 : _tabs$slice$.url;
-    }
+
+    // 默认激活最后一项
+    url = url || ((_options$slice = options.slice(-1)) === null || _options$slice === void 0 || (_options$slice = _options$slice[0]) === null || _options$slice === void 0 ? void 0 : _options$slice.url);
 
     //激活最后一个
-    this.activeTabByUrl(url);
+    _classPrivateMethodGet(this, _activeTabByUrl, _activeTabByUrl2).call(this, url, false, false);
 
     //滚动到激活tab所在位置
     _classPrivateMethodGet(this, _scrollToTabByUrl, _scrollToTabByUrl2).call(this, url, 'auto');
   }
   function _removeTabByUrl2(url) {
-    var _this$getTabByUrl4;
+    var _this$getTabByUrl3;
+    //添加进最近关闭的缓存
+    _classPrivateMethodGet(this, _cacheRecentlyClosedByUrl, _cacheRecentlyClosedByUrl2).call(this, url);
+
     //删除tab
-    (_this$getTabByUrl4 = this.getTabByUrl(url)) === null || _this$getTabByUrl4 === void 0 || _this$getTabByUrl4.remove();
+    (_this$getTabByUrl3 = this.getTabByUrl(url)) === null || _this$getTabByUrl3 === void 0 || _this$getTabByUrl3.remove();
 
     //删除面板
     _classPrivateMethodGet(this, _removeTabPaneByUrl, _removeTabPaneByUrl2).call(this, url);
@@ -10334,12 +12833,31 @@
     //删除缓存里的tab
     _classPrivateMethodGet(this, _removeCacheTabByUrl, _removeCacheTabByUrl2).call(this, url);
   }
+  function _cacheRecentlyClosedByUrl2(url) {
+    //添加最近删除的缓存,从tab的dom中拿到选项进行缓存
+    let tabEl = this.getTabByUrl(url);
+    let tabOption = tabEl[Constants.DATAKEYS.tabOptionDataKey];
+
+    //更新时间戳为关闭时的时间戳
+    tabOption.timestamp = Date.now();
+    if (_classPrivateFieldGet(this, _cacheHandle).has(_classPrivateFieldGet(this, _cacheRecentlyClosedTabsKey))) {
+      //先取所有的数组
+      let all = _classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheRecentlyClosedTabsKey));
+      while (all.length >= 10) {
+        all.shift();
+      }
+      all.push(tabOption);
+      _classPrivateFieldGet(this, _cacheHandle).set(_classPrivateFieldGet(this, _cacheRecentlyClosedTabsKey), all);
+    } else {
+      _classPrivateFieldGet(this, _cacheHandle).set(_classPrivateFieldGet(this, _cacheRecentlyClosedTabsKey), [tabOption]);
+    }
+  }
   function _removeTabPaneByUrl2(url) {
-    var _this$getTabPaneByUrl3;
+    var _this$getTabPaneByUrl2;
     //先删除iframe
     _classPrivateMethodGet(this, _removeIFrameByUrl, _removeIFrameByUrl2).call(this, url);
     //删除tab面板最外层的容器
-    (_this$getTabPaneByUrl3 = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl3 === void 0 || _this$getTabPaneByUrl3.remove();
+    (_this$getTabPaneByUrl2 = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl2 === void 0 || _this$getTabPaneByUrl2.remove();
   }
   function _removeCacheTabByUrl2(url) {
     if (_classPrivateFieldGet(this, _options).tab.remember === false) return;
@@ -10350,6 +12868,51 @@
       }
     });
     _classPrivateFieldGet(this, _cacheHandle).set(_classPrivateFieldGet(this, _cacheKey), tabs);
+  }
+  function _activeTabByUrl2(url) {
+    var _this$getActiveTabPan, _this$getTabPaneByUrl3;
+    let fromAddTabMethod = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+    let timestamp = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+    //过滤掉不存在的tab,或者已经激活的tab
+    if (!this.getTabByUrl(url) || this.isTabActiveByUrl(url)) {
+      return;
+    }
+    const tabEl = this.getTabByUrl(url);
+    const activeTabEl = this.getActiveTab();
+    //把之前激活的tab的激活状态类给删掉
+    activeTabEl === null || activeTabEl === void 0 || activeTabEl.classList.remove(Constants.CLASSES.tabActive);
+    if (activeTabEl && activeTabEl[Constants.DATAKEYS.tabOptionDataKey]) {
+      activeTabEl[Constants.DATAKEYS.tabOptionDataKey].active = false;
+    }
+
+    //添加上激活的类,激活当前tab的dom里存的选项,并更新时间戳
+    tabEl === null || tabEl === void 0 || tabEl.classList.add(Constants.CLASSES.tabActive);
+    if (tabEl && tabEl[Constants.DATAKEYS.tabOptionDataKey]) {
+      tabEl[Constants.DATAKEYS.tabOptionDataKey].active = true;
+      if (timestamp === true) tabEl[Constants.DATAKEYS.tabOptionDataKey].timestamp = Date.now();
+    }
+
+    //激活缓存中的tab
+    _classPrivateMethodGet(this, _activeCacheTabByUrl, _activeCacheTabByUrl2).call(this, url);
+    if (timestamp === true) _classPrivateMethodGet(this, _updateCacheTabByUrl, _updateCacheTabByUrl2).call(this, url, 'timestamp', Date.now());
+
+    //判断tab面板是否已经存在,不存在则添加
+    if (!this.getTabPaneByUrl(url)) {
+      _classPrivateMethodGet(this, _addTabPaneByUrl, _addTabPaneByUrl2).call(this, url);
+    }
+
+    //激活面板
+    //把之前激活的面板给移除掉
+    (_this$getActiveTabPan = this.getActiveTabPane()) === null || _this$getActiveTabPan === void 0 || _this$getActiveTabPan.classList.remove(Constants.CLASSES.tabPaneActive);
+    //把当前的tab面板给添加激活类
+    (_this$getTabPaneByUrl3 = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl3 === void 0 || _this$getTabPaneByUrl3.classList.add(Constants.CLASSES.tabPaneActive);
+
+    //激活逻辑完成调用激活事件
+    if (fromAddTabMethod) {
+      typeof _classPrivateFieldGet(this, _options).onTabAddActivated === 'function' && _classPrivateFieldGet(this, _options).onTabAddActivated.call(this, this);
+    } else {
+      typeof _classPrivateFieldGet(this, _options).onTabActivated === 'function' && _classPrivateFieldGet(this, _options).onTabActivated.call(this, this);
+    }
   }
   function _addTabPaneByUrl2(url) {
     //添加tab面板的容器li元素
@@ -10401,8 +12964,6 @@
         iframe.onload = null;
       }
     };
-
-    // console.log(iframe);
 
     //插入iframe
     (_this$getTabPaneByUrl4 = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl4 === void 0 || _this$getTabPaneByUrl4.appendChild(iframe);
@@ -10501,21 +13062,18 @@
       behavior
     });
   }
-  function _tabClickHandle2(url) {
-    //tab被单击的回调
-    typeof _classPrivateFieldGet(this, _options).onTabClick === 'function' && _classPrivateFieldGet(this, _options).onTabClick.call(this, url, this);
-
-    //激活
-    this.activeTabByUrl(url);
-
-    //滚动到tab所在位置
-    if (_classPrivateFieldGet(this, _options).tab.clickCenterActive === true) {
-      this.scrollToTabByUrl(url);
-    }
-  }
   function _getCacheActiveTab2() {
-    var _classPrivateFieldGet7;
-    return (_classPrivateFieldGet7 = _classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheKey))) === null || _classPrivateFieldGet7 === void 0 ? void 0 : _classPrivateFieldGet7.find(item => item.active === true);
+    var _classPrivateFieldGet10;
+    return (_classPrivateFieldGet10 = _classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheKey))) === null || _classPrivateFieldGet10 === void 0 ? void 0 : _classPrivateFieldGet10.find(item => item.active === true);
+  }
+  function _updateCacheTabByUrl2(url, updateKey, updateValue) {
+    if (_classPrivateFieldGet(this, _options).tab.remember === false) return;
+    const tabs = _classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheKey));
+    const targetElement = tabs.find(item => item.url === url);
+    if (targetElement) {
+      targetElement[updateKey] = updateValue;
+    }
+    _classPrivateFieldGet(this, _cacheHandle).set(_classPrivateFieldGet(this, _cacheKey), tabs);
   }
   function _getTabLoadingByUrl2(url) {
     var _this$getTabPaneByUrl6;

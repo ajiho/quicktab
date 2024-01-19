@@ -1,3 +1,5 @@
+import Icons from './icons'
+
 // 该配置项目是全部启用的列表
 export default {
   //最小高度
@@ -15,7 +17,7 @@ export default {
     // 断点视口
     breakpoint: 576,
     // 小设备时隐藏的工具栏上的项目
-    hideToolbarItem: ['prev', 'next'],
+    hideToolbarItem: ['prev', 'refresh', 'next', 'fullscreen'],
   },
   //默认tab
   defaultTabs: [],
@@ -30,13 +32,13 @@ export default {
 
     // 左滚动
     prev: {
-      icon: `<svg viewBox="0 0 16 16"><path d="M10 12.796V3.204L4.519 8 10 12.796zm-.659.753-5.48-4.796a1 1 0 0 1 0-1.506l5.48-4.796A1 1 0 0 1 11 3.204v9.592a1 1 0 0 1-1.659.753z"/></svg>`,
+      icon: Icons.caretLeft,
       order: 10,
     },
 
     // 刷新
     refresh: {
-      icon: `<svg viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 3a5 5 0 1 0 4.546 2.914.5.5 0 0 1 .908-.417A6 6 0 1 1 8 2v1z"/><path d="M8 4.466V.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384L8.41 4.658A.25.25 0 0 1 8 4.466z"/></svg>`,
+      icon: Icons.arrowClockwise,
       order: 20,
     },
 
@@ -47,20 +49,43 @@ export default {
 
     // 右滚动
     next: {
-      icon: `<svg viewBox="0 0 16 16"><path d="M6 12.796V3.204L11.481 8 6 12.796zm.659.753 5.48-4.796a1 1 0 0 0 0-1.506L6.66 2.451C6.011 1.885 5 2.345 5 3.204v9.592a1 1 0 0 0 1.659.753z"/></svg>`,
+      icon: Icons.caretRight,
       order: 40,
     },
 
     // 搜索tab、打开的标签、最近关闭的标签
     dropdown: {
-      icon: `<svg viewBox="0 0 16 16"><path d="M3.204 5h9.592L8 10.481 3.204 5zm-.753.659 4.796 5.48a1 1 0 0 0 1.506 0l4.796-5.48c.566-.647.106-1.659-.753-1.659H3.204a1 1 0 0 0-.753 1.659z"/></svg>`,
+      icon: Icons.caretDown,
       order: 50,
+      searchInput: {
+        placeholder: '',
+        prefixIcon: Icons.search
+      },
+      openedTabs: {
+        text: '',
+        itemIcon: Icons.x
+      },
+      recentlyClosedTabs: {
+        text: '',
+        showIcon: Icons.caretDownFill,
+        hideIcon: Icons.caretUpFill,
+      },
+      timeFormat: {
+        year: '',
+        months: '',
+        days: '',
+        hours: '',
+        minutes: '',
+        seconds: '',
+      },
+      //没有搜索结果时的提示文本
+      searchNoResultsText: ''
     },
 
     // 全屏
     fullscreen: {
       //图标
-      icon: `<svg viewBox="0 0 16 16"><path d="M1.5 1a.5.5 0 0 0-.5.5v4a.5.5 0 0 1-1 0v-4A1.5 1.5 0 0 1 1.5 0h4a.5.5 0 0 1 0 1h-4zM10 .5a.5.5 0 0 1 .5-.5h4A1.5 1.5 0 0 1 16 1.5v4a.5.5 0 0 1-1 0v-4a.5.5 0 0 0-.5-.5h-4a.5.5 0 0 1-.5-.5zM.5 10a.5.5 0 0 1 .5.5v4a.5.5 0 0 0 .5.5h4a.5.5 0 0 1 0 1h-4A1.5 1.5 0 0 1 0 14.5v-4a.5.5 0 0 1 .5-.5zm15 0a.5.5 0 0 1 .5.5v4a1.5 1.5 0 0 1-1.5 1.5h-4a.5.5 0 0 1 0-1h4a.5.5 0 0 0 .5-.5v-4a.5.5 0 0 1 .5-.5z"/></svg>`,
+      icon: Icons.fullscreen,
       //排序
       order: 60,
     },
@@ -132,7 +157,7 @@ export default {
     closeBtn: {
       //关闭按钮是否鼠标移入时才显示 true:启用 false:一直显示
       showOnHover: false,
-      icon: `<svg viewBox="0 0 16 16"><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" /></svg>`,
+      icon: Icons.x,
     },
     //当插件宽高改变时,当前激活的tab是否居中 false:不启用 true:启用
     resizeCenterActive: true,

@@ -5,102 +5,530 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sticky List with Collapsible Sections</title>
+    <link rel="stylesheet" href="/node_modules/simplebar/dist/simplebar.css">
+    <link rel="stylesheet" href="/dist/css/quicktab.css">
     <style>
-        .list-container {
-            position: fixed;
-            top: 16px;
-            left: 16px;
-            width: 320px;
-            background-color: #f1f1f1;
-            overflow-y: auto;
-            height: 300px;
-        }
-
-        .list-item {
-            padding: 10px;
-            cursor: pointer;
-            background-color: #ddd;
-        }
-
-        .section {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .section li {
-            padding: 8px;
-            background-color: #fff;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .sticky {
-            position: sticky;
-            top: 0;
-            z-index: 1;
-            background-color: #ddd;
+        #test-dropdown {
+            display: none;
         }
     </style>
 </head>
 
 <body>
-    <div class="list-container">
-        <div class="list-item sticky" data-section="section1">打开的标签页</div>
-        <ul class="section " id="section1">
-            <li>Item 1.1</li>
-            <li>Item 1.2</li>
-            <li>Item 1.3</li>
-            <li>Item 1.3</li>
-            <li>Item 1.3</li>
-            <li>Item 1.3</li>
-            <li>Item 1.3</li>
-            <li>Item 1.3</li>
-        </ul>
-        <div class="list-item sticky" data-section="section2">最近关闭的标签页</div>
-        <ul class="section" id="section2">
-            <li>Item 2.1</li>
-            <li>Item 2.2</li>
-            <li>Item 2.3</li>
-            <li>Item 2.3</li>
-            <li>Item 2.3</li>
-            <li>Item 2.3</li>
-            <li>Item 2.3</li>
-            <li>Item 2.3</li>
-            <li>Item 2.3</li>
-            <li>Item 2.3</li>
-        </ul>
+
+    <div class="quicktab-dropdown">
+        <div class="header">
+            <svg viewBox="0 0 16 16">
+                <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+            </svg>
+            <input type="text" placeholder="搜索标签页">
+        </div>
+        <div class="body" data-simplebar>
+
+            <div class="sticky">
+                <div class="subheader">
+                    <div class="subheader-text">打开的标签页打开的标签页打开的标签页打开的标签页</div>
+                </div>
+            </div>
+            <ul class="section">
+
+                <li class="active">
+                    <div class="details">
+                        <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                        <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前</p>
+                    </div>
+                    <div class="icon-wrapper">
+                        <svg viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="details">
+                        <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                        <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前</p>
+                    </div>
+                    <div class="icon-wrapper">
+                        <svg viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </div>
+                </li>
+                <li>
+                    <div class="details">
+                        <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                        <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前</p>
+                    </div>
+                    <div class="icon-wrapper">
+                        <svg viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </div>
+                </li>
+
+
+            </ul>
+            <div class="sticky has-icon">
+                <div class="subheader">
+                    <div class="subheader-text">
+                        最近打开的标签最近打开的标签最近打开的标签最近打开的标签
+                    </div>
+                    <div class="icon-wrapper" tabindex="0">
+                        <svg viewBox="0 0 16 16">
+                            <path
+                                d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <ul class="section">
+                <li>
+                    <div class="details">
+                        <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                        <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="details">
+                        <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                        <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前</p>
+                    </div>
+                </li>
+                <li>
+                    <div class="details">
+                        <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                        <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前</p>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="empty">找不到任何结果</div>
+        </div>
     </div>
+
+
+    <button id="btn2">显示</button>
+
+    <div class="quicktab-dropdown" id="test-dropdown">
+        <div class="header">
+            <svg viewBox="0 0 16 16">
+                <path
+                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
+            </svg>
+            <input type="text" placeholder="搜索标签页">
+        </div>
+        <div class="body" data-simplebar>
+
+            <!-- 打开的标签页的副标题 -->
+            <div class="sticky">
+                <div class="subheader">
+                    <div class="subheader-text">打开的标签页</div>
+                </div>
+            </div>
+            <!-- 打开标签页的原来的列表 -->
+            <ul class="section">
+
+                <li class="active">
+                    <div class="details">
+                        <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                        <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前</p>
+                    </div>
+                    <div class="icon-wrapper">
+                        <svg viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="details">
+                        <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                        <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前</p>
+                    </div>
+                    <div class="icon-wrapper">
+                        <svg viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </div>
+                </li>
+                <li>
+                    <div class="details">
+                        <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                        <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前</p>
+                    </div>
+                    <div class="icon-wrapper">
+                        <svg viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg>
+                    </div>
+                </li>
+
+
+            </ul>
+            <ul class="section"></ul>
+            <div class="sticky has-icon">
+                <div class="subheader">
+                    <div class="subheader-text">
+                        最近打开的标签
+                    </div>
+                    <div class="icon-wrapper" tabindex="0">
+                        <svg viewBox="0 0 16 16">
+                            <path
+                                d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            <!-- 这里必须再套一个div用户体验才比较好 -->
+            <div>
+                <ul class="section">
+                    <li>
+                        <div class="details">
+                            <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                            <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前
+                            </p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="details">
+                            <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                            <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前
+                            </p>
+                        </div>
+                    </li>
+                    <li>
+                        <div class="details">
+                            <p class="title">标题1标题1标大撒大撒大撒大撒的撒的撒的撒的撒的撒撒大撒</p>
+                            <p><span class="url">pagp12222222222222222222222.html</span><span class="dot">·</span>1分钟前
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="section"></ul>
+            </div>
+            <div class="empty">找不到任何结果</div>
+        </div>
+    </div>
+
+
+    <script src="/node_modules/simplebar/dist/simplebar.js"></script>
+
+
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const listItems = document.querySelectorAll('.list-item');
 
-            listItems.forEach(function (item) {
-                item.addEventListener('click', function () {
-                    const sectionId = item.getAttribute('data-section');
-                    const section = document.getElementById(sectionId);
 
-                    // Toggle the visibility of the section
-                    section.classList.toggle('collapsed');
-                });
-            });
 
-            const sections = document.querySelectorAll('.section');
 
-            window.addEventListener('scroll', function () {
-                sections.forEach(function (section) {
-                    const rect = section.getBoundingClientRect();
-                    const isSticky = rect.top <= 0;
+        //模拟选项卡数据
+        let tabs = [
+            {
+                title: 'bootstrap官网',
+                url: 'https://getbootstrap.com',
+                closable: true,
+                disabled: false,
+                timestamp: 1705211280,
+                active: true
+            },
+            {
+                title: 'bootstrap官网2',
+                url: 'https://getbootstrap.com',
+                closable: true,
+                disabled: false,
+                timestamp: 1705216280,
+                active: false
+            },
+            {
+                title: 'bootstrap官网3',
+                url: 'https://getbootstrap.com',
+                closable: true,
+                disabled: false,
+                timestamp: 1705217180,
+                active: false
+            },
+            {
+                title: 'bootstrap官网4',
+                url: 'https://getbootstrap.com',
+                closable: false,
+                disabled: false,
+                timestamp: 1705217000,
+                active: false
+            }
+        ]
 
-                    if (isSticky) {
-                        section.classList.add('sticky');
-                    } else {
-                        section.classList.remove('sticky');
-                    }
-                });
-            });
+
+        //最近关闭的标签
+        let recentlyClosedTabs = [
+            {
+                title: '最近关闭的标签1',
+                url: 'https://github.com/',
+                timestamp: 1704227280,
+            },
+            {
+                title: '最近关闭的标签2222222',
+                url: 'https://github.com/',
+                timestamp: 1704227280
+            },
+            {
+                title: '最近关闭的标签3',
+                url: 'https://github.com/',
+                timestamp: 1705217280
+            },
+            {
+                title: '最近关闭的标签4',
+                url: 'https://github.com/',
+                timestamp: 1705226280
+            },
+        ]
+
+
+
+        const testDropdown = document.querySelector('#test-dropdown')
+        const searchInput = testDropdown.querySelector('.header input')
+        const openTabsOriginalList = testDropdown.querySelectorAll('ul.section')[0];
+        const openTabsearchResults = testDropdown.querySelectorAll('ul.section')[1];
+        const openTabsSubtitle = testDropdown.querySelectorAll('.sticky')[0];
+
+
+        const recentlyClosedTabsOriginalList = testDropdown.querySelectorAll('ul.section')[2];
+        const recentlyClosedTabssearchResults = testDropdown.querySelectorAll('ul.section')[3];
+        const recentlyClosedTabsSubtitle = testDropdown.querySelectorAll('.sticky')[1];
+        const noResultsMessage = testDropdown.querySelector('.empty');
+
+
+        //监听input事件
+        searchInput.addEventListener('input', function () {
+            const keyword = searchInput.value.toLowerCase();
+
+            //先清空
+            openTabsearchResults.innerHTML = '';
+
+            if (keyword.trim() !== '') {
+                let results1 = false;
+                let results2 = false;
+
+
+                results1 = match(keyword, openTabsOriginalList, openTabsearchResults, openTabsSubtitle)
+                results2 = match(keyword, recentlyClosedTabsOriginalList, recentlyClosedTabssearchResults, recentlyClosedTabsSubtitle)
+
+                if (results1 === false && results2 === false) {//说明两个都没找到结果
+                    noResultsMessage.style.display = 'block';
+                } else {
+                    noResultsMessage.style.display = 'none';
+                }
+
+            } else {
+                //隐藏结果
+                noResultsMessage.style.display = 'none';
+                restore(openTabsOriginalList, openTabsearchResults, openTabsSubtitle)
+                restore(recentlyClosedTabsOriginalList, recentlyClosedTabssearchResults, recentlyClosedTabsSubtitle)
+            }
+
         });
 
+
+
+        function restore(element, resultsEl, subtitleEl) {
+            element.style.display = 'block';
+            subtitleEl.style.display = 'block';
+            resultsEl.style.display = 'none';
+        }
+
+        function match(keyword, element, resultsEl, subtitleEl) {
+
+            let hasResults = false
+
+            Array.from(element.children).forEach((li) => {
+
+                const title = li.querySelector('.title').textContent
+                const url = li.querySelector('.url').textContent.toLowerCase()
+
+
+                if (title.toLowerCase().includes(keyword) || url.toLowerCase().includes(keyword)) {
+                    hasResults = true;
+
+                    let matchLi = li.cloneNode(true)
+
+
+                    matchLi.querySelector('.title').innerHTML = highlightKeyword(title, keyword);
+                    matchLi.querySelector('.url').innerHTML = highlightKeyword(url, keyword);
+
+                    resultsEl.appendChild(matchLi);
+                }
+            });
+
+            if (hasResults) {
+                resultsEl.style.display = 'block';
+                subtitleEl.style.display = 'block';
+                element.style.display = 'none';
+
+            } else {
+                resultsEl.style.display = 'none';
+                element.style.display = 'none';
+                subtitleEl.style.display = 'none';
+            }
+
+            return hasResults
+
+        }
+
+
+        // 每个tab的li
+        const tpl = `<li class="%s">
+                    <div class="details">
+                        <p class="title">%s</p>
+                        <p><span class="url">%s</span><span class="dot">·</span>%s</p>
+                    </div>
+                    %s
+                </li>`
+        const closeSvg = `<svg viewBox="0 0 16 16">
+                            <path
+                                d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z" />
+                        </svg>`;
+
+        //关闭按钮
+        const closeBtnTpl = `<div class="icon-wrapper">${closeSvg}</div>`
+
+        document.querySelector('#btn2').addEventListener('click', function () {
+
+            // 按照timestamp从小到大排序
+            tabs.sort((a, b) => b.timestamp - a.timestamp);
+            // 未激活的
+            const notActiveTabs = tabs.filter(tab => tab.active === false);
+            const ativeTabs = tabs.find(tab => tab.active === true);
+
+
+            const html = [];
+
+            notActiveTabs.forEach((item, index) => {
+                html.push(sprintf(tpl, index === 0 ? 'active' : '', item.title, item.url, timeAgo(item.timestamp), item.closable === true ? closeBtnTpl : ''))
+            })
+
+            //然后把激活的项目插入到项目最后
+            html.push(sprintf(tpl, '', ativeTabs.title, ativeTabs.url, timeAgo(ativeTabs.timestamp), ativeTabs.closable === true ? closeBtnTpl : ''))
+
+            //替换ul的html
+            openTabsOriginalList.innerHTML = html.join('')
+
+
+
+            //然后准备最近关闭的标签
+
+            const html2 = [];
+
+            // 按照timestamp从小到大排序
+            recentlyClosedTabs.sort((a, b) => b.timestamp - a.timestamp);
+
+            recentlyClosedTabs.forEach((item, index) => {
+                html2.push(sprintf(tpl, '', item.title, item.url, timeAgo(item.timestamp), ''))
+            })
+
+
+            recentlyClosedTabsOriginalList.innerHTML = html2.join('')
+
+            testDropdown.style.display = 'inline-block'
+        })
+
+
+        function highlightKeyword(text, keyword) {
+            const regex = new RegExp(`(${keyword})`, 'gi');
+            return text.replace(regex, '<span class="highlighted">$1</span>');
+        }
+
+        function timeAgo(timestamp) {
+            const now = Math.floor(Date.now() / 1000); // 当前时间戳（秒）
+            const seconds = now - timestamp;
+
+            const minute = 60;
+            const hour = 60 * minute;
+            const day = 24 * hour;
+            const month = 30 * day;
+            const year = 365 * day;
+
+            if (seconds < minute) {
+                return `${seconds}秒前`;
+            } else if (seconds < hour) {
+                const minutes = Math.floor(seconds / minute);
+                return `${minutes}分钟前`;
+            } else if (seconds < day) {
+                const hours = Math.floor(seconds / hour);
+                return `${hours}小时前`;
+            } else if (seconds < month) {
+                const days = Math.floor(seconds / day);
+                return `${days}天前`;
+            } else if (seconds < year) {
+                const months = Math.floor(seconds / month);
+                return `${months}个月前`;
+            } else {
+                const years = Math.floor(seconds / year);
+                return `${years}年前`;
+            }
+        }
+
+
+
+        function sprintf(_str, ...args) {
+            let flag = true
+            let i = 0
+
+            const str = _str.replace(/%s/g, () => {
+                const arg = args[i++]
+
+                if (typeof arg === 'undefined') {
+                    flag = false
+                    return ''
+                }
+                return arg
+            })
+
+            return flag ? str : ''
+        }
+
+
+        const rewr = document.querySelectorAll('.quicktab-dropdown')[0].querySelectorAll('.sticky')[1];
+
+        openToggle(rewr)
+
+        openToggle(recentlyClosedTabsSubtitle)
+
+        function openToggle(element) {
+            element.addEventListener('click', function () {
+
+                let ul = this.nextElementSibling;
+
+                let svgWrapper = this.querySelector('.icon-wrapper');
+                svgWrapper.focus();
+
+                // 判断元素当前的显示状态
+                if (ul.style.display === "none") {
+                    svgWrapper.innerHTML = `<svg viewBox="0 0 16 16">
+            <path
+                d="m7.247 4.86-4.796 5.481c-.566.647-.106 1.659.753 1.659h9.592a1 1 0 0 0 .753-1.659l-4.796-5.48a1 1 0 0 0-1.506 0z" />
+        </svg>`
+                    ul.style.display = "block";
+                } else {
+
+                    svgWrapper.innerHTML = `<svg  viewBox="0 0 16 16">
+<path d="M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/>
+</svg>`
+
+                    ul.style.display = "none";
+                }
+
+            })
+        }
+
+
+
     </script>
+
 </body>
 
 </html>

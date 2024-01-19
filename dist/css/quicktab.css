@@ -3,6 +3,233 @@
  * Copyright 2023-2024 ajiho
  * license MIT (https://gitee.com/ajiho/quicktab/blob/master/LICENSE)
  */
+[data-simplebar] {
+  position: relative;
+  flex-direction: column;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-content: flex-start;
+  align-items: flex-start;
+}
+
+.simplebar-wrapper {
+  overflow: hidden;
+  width: inherit;
+  height: inherit;
+  max-width: inherit;
+  max-height: inherit;
+}
+
+.simplebar-mask {
+  direction: inherit;
+  position: absolute;
+  overflow: hidden;
+  padding: 0;
+  margin: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: auto !important;
+  height: auto !important;
+  z-index: 0;
+}
+
+.simplebar-offset {
+  direction: inherit !important;
+  box-sizing: inherit !important;
+  resize: none !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 0;
+  margin: 0;
+  -webkit-overflow-scrolling: touch;
+}
+
+.simplebar-content-wrapper {
+  direction: inherit;
+  box-sizing: border-box !important;
+  position: relative;
+  display: block;
+  height: 100%; /* Required for horizontal native scrollbar to not appear if parent is taller than natural height */
+  width: auto;
+  max-width: 100%; /* Not required for horizontal scroll to trigger */
+  max-height: 100%; /* Needed for vertical scroll to trigger */
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.simplebar-content-wrapper::-webkit-scrollbar,
+.simplebar-hide-scrollbar::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.simplebar-content:before,
+.simplebar-content:after {
+  content: " ";
+  display: table;
+}
+
+.simplebar-placeholder {
+  max-height: 100%;
+  max-width: 100%;
+  width: 100%;
+  pointer-events: none;
+}
+
+.simplebar-height-auto-observer-wrapper {
+  box-sizing: inherit !important;
+  height: 100%;
+  width: 100%;
+  max-width: 1px;
+  position: relative;
+  float: left;
+  max-height: 1px;
+  overflow: hidden;
+  z-index: -1;
+  padding: 0;
+  margin: 0;
+  pointer-events: none;
+  flex-grow: inherit;
+  flex-shrink: 0;
+  flex-basis: 0;
+}
+
+.simplebar-height-auto-observer {
+  box-sizing: inherit;
+  display: block;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 1000%;
+  width: 1000%;
+  min-height: 1px;
+  min-width: 1px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.simplebar-track {
+  z-index: 1;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+[data-simplebar].simplebar-dragging {
+  pointer-events: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+[data-simplebar].simplebar-dragging .simplebar-content {
+  pointer-events: none;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+
+[data-simplebar].simplebar-dragging .simplebar-track {
+  pointer-events: all;
+}
+
+.simplebar-scrollbar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  min-height: 10px;
+}
+
+.simplebar-scrollbar:before {
+  position: absolute;
+  content: "";
+  background: black;
+  border-radius: 7px;
+  left: 2px;
+  right: 2px;
+  opacity: 0;
+  transition: opacity 0.2s 0.5s linear;
+}
+
+.simplebar-scrollbar.simplebar-visible:before {
+  opacity: 0.5;
+  transition-delay: 0s;
+  transition-duration: 0s;
+}
+
+.simplebar-track.simplebar-vertical {
+  top: 0;
+  width: 11px;
+}
+
+.simplebar-scrollbar:before {
+  top: 2px;
+  bottom: 2px;
+  left: 2px;
+  right: 2px;
+}
+
+.simplebar-track.simplebar-horizontal {
+  left: 0;
+  height: 11px;
+}
+
+.simplebar-track.simplebar-horizontal .simplebar-scrollbar {
+  right: auto;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  min-height: 0;
+  min-width: 10px;
+  width: auto;
+}
+
+/* Rtl support */
+[data-simplebar-direction=rtl] .simplebar-track.simplebar-vertical {
+  right: auto;
+  left: 0;
+}
+
+.simplebar-dummy-scrollbar-size {
+  direction: rtl;
+  position: fixed;
+  opacity: 0;
+  visibility: hidden;
+  height: 500px;
+  width: 500px;
+  overflow-y: hidden;
+  overflow-x: scroll;
+  -ms-overflow-style: scrollbar !important;
+}
+
+.simplebar-dummy-scrollbar-size > div {
+  width: 200%;
+  height: 200%;
+  margin: 10px 0;
+}
+
+.simplebar-hide-scrollbar {
+  position: fixed;
+  left: 0;
+  visibility: hidden;
+  overflow-y: scroll;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
 .quicktab {
   display: flex;
   flex-direction: column;
@@ -14,8 +241,11 @@
 .quicktab ::before {
   box-sizing: border-box;
 }
-.quicktab.pen iframe {
+.quicktab[class*=pen-] iframe {
   pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
 }
 .quicktab .tab-bar {
   display: flex;
@@ -192,6 +422,14 @@
   border-radius: 0;
   box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
 }
+.quicktab-list-group .simplebar-track.simplebar-vertical {
+  top: 0;
+  width: 6px;
+}
+.quicktab-list-group .simplebar-vertical .simplebar-scrollbar::before {
+  inset: 2px;
+  background-color: #7431fa;
+}
 .quicktab-list-group.active {
   display: flex;
 }
@@ -214,6 +452,9 @@
   margin: 0.35em 0;
   overflow: hidden;
   border-top: 1px solid #e6e6e6;
+}
+.quicktab-list-group li.separator:last-child {
+  display: none;
 }
 .quicktab-list-group li:hover, .quicktab-list-group li:focus {
   color: #7431fa;
@@ -270,6 +511,174 @@
     opacity: 0;
     transform: scale(1);
   }
+}
+.quicktab-dropdown {
+  position: fixed;
+  display: none;
+  width: 320px;
+  max-width: 100%;
+  font-size: 14px;
+  background-color: #fff;
+  box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+.quicktab-dropdown *:focus {
+  outline: none;
+}
+.quicktab-dropdown.active {
+  display: inline-block;
+}
+.quicktab-dropdown .header {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  border-bottom: 1px solid #7431fa;
+}
+.quicktab-dropdown .header svg {
+  width: 16px;
+  height: 16px;
+  margin-right: 16px;
+}
+.quicktab-dropdown .header input {
+  flex-grow: 1;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  outline: none;
+}
+.quicktab-dropdown .body {
+  max-height: 300px;
+  overflow-y: auto;
+}
+.quicktab-dropdown .body .simplebar-track.simplebar-vertical {
+  top: 0;
+  width: 6px;
+}
+.quicktab-dropdown .body .simplebar-vertical .simplebar-scrollbar::before {
+  inset: 2px;
+  background-color: #7431fa;
+}
+.quicktab-dropdown .body .empty {
+  display: none;
+  padding: 12px;
+  text-align: center;
+}
+.quicktab-dropdown .body .highlighted {
+  font-weight: bold;
+  background-color: #ff0;
+}
+.quicktab-dropdown .body .icon-wrapper {
+  box-sizing: border-box;
+  display: none;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+}
+.quicktab-dropdown .body .icon-wrapper svg {
+  width: 24px;
+  height: 24px;
+  fill: #212529;
+}
+.quicktab-dropdown .body .icon-wrapper:hover {
+  background-color: #dbdbdb;
+}
+.quicktab-dropdown .body .icon-wrapper:focus {
+  border: 2px solid #7431fa;
+}
+.quicktab-dropdown .body .sticky {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  padding: 14px 16px;
+  font-size: 14px;
+  background-color: #fff;
+}
+.quicktab-dropdown .body .sticky.has-icon {
+  cursor: pointer;
+}
+.quicktab-dropdown .body .sticky.has-icon .icon-wrapper {
+  display: flex;
+}
+.quicktab-dropdown .body .sticky .subheader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+.quicktab-dropdown .body .sticky .subheader .subheader-text {
+  flex-grow: 1;
+  min-width: 0;
+  margin-right: 8px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.quicktab-dropdown .body .sticky .subheader svg {
+  transform: scale(0.4);
+}
+.quicktab-dropdown .body .section {
+  padding: 0;
+  margin: 0;
+  list-style-type: none;
+}
+.quicktab-dropdown .body .section li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 16px;
+  cursor: default;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  user-select: none;
+}
+.quicktab-dropdown .body .section li .details {
+  flex-grow: 1;
+  min-width: 0;
+  margin-right: 8px;
+  font-size: 14px;
+}
+.quicktab-dropdown .body .section li .details p {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.quicktab-dropdown .body .section li .details p:first-child {
+  font-weight: 400;
+}
+.quicktab-dropdown .body .section li .details p:last-child {
+  display: flex;
+  align-items: center;
+  margin-top: 6px;
+  font-size: 90%;
+  font-weight: lighter;
+}
+.quicktab-dropdown .body .section li .details p:last-child .dot {
+  margin: 0 8px;
+  font-weight: 800;
+}
+.quicktab-dropdown .body .section li .details p:last-child .url {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.quicktab-dropdown .body .section li:hover {
+  background-color: #ededed;
+}
+.quicktab-dropdown .body .section li:hover .icon-wrapper {
+  display: flex;
+}
+.quicktab-dropdown .body .section li.active {
+  background-color: #e4e4e4;
+}
+.quicktab-dropdown .body .section li.active .icon-wrapper {
+  display: flex;
 }
 
 /*# sourceMappingURL=quicktab.css.map */

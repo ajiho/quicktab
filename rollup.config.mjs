@@ -23,7 +23,7 @@ const plugins = [
     }),
     babel({
         babelHelpers: 'bundled',
-        exclude: ['node_modules/**','src/utils/event.js']
+        exclude: ['node_modules/**', 'src/utils/event.js']
     })
 ]
 

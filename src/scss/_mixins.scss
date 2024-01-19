@@ -1,0 +1,11 @@
+@mixin simplebar {
+  .simplebar-track.simplebar-vertical {
+    top: 0;
+    width: 6px;
+  }
+
+  .simplebar-vertical .simplebar-scrollbar::before {
+    inset: 2px;
+    background-color: $primary-color;
+  }
+}

@@ -31,4 +31,34 @@ export default {
   formatContextmenuNewBlank() {
     return `新窗口打开`
   },
+  formatSearchInputPlaceholder() {
+    return `搜索标签页`
+  },
+  formatOpenedTabs() {
+    return `打开的标签页`
+  },
+  formatRecentlyClosedTabs() {
+    return `最近关闭的标签页`
+  },
+  formatSearchNoResults() {
+    return `找不到任何结果`
+  },
+  formatTimeYear() {
+    return `年前`
+  },
+  formatTimeMonths() {
+    return `个月前`
+  },
+  formatTimeDays() {
+    return `天前`
+  },
+  formatTimeHours() {
+    return `小时前`
+  },
+  formatTimeMinutes() {
+    return `分钟前`
+  },
+  formatTimeSeconds() {
+    return `秒前`
+  },
 }
