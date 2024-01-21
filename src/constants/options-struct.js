@@ -2,12 +2,14 @@ import { number, string, array, boolean, func, optional } from 'superstruct'
 import tabOptionStruct from './tab-option-struct'
 import Struct from '../utils/struct'
 
-const toolbarItemStruct = Struct.falseOrObject({
+const toolbarItemStruct = Struct.object({
+  enable: boolean(),
   icon: string(),
   order: number(),
 })
 
-const contextmenuItemStruct = Struct.falseOrObject({
+const contextmenuItemStruct = Struct.object({
+  enable: boolean(),
   text: optional(string()),
   order: optional(number()),
   separator: optional(boolean()),
@@ -19,13 +21,15 @@ export default Struct.object({
   width: optional(string()),
   lang: optional(string()),
   cacheType: Struct.enums(['local', 'session']),
-  responsive: Struct.falseOrObject({
+  responsive: Struct.object({
+    enable: boolean(),
     breakpoint: Struct.positive(),
-    hideToolbarItem: Struct.uniqueArray(
+    hide: Struct.uniqueArray(
       Struct.enums(['prev', 'refresh', 'next', 'dropdown', 'fullscreen']),
     ),
   }),
-  defaultTabs: array(tabOptionStruct),
+
+  defaultTabs: Struct.arrayOfObjectsWithUniqueKey(tabOptionStruct, 'url'),
   toolbar: Struct.object({
     hide: boolean(),
     position: Struct.enums(['top', 'bottom']),
@@ -35,23 +39,24 @@ export default Struct.object({
       order: number(),
     }),
     next: toolbarItemStruct,
-    dropdown: Struct.falseOrObject({
+    dropdown: Struct.object({
+      enable: boolean(),
       icon: string(),
       order: number(),
-      searchInput: Struct.falseOrObject({
+      searchInput: Struct.object({
         placeholder: string(),
-        prefixIcon: string()
+        prefixIcon: string(),
       }),
-      openedTabs: Struct.falseOrObject({
+      openedTabs: Struct.object({
         text: string(),
-        itemIcon: string()
+        closeIcon: string(),
       }),
-      recentlyClosedTabs: Struct.falseOrObject({
+      recentlyClosedTabs: Struct.object({
         text: string(),
         showIcon: string(),
         hideIcon: string(),
       }),
-      timeFormat: Struct.falseOrObject({
+      timeFormat: Struct.object({
         year: string(),
         months: string(),
         days: string(),
@@ -59,13 +64,14 @@ export default Struct.object({
         minutes: string(),
         seconds: string(),
       }),
-      searchNoResultsText: string()
+      emptyText: string(),
     }),
     fullscreen: toolbarItemStruct,
   }),
   tab: Struct.object({
     remember: boolean(),
-    contextmenu: Struct.falseOrObject({
+    contextmenu: Struct.object({
+      enable: boolean(),
       close: contextmenuItemStruct,
       closeOthers: contextmenuItemStruct,
       closePrev: contextmenuItemStruct,
@@ -76,12 +82,13 @@ export default Struct.object({
       centerActive: contextmenuItemStruct,
       newBlank: contextmenuItemStruct,
     }),
-    mouseWheelSwitch: Struct.falseOrObject({
+    mouseWheelSwitch: Struct.object({
+      enable: boolean(),
       onlyScroll: boolean(),
-      centerActive: boolean(),
     }),
     maxNum: Struct.integer(),
-    closeBtn: Struct.falseOrObject({
+    closeBtn: Struct.object({
+      enable: boolean(),
       showOnHover: boolean(),
       icon: string(),
     }),
@@ -89,13 +96,15 @@ export default Struct.object({
     clickCenterActive: boolean(),
     doubleClickRefresh: boolean(),
     dragSort: boolean(),
-    timeout: Struct.falseOrObject({
+    timeout: Struct.object({
+      enable: boolean(),
       filter: func(),
       text: string(),
       second: Struct.positiveInteger(),
       template: string(),
     }),
-    loading: Struct.falseOrObject({
+    loading: Struct.object({
+      enable: boolean(),
       filter: func(),
       template: string(),
     }),

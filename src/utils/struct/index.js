@@ -1,11 +1,18 @@
-import { type, define, validate, array, refine, number } from 'superstruct'
+import {
+  type,
+  define,
+  validate,
+  array,
+  refine,
+  number,
+  string,
+} from 'superstruct'
 import Utils from '../index'
 
 export default {
-  validateOptions2(struct, options) {
+  validateOptions(struct, options) {
     const [error] = validate(options, struct)
     if (error) {
-      console.log({ error })
       let reason = `期望类型是${error.type}`
       if (error.myMessage) {
         reason = error.myMessage
@@ -43,6 +50,14 @@ export default {
     })
   },
 
+  arrayOfObjectsWithUniqueKey(param, uniqueKey) {
+    return refine(array(param), 'uniqueArray', (value) => {
+      if (Utils.hasDuplicateValues(value, uniqueKey))
+        return { myMessage: `${uniqueKey}不能重复` }
+      return true
+    })
+  },
+
   //正数
   positive() {
     return refine(number(), 'positive', (value) => {
@@ -54,6 +69,14 @@ export default {
   integer() {
     return refine(number(), 'integer', (value) => {
       if (!Number.isInteger(value)) return { myMessage: `必须是整数` }
+      return true
+    })
+  },
+
+  string() {
+    return refine(string(), 'string', (value) => {
+      if (value.trim() === '') return { myMessage: `不能为空` }
+
       return true
     })
   },

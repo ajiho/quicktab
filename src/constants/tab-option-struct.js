@@ -3,7 +3,6 @@ import Struct from '../utils/struct'
 
 export default Struct.object({
   title: optional(string()),
-  url: optional(string()),
+  url: Struct.string(),
   closable: optional(boolean()),
-  disabled: optional(boolean()),
 })

@@ -3043,7 +3043,7 @@
   };
 
   // 该配置项目是全部启用的列表
-  var FullOption = {
+  var Options = {
     //最小高度
     minHeight: undefined,
     //高度
@@ -3054,12 +3054,13 @@
     lang: undefined,
     //缓存类型  可用值: "session"  "local"
     cacheType: 'local',
-    // 响应式支持(针对移动端或者小设备)
+    // 响应式设置(是针对的父容器)
     responsive: {
+      enable: true,
       // 断点视口
       breakpoint: 576,
-      // 小设备时隐藏的工具栏上的项目
-      hideToolbarItem: ['prev', 'refresh', 'next', 'fullscreen']
+      // 小设备时想要隐藏的工具栏上的按钮 值是prev、refresh、next、fullscreen、dropdown
+      hide: ['prev', 'refresh', 'next', 'fullscreen']
     },
     //默认tab
     defaultTabs: [],
@@ -3071,11 +3072,13 @@
       position: 'top',
       // 左滚动
       prev: {
+        enable: true,
         icon: Icons.caretLeft,
         order: 10
       },
       // 刷新
       refresh: {
+        enable: false,
         icon: Icons.arrowClockwise,
         order: 20
       },
@@ -3085,26 +3088,33 @@
       },
       // 右滚动
       next: {
+        enable: true,
         icon: Icons.caretRight,
         order: 40
       },
       // 搜索tab、打开的标签、最近关闭的标签
       dropdown: {
+        enable: false,
         icon: Icons.caretDown,
         order: 50,
+        // 搜索框部分的配置
         searchInput: {
           placeholder: '',
           prefixIcon: Icons.search
         },
+        //打开tab部分的配置
         openedTabs: {
           text: '',
-          itemIcon: Icons.x
+          //每个tab条目右边的关闭按钮图标
+          closeIcon: Icons.x
         },
+        // 最近关闭的tab部分的配置
         recentlyClosedTabs: {
           text: '',
           showIcon: Icons.caretDownFill,
           hideIcon: Icons.caretUpFill
         },
+        //每个tab条目时间格式化
         timeFormat: {
           year: '',
           months: '',
@@ -3114,10 +3124,11 @@
           seconds: ''
         },
         //没有搜索结果时的提示文本
-        searchNoResultsText: ''
+        emptyText: ''
       },
       // 全屏
       fullscreen: {
+        enable: false,
         //图标
         icon: Icons.fullscreen,
         //排序
@@ -3130,77 +3141,97 @@
       remember: false,
       //右键菜单配置
       contextmenu: {
+        enable: false,
+        // 关闭当前
         close: {
+          enable: true,
           text: '',
           order: 10,
           separator: false
         },
+        // 关闭其它
         closeOthers: {
+          enable: true,
           text: '',
           order: 20,
           separator: false
         },
+        // 关闭左侧
         closePrev: {
+          enable: true,
           text: '',
           order: 30,
           separator: false
         },
+        // 关闭右侧
         closeNext: {
+          enable: true,
           text: '',
           order: 40,
           separator: false
         },
+        // 关闭全部
         closeAll: {
+          enable: true,
           text: '',
           order: 50,
           separator: false
         },
+        // 全屏显示
         fullscreen: {
+          enable: true,
           text: '',
           order: 60,
-          separator: false
+          separator: true
         },
+        // 重新加载
         refresh: {
+          enable: true,
           text: '',
           order: 70,
           separator: false
         },
+        // 激活居中
         centerActive: {
+          enable: true,
           text: '',
           order: 80,
           separator: false
         },
+        // 新选项卡打开
         newBlank: {
+          enable: true,
           text: '',
           order: 90,
           separator: false
         }
       },
-      //鼠标滚轮切换tab   false:表示禁用该功能
+      //鼠标滚轮切换tab
       mouseWheelSwitch: {
-        // 只是滚动tab的包裹区域   true:启用 false:不启用
-        onlyScroll: false,
-        //激活的tab自动滚动居中 true:启用 false:不启用 (当onlyScroll:false时有效)
-        centerActive: true
+        enable: false,
+        // 只是滚动tab的包裹区域 true:启用 false:不启用
+        onlyScroll: false
       },
       //最大数量  -1:表示无限制
       maxNum: -1,
-      //关闭按钮  false:表示禁用该功能
+      //关闭按钮 
       closeBtn: {
-        //关闭按钮是否鼠标移入时才显示 true:启用 false:一直显示
+        enable: true,
+        //关闭按钮是否鼠标移入时才显示 true:启用 false:始终显示
         showOnHover: false,
         icon: Icons.x
       },
       //当插件宽高改变时,当前激活的tab是否居中 false:不启用 true:启用
-      resizeCenterActive: true,
+      resizeCenterActive: false,
       //tab单击时自动居中 false:不启用 true:启用
       clickCenterActive: false,
       //双击刷新 false:不启用 true:启用
       doubleClickRefresh: false,
       //tab是否可以拖动排序  false:不启用 true:启用
       dragSort: false,
-      //超时设置 false:表示禁用该功能
+      //超时设置
       timeout: {
+        enable: true,
         //过滤器 func 可以对于一些特定的tab不启用超时
         filter(url) {
           return true;
@@ -3212,9 +3243,10 @@
         //超时自定义模板
         template: ''
       },
-      //tab加载时的模板 false:表示禁用该功能
+      //tab加载层效果
       loading: {
-        //过滤器 func 可以对于一些特定的tab不启用loading
+        enable: true,
+        //过滤器,可以对于一些特定的tab不启用loading
         filter(url) {
           return true;
         },
@@ -3223,43 +3255,43 @@
       }
     },
     //tab被激活的事件(这里是比如关闭tab时，会自动激活别的tab时的事件回调)
-    onTabActivated() {
+    onTabActivated(url) {
       return false;
     },
     //通过tab的add方法添加时产生的tab激活事件(比如左侧菜单需要通过添加tab的方法产生的激活事件)
-    onTabAddActivated() {
+    onTabAddActivated(url) {
       return false;
     },
     //tab加载完毕事件
-    onTabLoaded() {
+    onTabLoaded(url) {
       return false;
     },
     //tab加载超时事件
-    onTabTimeout() {
+    onTabTimeout(url) {
       return false;
     },
-    //tab加载或超时都会触发的事件
-    onTabFinally() {
+    //tab加载完毕或超时都会触发的事件
+    onTabFinally(url) {
       return false;
     },
-    //页面上所有的tab都完成事件。
+    //页面上所有的tab都完成事件(假如此时网速较慢,当前面一个tab还没有到Finally阶段的时候又重新开了一个tab，它会等待所有的tab都加载完毕或者超时后触发)
     onTabAll() {
       return false;
     },
     //tab加载层过渡完毕的事件,该事件需要tab配置项loading被启用才会执行回调。
-    onTabLoadingTransitionend() {
+    onTabLoadingTransitionend(url) {
       return false;
     },
     //tab被点击回调事件
-    onTabClick() {
+    onTabClick(url) {
       return false;
     },
     //tab被双击回调事件
-    onTabDoubleClick() {
+    onTabDoubleClick(url) {
       return false;
     },
     //tab被关闭的事件
-    onTabClose() {
+    onTabClose(url) {
       return false;
     },
     //实例化完毕回调
@@ -3979,10 +4011,10 @@
     isObject(value) {
       return Object.prototype.toString.call(value) === '[object Object]';
     },
-    isJSONString(str) {
+    isJSON(str) {
       try {
-        const result = JSON.parse(str);
-        return Object.prototype.toString.call(result) === '[object Object]' || Array.isArray(result);
+        JSON.parse(str);
+        return true;
       } catch (e) {
         return false;
       }
@@ -4026,21 +4058,37 @@
       });
       return obj;
     },
-    parseOptions(element, options) {
+    //解析data上的选项
+    parseDataOptions(element, defaultOption) {
       let prefix = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : '';
-      for (const key in options) {
+      let options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+      for (const key in defaultOption) {
         const attrKey = prefix + key;
-        const dataVal = this.parseAttributeValue(element.getAttribute(attrKey));
-        if (this.isObject(options[key])) {
-          //如果是对象
-          dataVal === false ? options[key] = false : this.parseOptions(element, options[key], attrKey + '-');
+        let attrVal = element.getAttribute(attrKey);
+        let parseVal = this.parseAttributeValue(attrVal);
+        if (!this.isObject(defaultOption[key])) {
+          //如果选项原来的值是一个对象
+
+          if (attrVal !== null) {
+            //如果获取到值了
+            options[key] = parseVal;
+          }
         } else {
-          if (dataVal !== null) {
-            options[key] = dataVal;
+          this.parseDataOptions(element, defaultOption[key], attrKey + '-', options[key] = {});
+          if (this.isEmptyObject(options[key])) {
+            delete options[key];
           }
         }
       }
       return options;
+    },
+    isEmptyObject(obj) {
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          return false;
+        }
+      }
+      return true;
     },
     hasDuplicates(array) {
       for (let i = 0; i < array.length; i++) {
@@ -4048,6 +4096,21 @@
           return true;
         }
       }
+      return false;
+    },
+    //判断数组的对象元素中的某个key是否具有唯一值
+    hasDuplicateValues(arr, key) {
+      const valueSet = new Set();
+      for (const obj of arr) {
+        const value = obj[key];
+        if (valueSet.has(value)) {
+          // 发现重复的值
+          return true;
+        }
+        valueSet.add(value);
+      }
+
+      // 没有重复的值
       return false;
     },
     onResize(element, callback) {
@@ -4068,7 +4131,7 @@
     // 获取开启和激活的选项
     getEnabledAndSortedOpsKey(options, keyClassMap) {
       return Object.keys(options).filter(key => {
-        if (Object.keys(keyClassMap).includes(key) && options[key] !== false) {
+        if (Object.keys(keyClassMap).includes(key) && options[key].enable !== false) {
           return true;
         }
         return false;
@@ -4133,7 +4196,7 @@
     /**
      * 把时间戳转换成人类友好的时间
      * @param {Number} timestamp 微妙时间戳
-     * @returns {String} 
+     * @returns {String}
      */
     timeAgo(timestamp) {
       let customText = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {
@@ -4172,16 +4235,18 @@
     //判断数字是否有小数点
     hasDecimal(number) {
       return !Number.isInteger(number);
+    },
+    // 通知程序
+    notify(msg) {
+      let type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'error';
+      console[type]("Quicktab:".concat(msg));
     }
   };
 
   var Struct = {
-    validateOptions2(struct, options) {
+    validateOptions(struct, options) {
       const [error] = validate(options, struct);
       if (error) {
-        console.log({
-          error
-        });
         let reason = "\u671F\u671B\u7C7B\u578B\u662F".concat(error.type);
         if (error.myMessage) {
           reason = error.myMessage;
@@ -4218,6 +4283,14 @@
         return true;
       });
     },
+    arrayOfObjectsWithUniqueKey(param, uniqueKey) {
+      return refine(array(param), 'uniqueArray', value => {
+        if (Utils.hasDuplicateValues(value, uniqueKey)) return {
+          myMessage: "".concat(uniqueKey, "\u4E0D\u80FD\u91CD\u590D")
+        };
+        return true;
+      });
+    },
     //正数
     positive() {
       return refine(number(), 'positive', value => {
@@ -4231,6 +4304,14 @@
       return refine(number(), 'integer', value => {
         if (!Number.isInteger(value)) return {
           myMessage: "\u5FC5\u987B\u662F\u6574\u6570"
+        };
+        return true;
+      });
+    },
+    string() {
+      return refine(string(), 'string', value => {
+        if (value.trim() === "") return {
+          myMessage: "\u4E0D\u80FD\u4E3A\u7A7A"
         };
         return true;
       });
@@ -4269,31 +4350,33 @@
 
   var TabOptionStruct = Struct.object({
     title: optional(string()),
-    url: optional(string()),
-    closable: optional(boolean()),
-    disabled: optional(boolean())
+    url: Struct.string(),
+    closable: optional(boolean())
   });
 
-  const toolbarItemStruct = Struct.falseOrObject({
+  const toolbarItemStruct = Struct.object({
+    enable: boolean(),
     icon: string(),
     order: number()
   });
-  const contextmenuItemStruct = Struct.falseOrObject({
+  const contextmenuItemStruct = Struct.object({
+    enable: boolean(),
     text: optional(string()),
     order: optional(number()),
     separator: optional(boolean())
   });
-  var FullOptionStruct = Struct.object({
+  var OptionsStruct = Struct.object({
     minHeight: optional(string()),
     height: optional(string()),
     width: optional(string()),
     lang: optional(string()),
     cacheType: Struct.enums(['local', 'session']),
-    responsive: Struct.falseOrObject({
+    responsive: Struct.object({
+      enable: boolean(),
       breakpoint: Struct.positive(),
-      hideToolbarItem: Struct.uniqueArray(Struct.enums(['prev', 'refresh', 'next', 'dropdown', 'fullscreen']))
+      hide: Struct.uniqueArray(Struct.enums(['prev', 'refresh', 'next', 'dropdown', 'fullscreen']))
     }),
-    defaultTabs: array(TabOptionStruct),
+    defaultTabs: Struct.arrayOfObjectsWithUniqueKey(TabOptionStruct, 'url'),
     toolbar: Struct.object({
       hide: boolean(),
       position: Struct.enums(['top', 'bottom']),
@@ -4303,23 +4386,24 @@
         order: number()
       }),
       next: toolbarItemStruct,
-      dropdown: Struct.falseOrObject({
+      dropdown: Struct.object({
+        enable: boolean(),
         icon: string(),
         order: number(),
-        searchInput: Struct.falseOrObject({
+        searchInput: Struct.object({
           placeholder: string(),
           prefixIcon: string()
         }),
-        openedTabs: Struct.falseOrObject({
+        openedTabs: Struct.object({
           text: string(),
-          itemIcon: string()
+          closeIcon: string()
         }),
-        recentlyClosedTabs: Struct.falseOrObject({
+        recentlyClosedTabs: Struct.object({
           text: string(),
           showIcon: string(),
           hideIcon: string()
         }),
-        timeFormat: Struct.falseOrObject({
+        timeFormat: Struct.object({
           year: string(),
           months: string(),
           days: string(),
@@ -4327,13 +4411,14 @@
           minutes: string(),
           seconds: string()
         }),
-        searchNoResultsText: string()
+        emptyText: string()
       }),
       fullscreen: toolbarItemStruct
     }),
     tab: Struct.object({
       remember: boolean(),
-      contextmenu: Struct.falseOrObject({
+      contextmenu: Struct.object({
+        enable: boolean(),
         close: contextmenuItemStruct,
         closeOthers: contextmenuItemStruct,
         closePrev: contextmenuItemStruct,
@@ -4344,12 +4429,13 @@
         centerActive: contextmenuItemStruct,
         newBlank: contextmenuItemStruct
       }),
-      mouseWheelSwitch: Struct.falseOrObject({
-        onlyScroll: boolean(),
-        centerActive: boolean()
+      mouseWheelSwitch: Struct.object({
+        enable: boolean(),
+        onlyScroll: boolean()
       }),
       maxNum: Struct.integer(),
-      closeBtn: Struct.falseOrObject({
+      closeBtn: Struct.object({
+        enable: boolean(),
         showOnHover: boolean(),
         icon: string()
       }),
@@ -4357,13 +4443,15 @@
       clickCenterActive: boolean(),
       doubleClickRefresh: boolean(),
       dragSort: boolean(),
-      timeout: Struct.falseOrObject({
+      timeout: Struct.object({
+        enable: boolean(),
         filter: func(),
         text: string(),
         second: Struct.positiveInteger(),
         template: string()
       }),
-      loading: Struct.falseOrObject({
+      loading: Struct.object({
+        enable: boolean(),
         filter: func(),
         template: string()
       })
@@ -4394,8 +4482,9 @@
 
   var DataKeys = {
     tabUrl: 'data-tab-url',
-    contextmenu: 'data-quicktab-contextmenu',
-    dropdown: 'data-quicktab-dropdown',
+    container: 'data-quicktab',
+    contextmenu: 'data-qt-contextmenu',
+    dropdown: 'data-qt-dropdown',
     //记录iframe的状态 true:表示已经加载完毕
     iframeLoaded: 'loaded',
     singleTab: 'data-qt-tab',
@@ -4407,7 +4496,6 @@
   };
 
   var Classes = {
-    container: 'quicktab',
     toolbar: 'tab-bar',
     toolbarHide: 'hide',
     toolbarPrevItem: 'prev',
@@ -4443,6 +4531,8 @@
   };
 
   var Html = {
+    // 容器
+    container: ["<div ".concat(DataKeys.container, "=\"%s\" class=\"quicktab\">"), '</div>'],
     //工具栏容器
     toolbar: ["<ul class=\"".concat(Classes.toolbar, " %s\">"), '</ul>'],
     // 工具栏的项目
@@ -4451,7 +4541,7 @@
     tabBody: "<ul class=\"".concat(Classes.tabBody, "\"></ul>"),
     tabBodyItem: "<li ".concat(DataKeys.tabUrl, "=%s></li>"),
     //遮罩层包裹层
-    maskWrapper: "<div class=\"".concat(Classes.overlays, "\"><div class=\"mask-inner\">%s</div></div>"),
+    maskWrapper: "<div ".concat(DataKeys.tabUrl, "=%s  class=\"").concat(Classes.overlays, "\"><div class=\"mask-inner\">%s</div></div>"),
     //加载器
     loading: "<div class=\"quicktab-loaders\"><div></div><div></div><div></div></div>",
     //默认超时界面
@@ -4543,29 +4633,12 @@
     }
   };
 
+  const NAMESPACE = 'Quicktab';
   const VERSION = '0.0.1';
   const SELECTOR_DATA_TOGGLE = '[data-qt-toggle="quicktab"]';
 
-  //禁用掉一些选项
-  const Presets = {
-    toolbar: {
-      refresh: false,
-      dropdown: false,
-      fullscreen: false
-    },
-    tab: {
-      remember: false,
-      contextmenu: false,
-      mouseWheelSwitch: false,
-      timeout: false,
-      loading: false
-    }
-  };
-
   // 默认选项
-  const DEFAULTS = Utils.extend(true, {}, FullOption, Lang, Presets);
-
-  //默认的语言包是中文
+  const DEFAULTS = Utils.extend(true, {}, Options, Lang);
   const LANGS = {
     zh: Lang,
     'zh-CN': Lang
@@ -4573,15 +4646,16 @@
   var Constants = {
     VERSION,
     DEFAULTS,
-    FULLOPTION: FullOption,
-    FULLOPTIONSTRUCT: FullOptionStruct,
+    OPTIONS: Options,
+    OPTIONSSTRUCT: OptionsStruct,
     TABOPTIONSTRUCT: TabOptionStruct,
     DATAKEYS: DataKeys,
     TABDEFAULTS: TabOption,
     CLASSES: Classes,
     HTML: Html,
     SELECTOR_DATA_TOGGLE,
-    LANGS
+    LANGS,
+    NAMESPACE
   };
 
   class TagSet {
@@ -11499,7 +11573,8 @@
   var _class;
   var _id = /*#__PURE__*/new WeakMap();
   var _options = /*#__PURE__*/new WeakMap();
-  var _container = /*#__PURE__*/new WeakMap();
+  var _element = /*#__PURE__*/new WeakMap();
+  var _containerEl = /*#__PURE__*/new WeakMap();
   var _toolbarEl = /*#__PURE__*/new WeakMap();
   var _toolbarItemTabWrapperEl = /*#__PURE__*/new WeakMap();
   var _toolbarItemDropdownEl = /*#__PURE__*/new WeakMap();
@@ -11524,7 +11599,6 @@
   var _init = /*#__PURE__*/new WeakSet();
   var _initDropdown = /*#__PURE__*/new WeakSet();
   var _initLocale = /*#__PURE__*/new WeakSet();
-  var _parsedefaultTabs = /*#__PURE__*/new WeakSet();
   var _tabOptionExtend = /*#__PURE__*/new WeakSet();
   var _initCache = /*#__PURE__*/new WeakSet();
   var _initEvent = /*#__PURE__*/new WeakSet();
@@ -11544,6 +11618,7 @@
   var _initTabs = /*#__PURE__*/new WeakSet();
   var _cacheTabsCheck = /*#__PURE__*/new WeakSet();
   var _restoreTabs = /*#__PURE__*/new WeakSet();
+  var _validateSingleTabOption = /*#__PURE__*/new WeakSet();
   var _removeTabByUrl = /*#__PURE__*/new WeakSet();
   var _cacheRecentlyClosedByUrl = /*#__PURE__*/new WeakSet();
   var _removeTabPaneByUrl = /*#__PURE__*/new WeakSet();
@@ -11568,7 +11643,7 @@
   var _getIFrameByUrl = /*#__PURE__*/new WeakSet();
   class Quicktab {
     constructor(id, _options2) {
-      var _classPrivateFieldGet2, _classPrivateFieldGet3, _classPrivateFieldGet4;
+      var _classPrivateFieldGet2;
       _classPrivateMethodInitSpec(this, _getIFrameByUrl);
       // 获取所有的iframe
       _classPrivateMethodInitSpec(this, _getIFrames);
@@ -11601,10 +11676,10 @@
       // }
       /**
        * 私有的激活tab的方法
-       * @param {String} url 
+       * @param {String} url
        * @param {Boolean} fromAddTabMethod 激活tab的方法方法是否来自addTab()
        * @param {Boolean} timestamp 是否需要更新自动时间戳
-       * @returns 
+       * @returns
        */
       _classPrivateMethodInitSpec(this, _activeTabByUrl);
       //根据url删除缓存里的tab
@@ -11614,6 +11689,12 @@
       _classPrivateMethodInitSpec(this, _cacheRecentlyClosedByUrl);
       //单纯的只做删除的工作
       _classPrivateMethodInitSpec(this, _removeTabByUrl);
+      /**
+       * 验证通过返回合并后的tab选项,失败返回String类型的错误信息
+       * @param {Object} option  单个tab的选项参数
+       * @returns {Object|String} 
+       */
+      _classPrivateMethodInitSpec(this, _validateSingleTabOption);
       /**
        * 恢复tab
        * @param {Array} options tab选项数组
@@ -11649,25 +11730,30 @@
       _classPrivateMethodInitSpec(this, _initCache);
       //合并单个tab的选项
       _classPrivateMethodInitSpec(this, _tabOptionExtend);
-      _classPrivateMethodInitSpec(this, _parsedefaultTabs);
       _classPrivateMethodInitSpec(this, _initLocale);
       _classPrivateMethodInitSpec(this, _initDropdown);
       _classPrivateMethodInitSpec(this, _init);
+      // 唯一的id
       _classPrivateFieldInitSpec(this, _id, {
         writable: true,
         value: void 0
       });
-      //选项
+      // 选项
       _classPrivateFieldInitSpec(this, _options, {
         writable: true,
         value: void 0
       });
-      //quicktab的容器
-      _classPrivateFieldInitSpec(this, _container, {
+      // 传入的id查找对应的元素
+      _classPrivateFieldInitSpec(this, _element, {
         writable: true,
         value: void 0
       });
-      //整个工具条
+      // quicktab的真实的容器元素
+      _classPrivateFieldInitSpec(this, _containerEl, {
+        writable: true,
+        value: void 0
+      });
+      // 整个工具条
       _classPrivateFieldInitSpec(this, _toolbarEl, {
         writable: true,
         value: void 0
@@ -11687,32 +11773,32 @@
         writable: true,
         value: void 0
       });
-      //缓存句柄
+      // 缓存句柄
       _classPrivateFieldInitSpec(this, _cacheHandle, {
         writable: true,
         value: void 0
       });
-      //tab持久化的缓存key
+      // tab持久化的缓存key
       _classPrivateFieldInitSpec(this, _cacheKey, {
         writable: true,
         value: void 0
       });
-      //初始化缓存选项
+      // 初始化缓存选项
       _classPrivateFieldInitSpec(this, _cacheDefaultTabsKey, {
         writable: true,
         value: void 0
       });
-      //右键菜单的列表组
+      // 右键菜单的列表组
       _classPrivateFieldInitSpec(this, _contextmenuEl, {
         writable: true,
         value: void 0
       });
-      //下拉菜单的元素
+      // 下拉菜单的元素
       _classPrivateFieldInitSpec(this, _dropdownEl, {
         writable: true,
         value: void 0
       });
-      //tab右键菜单floatui自动更新的监听器
+      // tab右键菜单floatui自动更新的监听器
       _classPrivateFieldInitSpec(this, _contextmenuCleanup, {
         writable: true,
         value: void 0
@@ -11766,33 +11852,47 @@
         writable: true,
         value: void 0
       });
-      _classPrivateFieldSet(this, _container, document.getElementById(id));
-      if (!_classPrivateFieldGet(this, _container)) {
-        return console.error("".concat(Constants.CLASSES.container, ":Invalid id!"));
+      _classPrivateFieldSet(this, _element, document.getElementById(id));
+      if (!_classPrivateFieldGet(this, _element)) {
+        return Utils.notify("ID '".concat(id, "' is invalid"));
       }
       if (_classStaticPrivateFieldSpecGet(Quicktab, Quicktab, _instances).has(id)) {
-        return console.error("The ID ".concat(id, " has already been used"));
+        return Utils.notify("The ID ".concat(id, " has already been used"));
       }
+
+      //立马隐藏挂载元素
+      _classPrivateFieldGet(this, _element).style.setProperty('display', 'none');
       _classStaticPrivateFieldSpecGet(Quicktab, Quicktab, _instances).set(id, this);
 
-      //接收参数
-      _classPrivateFieldSet(this, _options, Utils.extend(true, {}, Constants.DEFAULTS, Utils.parseOptions(_classPrivateFieldGet(this, _container), Utils.extend(true, {}, Constants.FULLOPTION), 'data-qt-'), typeof _options2 === 'object' && _options2));
+      //接收用户参数
+      const userOptions = Utils.extend(true, {}, Utils.parseDataOptions(_classPrivateFieldGet(this, _element), Constants.OPTIONS, 'data-qt-'), Utils.isObject(_options2) && _options2);
 
-      //验证参数
-      const result = Struct.validateOptions2(Constants.FULLOPTIONSTRUCT, _classPrivateFieldGet(this, _options));
-      if (result !== true) {
-        return console.error(result);
+      // 处理hideItem参数
+      const hideItemKey = 'responsive.hide';
+      const hideItemVal = Utils.getObjDataByKey(userOptions, hideItemKey);
+      if (hideItemVal !== undefined) {
+        Utils.updateObjDataByKey(Constants.DEFAULTS, hideItemKey, hideItemVal);
       }
 
-      //额外处理defaultTabs参数
-      _classPrivateFieldSet(this, _options, _classPrivateMethodGet(this, _parsedefaultTabs, _parsedefaultTabs2).call(this, _classPrivateFieldGet(this, _options)));
+      //合并默认参数
+      _classPrivateFieldSet(this, _options, Utils.extend(true, {}, Constants.DEFAULTS, userOptions));
+
+      //验证参数
+      const _result = Struct.validateOptions(Constants.OPTIONSSTRUCT, _classPrivateFieldGet(this, _options));
+      if (_result !== true) {
+        return Utils.notify(_result);
+      }
+
+      //合并一下单个tab的选项
+      _classPrivateFieldGet(this, _options).defaultTabs = _classPrivateFieldGet(this, _options).defaultTabs.map(option => _classPrivateMethodGet(this, _tabOptionExtend, _tabOptionExtend2).call(this, option));
       _classPrivateFieldSet(this, _id, id);
-      _classPrivateFieldSet(this, _cacheKey, "".concat(Constants.CLASSES.container, "-").concat(id));
+      _classPrivateFieldSet(this, _cacheKey, "".concat(Constants.NAMESPACE, "-").concat(_classPrivateFieldGet(this, _id)));
       _classPrivateFieldSet(this, _cacheDefaultTabsKey, "".concat(_classPrivateFieldGet(this, _cacheKey), "-defaultTabs"));
       _classPrivateFieldSet(this, _cacheRecentlyClosedTabsKey, "".concat(_classPrivateFieldGet(this, _cacheKey), "-recentlyClosed"));
-      _classPrivateFieldSet(this, _hideItemSelector, (_classPrivateFieldGet2 = _classPrivateFieldGet(this, _options).responsive.hideToolbarItem) === null || _classPrivateFieldGet2 === void 0 ? void 0 : _classPrivateFieldGet2.map(item => {
+      _classPrivateFieldSet(this, _hideItemSelector, (_classPrivateFieldGet2 = _classPrivateFieldGet(this, _options).responsive.hide) === null || _classPrivateFieldGet2 === void 0 ? void 0 : _classPrivateFieldGet2.map(item => {
         return ".".concat(Constants.CLASSES.toolbar, " li.").concat(item);
       }));
+      //这里要注意：实例化多个实例的时候，页面大小可能会改变，会触发该防抖函数
       _classPrivateFieldSet(this, _debounceCenterActive, Utils.debounce(() => {
         this.scrollToTabByUrl(_classPrivateMethodGet(this, _getTabUrl, _getTabUrl2).call(this, this.getActiveTab()));
       }, 500));
@@ -11801,7 +11901,7 @@
       _classPrivateMethodGet(this, _init, _init2).call(this);
 
       //初始化完毕调用init
-      (_classPrivateFieldGet3 = (_classPrivateFieldGet4 = _classPrivateFieldGet(this, _options)).onInit) === null || _classPrivateFieldGet3 === void 0 || _classPrivateFieldGet3.call(_classPrivateFieldGet4, this);
+      _classPrivateFieldGet(this, _options).onInit.call(this);
     }
     //关闭所有的tabs
     closeAllTabs() {
@@ -11828,14 +11928,8 @@
       });
     }
     addTab(option) {
-      //参数合并
-      option = _classPrivateMethodGet(this, _tabOptionExtend, _tabOptionExtend2).call(this, option);
-
-      //参数验证
-      const result = Struct.validateOptions2(Constants.TABOPTIONSTRUCT, option);
-      if (result !== true) {
-        return console.error(result);
-      }
+      option = _classPrivateMethodGet(this, _validateSingleTabOption, _validateSingleTabOption2).call(this, option);
+      if (Utils.isStr(option)) return Utils.notify(option);
       const url = option.url;
       if (!this.getTabByUrl(url)) {
         //如果这个tab不存在
@@ -11859,13 +11953,6 @@
             }
           }
         }
-
-        //如果没有该tab则添加这个tab
-        // this.#toolbarItemTabWrapperEl.insertAdjacentHTML(
-        //   'beforeEnd',
-        //   this.#generateTabHtml(option),
-        // )
-
         const tabEl = Utils.createNode(_classPrivateMethodGet(this, _generateTabHtml, _generateTabHtml2).call(this, option));
         option.timestamp = Date.now();
         tabEl[Constants.DATAKEYS.tabOptionDataKey] = option;
@@ -12013,7 +12100,7 @@
     _classPrivateMethodGet(this, _initTabs, _initTabs2).call(this);
   }
   function _initDropdown2() {
-    if (_classPrivateFieldGet(this, _options).toolbar.hide === true || _classPrivateFieldGet(this, _options).tab.dropdown === false) return;
+    if (_classPrivateFieldGet(this, _options).toolbar.dropdown.enable === false) return;
     const dropdownOptions = _classPrivateFieldGet(this, _options).toolbar.dropdown;
 
     //组织html
@@ -12044,7 +12131,7 @@
     html.push('</div>');
 
     //再插入一个无数据时的dom
-    const noResultsText = dropdownOptions.searchNoResultsText.trim() !== '' ? dropdownOptions.searchNoResultsText : _classPrivateFieldGet(this, _options).formatSearchNoResults();
+    const noResultsText = dropdownOptions.emptyText.trim() !== '' ? dropdownOptions.emptyText : _classPrivateFieldGet(this, _options).formatSearchNoResults();
     html.push(Utils.sprintf(Constants.HTML.dropdownEmpty, noResultsText));
     html.push(Constants.HTML.dropdownBody[1]);
     html.push(Constants.HTML.dropdown[1]);
@@ -12096,20 +12183,6 @@
       }
     }
   }
-  function _parsedefaultTabs2(options) {
-    //克隆对象,避免影响外部对象
-    let ops = Utils.extend(true, {}, options);
-    let defaultTabs = [];
-    ops.defaultTabs.map(item => {
-      const tab = _classPrivateMethodGet(this, _tabOptionExtend, _tabOptionExtend2).call(this, item);
-      if (tab.url.trim() !== '') {
-        defaultTabs.push(tab);
-      }
-    });
-    defaultTabs = Utils.arrUnique(defaultTabs, 'url');
-    ops.defaultTabs = defaultTabs;
-    return ops;
-  }
   function _tabOptionExtend2(option) {
     return Utils.extend(true, {}, Constants.TABDEFAULTS, option, {
       [Constants.CLASSES.tabActive]: false
@@ -12130,24 +12203,25 @@
 
       //上面的这几种事件全部都要关闭tab的右键菜单
       _classPrivateMethodGet(that, _closeContextmenu, _closeContextmenu2).call(that);
-      if (["click", "dragstart"].includes(eventType)) {
+      if (['click', 'dragstart'].includes(eventType)) {
+        var _classPrivateFieldGet3, _classPrivateFieldGet4;
         //对于下拉菜单只处理点击和拖拽用户体验比较好
-        if (!_classPrivateFieldGet(that, _dropdownEl).contains(clickedElement) && !_classPrivateFieldGet(that, _toolbarItemDropdownEl).contains(clickedElement)) {
+        if (!((_classPrivateFieldGet3 = _classPrivateFieldGet(that, _dropdownEl)) !== null && _classPrivateFieldGet3 !== void 0 && _classPrivateFieldGet3.contains(clickedElement)) && !((_classPrivateFieldGet4 = _classPrivateFieldGet(that, _toolbarItemDropdownEl)) !== null && _classPrivateFieldGet4 !== void 0 && _classPrivateFieldGet4.contains(clickedElement))) {
           _classPrivateMethodGet(that, _closeDropdown, _closeDropdown2).call(that);
         }
       }
     });
 
     //响应式处理
-    Utils.onResize(_classPrivateFieldGet(this, _container).parentNode, function (rect) {
+    Utils.onResize(_classPrivateFieldGet(this, _element).parentNode, function (rect) {
       //关闭tab右键菜单和下拉菜单
       _classPrivateMethodGet(that, _closeContextmenu, _closeContextmenu2).call(that);
       _classPrivateMethodGet(that, _closeDropdown, _closeDropdown2).call(that);
-      if (_classPrivateFieldGet(that, _options).responsive !== false) {
+      if (_classPrivateFieldGet(that, _options).responsive.enable !== false) {
         //如果启用了响应式就动态设置显示和隐藏
-        Utils.setProperty(_classPrivateFieldGet(that, _container), _classPrivateFieldGet(that, _hideItemSelector), 'display', rect.width < _classPrivateFieldGet(that, _options).responsive.breakpoint ? 'none' : null);
+        Utils.setProperty(_classPrivateFieldGet(that, _containerEl), _classPrivateFieldGet(that, _hideItemSelector), 'display', rect.width < _classPrivateFieldGet(that, _options).responsive.breakpoint ? 'none' : null);
       }
-      if (_classPrivateFieldGet(that, _options).toolbar.hide === false && _classPrivateFieldGet(that, _options).tab.resizeCenterActive === true) {
+      if (_classPrivateFieldGet(that, _options).tab.resizeCenterActive === true) {
         _classPrivateFieldGet(that, _debounceCenterActive).call(that);
       }
     });
@@ -12155,35 +12229,38 @@
     //添加通过html属性添加tab的能力(这个非常方便)
     jQuery(document).on('click', "[".concat(Constants.DATAKEYS.singleTab, "][").concat(Constants.DATAKEYS.singleTabTarget, "]"), function (event) {
       event.preventDefault();
-      if (this.getAttribute(Constants.DATAKEYS.singleTabTarget) === _classPrivateFieldGet(that, _id)) {
+      const target = this.getAttribute(Constants.DATAKEYS.singleTabTarget) || '';
+      if (target.trim() === "#".concat(_classPrivateFieldGet(that, _id))) {
         try {
-          that.addTab(JSON.parse(this.getAttribute(Constants.DATAKEYS.singleTab)));
+          let option = JSON.parse(this.getAttribute(Constants.DATAKEYS.singleTab));
+          that.addTab(option);
         } catch (error) {
-          return console.error('tab格式错误');
+          return Utils.notify("".concat(Constants.DATAKEYS.singleTab, "\u5C5E\u6027Json\u683C\u5F0F\u9519\u8BEF"));
         }
       }
     });
 
     //事件委托监听loading过渡完毕
-    jQuery(_classPrivateFieldGet(this, _container)).on('transitionend', ".".concat(Constants.CLASSES.tabBody, " .").concat(Constants.CLASSES.overlays), function (event) {
+    jQuery(_classPrivateFieldGet(this, _containerEl)).on('transitionend', ".".concat(Constants.CLASSES.tabBody, " .").concat(Constants.CLASSES.overlays), function (event) {
       if (event.target === event.currentTarget) {
-        event.target.remove();
+        const maskEl = event.target;
+        const url = _classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, maskEl);
+        maskEl.remove();
+
         //tab过渡完毕事件回调
-        typeof _classPrivateFieldGet(that, _options).onTabLoadingTransitionend === 'function' && _classPrivateFieldGet(that, _options).onTabLoadingTransitionend.call(that, that);
+        _classPrivateFieldGet(that, _options).onTabLoadingTransitionend.call(that, url);
       }
     });
 
     //tab的单击事件
-    jQuery(_classPrivateFieldGet(this, _toolbarItemTabWrapperEl)).on(
-    //单击和双击
-    'click', 'button', Utils.handleSingleAndDoubleClick({
+    jQuery(_classPrivateFieldGet(this, _toolbarItemTabWrapperEl)).on('click', 'button', Utils.handleSingleAndDoubleClick({
       click: {
         stopPropagation: false,
         handle: function () {
           let url = _classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, this);
 
           //tab被单击的回调
-          typeof _classPrivateFieldGet(that, _options).onTabClick === 'function' && _classPrivateFieldGet(that, _options).onTabClick.call(that, url, that);
+          _classPrivateFieldGet(that, _options).onTabClick.call(that, url);
 
           //激活
           _classPrivateMethodGet(that, _activeTabByUrl, _activeTabByUrl2).call(that, url);
@@ -12197,15 +12274,19 @@
       dbclick: {
         stopPropagation: false,
         handle: function () {
-          that.refreshTabByUrl(_classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, this));
+          let url = _classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, this);
+
+          //双击事件回调
+          _classPrivateFieldGet(that, _options).onTabDoubleClick.call(that, url);
+          that.refreshTabByUrl(url);
         }
       }
     }, {
-      enableDbClick: _classPrivateFieldGet(that, _options).tab.dbClickRefresh === true
+      enableDbClick: _classPrivateFieldGet(that, _options).tab.doubleClickRefresh === true
     }));
 
     //tab关闭事件
-    if (_classPrivateFieldGet(this, _options).tab.closeBtn !== false) {
+    if (_classPrivateFieldGet(this, _options).tab.closeBtn.enable !== false) {
       jQuery(_classPrivateFieldGet(this, _toolbarItemTabWrapperEl)).on('click', "button > svg", function (event) {
         event.stopPropagation(); //必须要阻止事件的冒泡,否则会冲突
 
@@ -12240,13 +12321,9 @@
     });
 
     //鼠标滚动切换
-    if (_classPrivateFieldGet(this, _options).tab.mouseWheelSwitch !== false) {
+    if (_classPrivateFieldGet(this, _options).tab.mouseWheelSwitch.enable !== false) {
       //鼠标滚轮切换tab功能启用
 
-      const {
-        onlyScroll,
-        centerActive
-      } = _classPrivateFieldGet(this, _options).tab.mouseWheelSwitch;
       let centerTabEl;
       const withTabPaneDebounce = Utils.debounce(function (event) {
         const activeTab = that.getActiveTab();
@@ -12262,10 +12339,7 @@
           _classPrivateMethodGet(that, _activeTabByUrl, _activeTabByUrl2).call(that, _classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, next));
           centerTabEl = next;
         }
-        if (centerActive === true && centerTabEl) {
-          //是否启动居中,且将要激活的tab是否存在
-          that.scrollToTabByUrl(_classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, centerTabEl));
-        }
+        that.scrollToTabByUrl(_classPrivateMethodGet(that, _getTabUrl, _getTabUrl2).call(that, centerTabEl));
       }, 200);
       _classPrivateFieldGet(this, _toolbarItemTabWrapperEl).addEventListener('wheel', function (event) {
         event.preventDefault(); //阻止默认事件，否则它会被外部的滚动条影响
@@ -12274,7 +12348,7 @@
         if (_classPrivateFieldGet(that, _options).tab.contextmenu !== false) {
           _classPrivateMethodGet(that, _closeContextmenu, _closeContextmenu2).call(that);
         }
-        if (onlyScroll === true) {
+        if (_classPrivateFieldGet(that, _options).tab.mouseWheelSwitch.onlyScroll === true) {
           //如果只是滚动
           _classPrivateFieldGet(that, _toolbarItemTabWrapperEl).scrollLeft += (event.deltaY || event.detail || -event.wheelDelta) / 2;
         } else {
@@ -12286,7 +12360,7 @@
     }
 
     //是否启用右键菜单功能
-    if (_classPrivateFieldGet(this, _options).tab.contextmenu !== false) {
+    if (_classPrivateFieldGet(this, _options).tab.contextmenu.enable !== false) {
       //tab右键的事件委托
       jQuery(_classPrivateFieldGet(this, _toolbarItemTabWrapperEl)).on('contextmenu', 'button', function (event) {
         let tabEl = this;
@@ -12381,18 +12455,18 @@
     }
 
     //下拉菜单的相关事件
-    if (_classPrivateFieldGet(this, _options).toolbar.dropdown !== false) {
+    if (_classPrivateFieldGet(this, _options).toolbar.dropdown.enable !== false) {
       //点击最近关闭折叠
       jQuery(_classPrivateFieldGet(this, _dropdownEl)).on('click', '.has-icon', function (event) {
         const ul = this.nextElementSibling;
         const iconWrapper = this.querySelector('.icon-wrapper');
         iconWrapper.focus();
-        if (ul.style.display === "none") {
+        if (ul.style.display === 'none') {
           iconWrapper.innerHTML = _classPrivateFieldGet(that, _options).toolbar.dropdown.recentlyClosedTabs.hideIcon;
-          ul.style.display = "block";
+          ul.style.display = 'block';
         } else {
           iconWrapper.innerHTML = _classPrivateFieldGet(that, _options).toolbar.dropdown.recentlyClosedTabs.showIcon;
-          ul.style.display = "none";
+          ul.style.display = 'none';
         }
       });
 
@@ -12503,10 +12577,12 @@
     });
 
     // 未激活的,按照timestamp从小到大排序
-    const notActiveTabs = allOpenedTabs.filter(tab => tab.active === false).sort((a, b) => b.timestamp - a.timestamp);
+    const newOrderTabs = allOpenedTabs.filter(tab => tab.active === false).sort((a, b) => b.timestamp - a.timestamp);
     const ativeTabs = allOpenedTabs.find(tab => tab.active === true);
-    const newOrderTabs = [...notActiveTabs, ativeTabs];
-    const closeBtnTpl = Utils.sprintf(Constants.HTML.iconWrapper, '', _classPrivateFieldGet(this, _options).toolbar.dropdown.openedTabs.itemIcon);
+    if (ativeTabs) {
+      newOrderTabs.push(ativeTabs);
+    }
+    const closeBtnTpl = Utils.sprintf(Constants.HTML.iconWrapper, '', _classPrivateFieldGet(this, _options).toolbar.dropdown.openedTabs.closeIcon);
 
     //创建两个虚拟节点
     const openTabsFrag = document.createDocumentFragment();
@@ -12544,19 +12620,19 @@
     // 注册菜单自动更新位置
     _classPrivateFieldSet(this, _dropdownCleanup, autoUpdate(_classPrivateFieldGet(this, _toolbarItemDropdownEl), _classPrivateFieldGet(this, _dropdownEl), _classPrivateMethodGet(this, _updatePosition, _updatePosition2).bind(this, _classPrivateFieldGet(this, _toolbarItemDropdownEl), _classPrivateFieldGet(this, _dropdownEl), 'bottom-end')));
     _classPrivateFieldGet(this, _dropdownEl).classList.add(Constants.CLASSES.dropdownActive);
-    _classPrivateFieldGet(this, _container).classList.add(Constants.CLASSES.dropdownPEN);
+    _classPrivateFieldGet(this, _containerEl).classList.add(Constants.CLASSES.dropdownPEN);
 
     //关闭tab的右键菜单
     _classPrivateMethodGet(this, _closeContextmenu, _closeContextmenu2).call(this);
   }
   function _closeDropdown2() {
-    var _classPrivateFieldGet7;
+    var _classPrivateFieldGet7, _classPrivateFieldGet8;
     (_classPrivateFieldGet7 = _classPrivateFieldGet(this, _dropdownCleanup)) === null || _classPrivateFieldGet7 === void 0 || _classPrivateFieldGet7.call(this);
-    _classPrivateFieldGet(this, _dropdownEl).classList.remove(Constants.CLASSES.dropdownActive);
-    _classPrivateFieldGet(this, _container).classList.remove(Constants.CLASSES.dropdownPEN);
+    (_classPrivateFieldGet8 = _classPrivateFieldGet(this, _dropdownEl)) === null || _classPrivateFieldGet8 === void 0 || _classPrivateFieldGet8.classList.remove(Constants.CLASSES.dropdownActive);
+    _classPrivateFieldGet(this, _containerEl).classList.remove(Constants.CLASSES.dropdownPEN);
   }
   function _showContextmenuByUrl2(url) {
-    var _classPrivateFieldGet8;
+    var _classPrivateFieldGet9;
     //判断关闭当前菜单选项是否被启用
     if (_classPrivateFieldGet(this, _options).tab.contextmenu.close !== false) {
       const listGroupCloseItemEl = _classPrivateFieldGet(this, _contextmenuEl).querySelector(".".concat(Constants.CLASSES.listGroupCloseItem));
@@ -12570,7 +12646,7 @@
       }
     }
     const tabEl = this.getTabByUrl(url);
-    (_classPrivateFieldGet8 = _classPrivateFieldGet(this, _contextmenuCleanup)) === null || _classPrivateFieldGet8 === void 0 || _classPrivateFieldGet8.call(this);
+    (_classPrivateFieldGet9 = _classPrivateFieldGet(this, _contextmenuCleanup)) === null || _classPrivateFieldGet9 === void 0 || _classPrivateFieldGet9.call(this);
 
     // 注册菜单自动更新位置
     _classPrivateFieldSet(this, _contextmenuCleanup, autoUpdate(tabEl, _classPrivateFieldGet(this, _contextmenuEl), _classPrivateMethodGet(this, _updatePosition, _updatePosition2).bind(this, tabEl, _classPrivateFieldGet(this, _contextmenuEl), 'top')));
@@ -12579,7 +12655,7 @@
     _classPrivateFieldGet(this, _contextmenuEl).classList.add(Constants.CLASSES.listGroupActive);
 
     //给iframe添加蒙层
-    _classPrivateFieldGet(this, _container).classList.add(Constants.CLASSES.contextmenuPEN);
+    _classPrivateFieldGet(this, _containerEl).classList.add(Constants.CLASSES.contextmenuPEN);
 
     //把url属性也给每一个列表项目设置一遍，方便后续事件的处理
     _classPrivateFieldGet(this, _contextmenuEl).querySelectorAll('li').forEach(function (li) {
@@ -12590,10 +12666,10 @@
     _classPrivateMethodGet(this, _closeDropdown, _closeDropdown2).call(this);
   }
   function _closeContextmenu2() {
-    var _classPrivateFieldGet9;
-    (_classPrivateFieldGet9 = _classPrivateFieldGet(this, _contextmenuCleanup)) === null || _classPrivateFieldGet9 === void 0 || _classPrivateFieldGet9.call(this);
-    _classPrivateFieldGet(this, _contextmenuEl).classList.remove(Constants.CLASSES.listGroupActive);
-    _classPrivateFieldGet(this, _container).classList.remove(Constants.CLASSES.contextmenuPEN);
+    var _classPrivateFieldGet10, _classPrivateFieldGet11;
+    (_classPrivateFieldGet10 = _classPrivateFieldGet(this, _contextmenuCleanup)) === null || _classPrivateFieldGet10 === void 0 || _classPrivateFieldGet10.call(this);
+    (_classPrivateFieldGet11 = _classPrivateFieldGet(this, _contextmenuEl)) === null || _classPrivateFieldGet11 === void 0 || _classPrivateFieldGet11.classList.remove(Constants.CLASSES.listGroupActive);
+    _classPrivateFieldGet(this, _containerEl).classList.remove(Constants.CLASSES.contextmenuPEN);
   }
   function _updatePosition2(referenceEl, floatingEl) {
     let placement = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 'top';
@@ -12622,18 +12698,6 @@
     });
   }
   function _initContainer2() {
-    //给容器挂载类名
-    _classPrivateFieldGet(this, _container).classList.add(Constants.CLASSES.container);
-
-    //设置容器的尺寸
-    const {
-      height,
-      width,
-      minHeight
-    } = _classPrivateFieldGet(this, _options);
-    _classPrivateFieldGet(this, _container).style.setProperty('height', height);
-    _classPrivateFieldGet(this, _container).style.setProperty('width', width);
-    _classPrivateFieldGet(this, _container).style.setProperty('min-height', minHeight);
     const toolbarTabWrapperOpsKey = 'tabWrapper';
     const toolbarItemClassMap = {
       prev: Constants.CLASSES.toolbarPrevItem,
@@ -12643,41 +12707,60 @@
       dropdown: Constants.CLASSES.toolbarDropdownItem,
       fullscreen: Constants.CLASSES.toolbarFullscreenItem
     };
-    let html = [Utils.sprintf(Constants.HTML.toolbar[0], _classPrivateFieldGet(this, _options).toolbar.hide === true ? Constants.CLASSES.toolbarHide : '')];
+    let html = [Utils.sprintf(Constants.HTML.container[0], _classPrivateFieldGet(this, _id))];
+    const toolbarHtml = [Utils.sprintf(Constants.HTML.toolbar[0], _classPrivateFieldGet(this, _options).toolbar.hide === true ? Constants.CLASSES.toolbarHide : '')];
     Utils.getEnabledAndSortedOpsKey(_classPrivateFieldGet(this, _options).toolbar, toolbarItemClassMap).map(key => {
-      html.push(Utils.sprintf(Constants.HTML.toolbarItem, toolbarItemClassMap[key], key === toolbarTabWrapperOpsKey ? '' : "<button>".concat(_classPrivateFieldGet(this, _options).toolbar[key].icon, "</button>")));
+      toolbarHtml.push(Utils.sprintf(Constants.HTML.toolbarItem, toolbarItemClassMap[key], key === toolbarTabWrapperOpsKey ? '' : "<button>".concat(_classPrivateFieldGet(this, _options).toolbar[key].icon, "</button>")));
     });
-
     //加入工具栏的结尾
-    html.push(Constants.HTML.toolbar[1]);
+    toolbarHtml.push(Constants.HTML.toolbar[1]);
 
     //排序实现
-    let pos = _classPrivateFieldGet(this, _options).toolbar.position;
+    const pos = _classPrivateFieldGet(this, _options).toolbar.position;
     if (pos === 'bottom') {
-      html.unshift(Constants.HTML.tabBody);
+      toolbarHtml.unshift(Constants.HTML.tabBody);
     } else if (pos === 'top') {
-      html.push(Constants.HTML.tabBody);
+      toolbarHtml.push(Constants.HTML.tabBody);
     }
+    html.push(...toolbarHtml);
+    html.push(Constants.HTML.container[1]);
     html = html.join(''); //转换成字符串
 
     // 隐藏特定的项目
-    if (_classPrivateFieldGet(this, _options).toolbar.hide === false && _classPrivateFieldGet(this, _options).responsive !== false && _classPrivateFieldGet(this, _container).parentNode.getBoundingClientRect().width < _classPrivateFieldGet(this, _options).responsive.breakpoint) {
+    if (_classPrivateFieldGet(this, _options).responsive.enable !== false && _classPrivateFieldGet(this, _element).parentNode.getBoundingClientRect().width < _classPrivateFieldGet(this, _options).responsive.breakpoint) {
       html = Utils.setProperty(html, _classPrivateFieldGet(this, _hideItemSelector), 'display', 'none');
     }
 
-    //插入到容器内部
-    _classPrivateFieldGet(this, _container).insertAdjacentHTML('beforeEnd', html);
+    //设置容器的尺寸
+    const {
+      height,
+      width,
+      minHeight
+    } = _classPrivateFieldGet(this, _options);
+    const containerSelector = "[".concat(Constants.DATAKEYS.container, "=\"").concat(_classPrivateFieldGet(this, _id), "\"]");
+    html = Utils.setProperty(html, [containerSelector], 'height', height);
+    html = Utils.setProperty(html, [containerSelector], 'width', width);
+    html = Utils.setProperty(html, [containerSelector], 'min-height', minHeight);
+
+    //插入到挂载元素之后
+    _classPrivateFieldGet(this, _element).insertAdjacentHTML('afterend', html);
+    _classPrivateFieldSet(this, _containerEl, document.querySelector(containerSelector));
 
     //查找一些需要的dom
-    _classPrivateFieldSet(this, _toolbarEl, _classPrivateFieldGet(this, _container).querySelector(".".concat(Constants.CLASSES.toolbar)));
-    _classPrivateFieldSet(this, _toolbarItemTabWrapperEl, _classPrivateFieldGet(this, _container).querySelector(".".concat(Constants.CLASSES.toolbar, " li.").concat(Constants.CLASSES.toolbarTabWrapperItem)));
-    _classPrivateFieldSet(this, _tabBodyEl, _classPrivateFieldGet(this, _container).querySelector(".".concat(Constants.CLASSES.tabBody)));
+    _classPrivateFieldSet(this, _toolbarEl, _classPrivateFieldGet(this, _containerEl).querySelector(".".concat(Constants.CLASSES.toolbar)));
+    _classPrivateFieldSet(this, _toolbarItemTabWrapperEl, _classPrivateFieldGet(this, _containerEl).querySelector(".".concat(Constants.CLASSES.toolbar, " li.").concat(Constants.CLASSES.toolbarTabWrapperItem)));
+    _classPrivateFieldSet(this, _tabBodyEl, _classPrivateFieldGet(this, _containerEl).querySelector(".".concat(Constants.CLASSES.tabBody)));
 
     //下拉菜单的按钮,弹出下拉菜单时需要使用
     _classPrivateFieldSet(this, _toolbarItemDropdownEl, _classPrivateFieldGet(this, _toolbarEl).querySelector(".".concat(Constants.CLASSES.toolbarDropdownItem, " button")));
+
+    // console.log(this.#toolbarEl);
+    // console.log(this.#toolbarItemTabWrapperEl);
+    // console.log(this.#tabBodyEl);
+    // console.log(this.#toolbarItemDropdownEl);
   }
   function _initContextmenu2() {
-    if (_classPrivateFieldGet(this, _options).toolbar.hide === true || _classPrivateFieldGet(this, _options).tab.contextmenu === false) return;
+    if (_classPrivateFieldGet(this, _options).tab.contextmenu.enable === false) return;
     const listGroupItemMap = {
       close: {
         class: Constants.CLASSES.listGroupCloseItem,
@@ -12819,6 +12902,17 @@
     //滚动到激活tab所在位置
     _classPrivateMethodGet(this, _scrollToTabByUrl, _scrollToTabByUrl2).call(this, url, 'auto');
   }
+  function _validateSingleTabOption2(option) {
+    if (!Utils.isObject(option)) return 'tab选项必须是对象';
+
+    //参数合并
+    option = _classPrivateMethodGet(this, _tabOptionExtend, _tabOptionExtend2).call(this, option);
+    const result = Struct.validateOptions(Constants.TABOPTIONSTRUCT, option);
+    if (result !== true) {
+      return result;
+    }
+    return option;
+  }
   function _removeTabByUrl2(url) {
     var _this$getTabByUrl3;
     //添加进最近关闭的缓存
@@ -12832,6 +12926,9 @@
 
     //删除缓存里的tab
     _classPrivateMethodGet(this, _removeCacheTabByUrl, _removeCacheTabByUrl2).call(this, url);
+
+    //关闭tab的回调
+    _classPrivateFieldGet(this, _options).onTabClose.call(this, url);
   }
   function _cacheRecentlyClosedByUrl2(url) {
     //添加最近删除的缓存,从tab的dom中拿到选项进行缓存
@@ -12909,9 +13006,9 @@
 
     //激活逻辑完成调用激活事件
     if (fromAddTabMethod) {
-      typeof _classPrivateFieldGet(this, _options).onTabAddActivated === 'function' && _classPrivateFieldGet(this, _options).onTabAddActivated.call(this, this);
+      _classPrivateFieldGet(this, _options).onTabAddActivated.call(this, url);
     } else {
-      typeof _classPrivateFieldGet(this, _options).onTabActivated === 'function' && _classPrivateFieldGet(this, _options).onTabActivated.call(this, this);
+      _classPrivateFieldGet(this, _options).onTabActivated.call(this, url);
     }
   }
   function _addTabPaneByUrl2(url) {
@@ -12957,8 +13054,8 @@
 
       //判断是否有loading 有的话就执行过渡
       (_classPrivateMethodGe2 = _classPrivateMethodGet(this, _getTabLoadingByUrl, _getTabLoadingByUrl2).call(this, url)) === null || _classPrivateMethodGe2 === void 0 || _classPrivateMethodGe2.style.setProperty('opacity', 0);
-      typeof _classPrivateFieldGet(this, _options).onTabLoaded === 'function' && _classPrivateFieldGet(this, _options).onTabLoaded.call(this, iframe, url, this);
-      _classPrivateMethodGet(this, _tabFinallyAndAll, _tabFinallyAndAll2).call(this);
+      _classPrivateFieldGet(this, _options).onTabLoaded.call(this, url);
+      _classPrivateMethodGet(this, _tabFinallyAndAll, _tabFinallyAndAll2).call(this, url);
       if (!canAccessIFrame) {
         //如果是跨域的iframe,所有的逻辑执行完毕后清空onload,因为跨域的iframe,被用户点击重新加载此框架时,无法控制它
         iframe.onload = null;
@@ -12983,13 +13080,13 @@
 
       //如果超时的话，就应该立即移除这个loading层
       (_classPrivateMethodGe3 = _classPrivateMethodGet(this, _getTabLoadingByUrl, _getTabLoadingByUrl2).call(this, url)) === null || _classPrivateMethodGe3 === void 0 || _classPrivateMethodGe3.remove();
-      let timeoutHtml = Utils.sprintf(Constants.HTML.maskWrapper, Utils.sprintf(Constants.HTML.timeout, _classPrivateFieldGet(this, _options).tab.timeout.text.trim() !== '' ? _classPrivateFieldGet(this, _options).tab.timeout.text : _classPrivateFieldGet(this, _options).formatTimeoutMessage()));
+      let timeoutHtml = Utils.sprintf(Constants.HTML.maskWrapper, url, Utils.sprintf(Constants.HTML.timeout, _classPrivateFieldGet(this, _options).tab.timeout.text.trim() !== '' ? _classPrivateFieldGet(this, _options).tab.timeout.text : _classPrivateFieldGet(this, _options).formatTimeoutMessage()));
       if (_classPrivateFieldGet(this, _options).tab.timeout.template.trim() !== '') {
         timeoutHtml = _classPrivateFieldGet(this, _options).tab.timeout.template;
       }
       (_this$getTabPaneByUrl5 = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl5 === void 0 || _this$getTabPaneByUrl5.insertAdjacentHTML('beforeEnd', timeoutHtml);
-      typeof _classPrivateFieldGet(this, _options).onTabTimeout === 'function' && _classPrivateFieldGet(this, _options).onTabTimeout.call(this, url, this);
-      _classPrivateMethodGet(this, _tabFinallyAndAll, _tabFinallyAndAll2).call(this);
+      _classPrivateFieldGet(this, _options).onTabTimeout.call(this, url);
+      _classPrivateMethodGet(this, _tabFinallyAndAll, _tabFinallyAndAll2).call(this, url);
     }, _classPrivateFieldGet(this, _options).tab.timeout.second);
   }
   function _refreshIFrameByUrl2(url) {
@@ -13019,20 +13116,20 @@
   function _clearIFrameTimeout2(iframeEl) {
     clearTimeout(iframeEl[Constants.DATAKEYS.iframeTimeoutTimer]);
   }
-  function _tabFinallyAndAll2() {
-    typeof _classPrivateFieldGet(this, _options).onTabFinally === 'function' && _classPrivateFieldGet(this, _options).onTabFinally.call(this, this);
+  function _tabFinallyAndAll2(url) {
+    _classPrivateFieldGet(this, _options).onTabFinally.call(this, url);
 
     // 判断所有的tab是否都完成
     const allCompleted = Array.from(_classPrivateMethodGet(this, _getIFrames, _getIFrames2).call(this)).every(iframe => {
       return iframe[Constants.DATAKEYS.iframeLoaded] === true;
     });
     if (allCompleted) {
-      typeof _classPrivateFieldGet(this, _options).onTabAll === 'function' && _classPrivateFieldGet(this, _options).onTabAll.call(this, this);
+      _classPrivateFieldGet(this, _options).onTabAll.call(this, this);
     }
   }
   function _generateTabHtml2(option) {
     //是否启用
-    const enable = _classPrivateFieldGet(this, _options).tab.closeBtn !== false && option.closable === true;
+    const enable = _classPrivateFieldGet(this, _options).tab.closeBtn.enable !== false && option.closable === true;
     return Utils.sprintf(Constants.HTML.tab, _classPrivateFieldGet(this, _options).tab.dragSort === true ? "draggable=\"true\"" : '', enable && _classPrivateFieldGet(this, _options).tab.closeBtn.showOnHover === true ? Constants.CLASSES.showCloseBtnOnHover : '', option.url, option.title, enable ? _classPrivateFieldGet(this, _options).tab.closeBtn.icon : '');
   }
   function _addCacheTab2(option) {
@@ -13054,6 +13151,7 @@
   function _scrollToTabByUrl2(url) {
     let behavior = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'smooth';
     const tab = this.getTabByUrl(url);
+    if (!tab) return;
 
     //需要父元素设置postion(relative、absolute、fixed)
     // 获取到当前点击元素的 offsetLeft  - 包裹盒子 offsetWidth 的一半 + 当前点击元素 offsetWidth 的一半
@@ -13063,8 +13161,8 @@
     });
   }
   function _getCacheActiveTab2() {
-    var _classPrivateFieldGet10;
-    return (_classPrivateFieldGet10 = _classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheKey))) === null || _classPrivateFieldGet10 === void 0 ? void 0 : _classPrivateFieldGet10.find(item => item.active === true);
+    var _classPrivateFieldGet12;
+    return (_classPrivateFieldGet12 = _classPrivateFieldGet(this, _cacheHandle).get(_classPrivateFieldGet(this, _cacheKey))) === null || _classPrivateFieldGet12 === void 0 ? void 0 : _classPrivateFieldGet12.find(item => item.active === true);
   }
   function _updateCacheTabByUrl2(url, updateKey, updateValue) {
     if (_classPrivateFieldGet(this, _options).tab.remember === false) return;
@@ -13081,7 +13179,7 @@
   }
   function _addLoadingByUrl2(url) {
     var _this$getTabPaneByUrl7;
-    if (_classPrivateFieldGet(this, _options).tab.loading === false) return;
+    if (_classPrivateFieldGet(this, _options).tab.loading.enable === false) return;
 
     //关闭遮罩层
     this.clsoeLoadingByUrl(url);
@@ -13090,7 +13188,7 @@
     let template = _classPrivateFieldGet(this, _options).tab.loading.template !== '' ? _classPrivateFieldGet(this, _options).tab.loading.template : Constants.HTML.loading;
 
     //插入面板
-    (_this$getTabPaneByUrl7 = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl7 === void 0 || _this$getTabPaneByUrl7.insertAdjacentHTML('beforeEnd', Utils.sprintf(Constants.HTML.maskWrapper, template));
+    (_this$getTabPaneByUrl7 = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl7 === void 0 || _this$getTabPaneByUrl7.insertAdjacentHTML('beforeEnd', Utils.sprintf(Constants.HTML.maskWrapper, url, template));
   }
   function _getIFrames2() {
     return _classPrivateFieldGet(this, _tabBodyEl).querySelectorAll("li[".concat(Constants.DATAKEYS.tabUrl, "] > iframe"));
@@ -13099,7 +13197,7 @@
     var _this$getTabPaneByUrl8;
     return (_this$getTabPaneByUrl8 = this.getTabPaneByUrl(url)) === null || _this$getTabPaneByUrl8 === void 0 ? void 0 : _this$getTabPaneByUrl8.querySelector('iframe');
   }
-  //实例集合
+  // 实例集合
   var _instances = {
     writable: true,
     value: new Map()

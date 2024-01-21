@@ -6,7 +6,7 @@ export default {
    */
   createNode(htmlStr) {
     const node = document.createElement('div')
-    node.innerHTML = htmlStr.trim()// 去除字符串两端的空白
+    node.innerHTML = htmlStr.trim() // 去除字符串两端的空白
     return node.firstElementChild
   },
 
@@ -242,13 +242,10 @@ export default {
     return Object.prototype.toString.call(value) === '[object Object]'
   },
 
-  isJSONString(str) {
+  isJSON(str) {
     try {
-      const result = JSON.parse(str)
-      return (
-        Object.prototype.toString.call(result) === '[object Object]' ||
-        Array.isArray(result)
-      )
+      JSON.parse(str)
+      return true
     } catch (e) {
       return false
     }
@@ -301,29 +298,71 @@ export default {
     return obj
   },
 
-  parseOptions(element, options, prefix = '') {
-    for (const key in options) {
+  //解析data上的选项
+  parseDataOptions(element, defaultOption, prefix = '', options = {}) {
+    for (const key in defaultOption) {
       const attrKey = prefix + key
-      const dataVal = this.parseAttributeValue(element.getAttribute(attrKey))
-      if (this.isObject(options[key])) {
-        //如果是对象
-        dataVal === false
-          ? (options[key] = false)
-          : this.parseOptions(element, options[key], attrKey + '-')
+
+      let attrVal = element.getAttribute(attrKey)
+      let parseVal = this.parseAttributeValue(attrVal)
+
+      if (!this.isObject(defaultOption[key])) {
+        //如果选项原来的值是一个对象
+
+        if (attrVal !== null) {
+          //如果获取到值了
+          options[key] = parseVal
+        }
       } else {
-        if (dataVal !== null) {
-          options[key] = dataVal
+        this.parseDataOptions(
+          element,
+          defaultOption[key],
+          attrKey + '-',
+          (options[key] = {}),
+        )
+
+        if (this.isEmptyObject(options[key])) {
+          delete options[key]
         }
       }
     }
     return options
   },
+
+  isEmptyObject(obj) {
+    for (let key in obj) {
+      if (Object.hasOwnProperty.call(obj, key)) {
+        return false
+      }
+    }
+    return true
+  },
+
   hasDuplicates(array) {
     for (let i = 0; i < array.length; i++) {
       if (array.indexOf(array[i]) !== i) {
         return true
       }
     }
+    return false
+  },
+
+  //判断数组的对象元素中的某个key是否具有唯一值
+  hasDuplicateValues(arr, key) {
+    const valueSet = new Set()
+
+    for (const obj of arr) {
+      const value = obj[key]
+
+      if (valueSet.has(value)) {
+        // 发现重复的值
+        return true
+      }
+
+      valueSet.add(value)
+    }
+
+    // 没有重复的值
     return false
   },
 
@@ -342,17 +381,22 @@ export default {
     })
     resizeObserver.observe(element)
   },
+
   // 获取开启和激活的选项
   getEnabledAndSortedOpsKey(options, keyClassMap) {
     return Object.keys(options)
       .filter((key) => {
-        if (Object.keys(keyClassMap).includes(key) && options[key] !== false) {
+        if (
+          Object.keys(keyClassMap).includes(key) &&
+          options[key].enable !== false
+        ) {
           return true
         }
         return false
       })
       .sort((a, b) => options[a].order - options[b].order)
   },
+
   //实现类似jquery的prevAll
   prevAll(element) {
     const result = []
@@ -403,7 +447,8 @@ export default {
       target.style.setProperty('transition', 'none')
       target.style.setProperty(
         'transform',
-        `translate3d(${prevRect.left - currentRect.left}px,${prevRect.top - currentRect.top
+        `translate3d(${prevRect.left - currentRect.left}px,${
+          prevRect.top - currentRect.top
         }px,0)`,
       )
 
@@ -422,50 +467,56 @@ export default {
     }
   },
 
-
   /**
    * 把时间戳转换成人类友好的时间
    * @param {Number} timestamp 微妙时间戳
-   * @returns {String} 
+   * @returns {String}
    */
-  timeAgo(timestamp, customText = {
-    second: '秒前',
-    minutes: '分钟前',
-    hours: '小时前',
-    days: '天前',
-    months: '月前',
-    years: '年前'
-  }) {
+  timeAgo(
+    timestamp,
+    customText = {
+      second: '秒前',
+      minutes: '分钟前',
+      hours: '小时前',
+      days: '天前',
+      months: '月前',
+      years: '年前',
+    },
+  ) {
+    const seconds = Math.floor((Date.now() - Math.floor(timestamp)) / 1000)
 
-    const seconds = Math.floor((Date.now() - Math.floor(timestamp)) / 1000);
-
-    const minute = 60;
-    const hour = 60 * minute;
-    const day = 24 * hour;
-    const month = 30 * day;
-    const year = 365 * day;
+    const minute = 60
+    const hour = 60 * minute
+    const day = 24 * hour
+    const month = 30 * day
+    const year = 365 * day
 
     if (seconds < minute) {
-      return `${seconds} ${customText.second}`;
+      return `${seconds} ${customText.second}`
     } else if (seconds < hour) {
-      const minutes = Math.floor(seconds / minute);
-      return `${minutes} ${customText.minutes}`;
+      const minutes = Math.floor(seconds / minute)
+      return `${minutes} ${customText.minutes}`
     } else if (seconds < day) {
-      const hours = Math.floor(seconds / hour);
-      return `${hours} ${customText.hours}`;
+      const hours = Math.floor(seconds / hour)
+      return `${hours} ${customText.hours}`
     } else if (seconds < month) {
-      const days = Math.floor(seconds / day);
-      return `${days} ${customText.days}`;
+      const days = Math.floor(seconds / day)
+      return `${days} ${customText.days}`
     } else if (seconds < year) {
-      const months = Math.floor(seconds / month);
-      return `${months} ${customText.months}`;
+      const months = Math.floor(seconds / month)
+      return `${months} ${customText.months}`
     } else {
-      const years = Math.floor(seconds / year);
-      return `${years} ${customText.years}`;
+      const years = Math.floor(seconds / year)
+      return `${years} ${customText.years}`
     }
   },
   //判断数字是否有小数点
   hasDecimal(number) {
-    return !Number.isInteger(number);
-  }
+    return !Number.isInteger(number)
+  },
+
+  // 通知程序
+  notify(msg, type = 'error') {
+    console[type](`Quicktab:${msg}`)
+  },
 }

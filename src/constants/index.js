@@ -1,5 +1,5 @@
-import FullOption from './full-option'
-import FullOptionStruct from './full-option-struct'
+import Options from './options'
+import OptionsStruct from './options-struct'
 import TabOptionStruct from './tab-option-struct'
 import TabOption from './tab-option'
 import DataKeys from './datakeys'
@@ -8,29 +8,13 @@ import Html from './html'
 import Lang from './lang'
 import Utils from '../utils'
 
+const NAMESPACE = 'Quicktab'
 const VERSION = '0.0.1'
 const SELECTOR_DATA_TOGGLE = '[data-qt-toggle="quicktab"]'
 
-//禁用掉一些选项
-const Presets = {
-  toolbar: {
-    refresh: false,
-    dropdown: false,
-    fullscreen: false,
-  },
-  tab: {
-    remember: false,
-    contextmenu: false,
-    mouseWheelSwitch: false,
-    timeout: false,
-    loading: false,
-  },
-}
-
 // 默认选项
-const DEFAULTS = Utils.extend(true, {}, FullOption, Lang, Presets)
+const DEFAULTS = Utils.extend(true, {}, Options, Lang)
 
-//默认的语言包是中文
 const LANGS = {
   zh: Lang,
   'zh-CN': Lang,
@@ -39,8 +23,8 @@ const LANGS = {
 export default {
   VERSION,
   DEFAULTS,
-  FULLOPTION: FullOption,
-  FULLOPTIONSTRUCT: FullOptionStruct,
+  OPTIONS: Options,
+  OPTIONSSTRUCT: OptionsStruct,
   TABOPTIONSTRUCT: TabOptionStruct,
   DATAKEYS: DataKeys,
   TABDEFAULTS: TabOption,
@@ -48,4 +32,5 @@ export default {
   HTML: Html,
   SELECTOR_DATA_TOGGLE,
   LANGS,
+  NAMESPACE,
 }

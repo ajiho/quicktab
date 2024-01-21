@@ -1,5 +1,4 @@
 export default {
-  container: 'quicktab',
   toolbar: 'tab-bar',
   toolbarHide: 'hide',
   toolbarPrevItem: 'prev',
@@ -9,9 +8,6 @@ export default {
   toolbarDropdownItem: 'dropdown',
   toolbarFullscreenItem: 'fullscreen',
   tabBody: 'tab-body',
-
-
-
 
   tabActive: 'active',
   tabDisabled: 'disabled',
@@ -32,7 +28,6 @@ export default {
   //遮罩层
   overlays: 'mask',
 
-
   //下拉菜单粘性标题部分有图标时的类
   dropdownBodyStickyHasIcon: 'has-icon',
 
@@ -41,5 +36,4 @@ export default {
   dropdownPEN: 'pen-dropdown',
 
   dropdownActive: 'active',
-
 }
