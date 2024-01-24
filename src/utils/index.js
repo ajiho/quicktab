@@ -25,12 +25,25 @@ export default {
     }
   },
 
-  // 判断iframe是否跨域
-  canAccessIFrame(iframe) {
-    if (!iframe.contentWindow || !iframe.contentDocument) {
+  /**
+   * 判断是否是同源的、可以操作 contentWindow 对象的 iframe
+   * @param {HTMLIFrameElement} iframe - 要检查的 iframe 元素
+   * @returns {boolean} - 如果是同源且可以操作 contentWindow 返回 true，否则返回 false
+   */
+  isSameOriginIframe(iframe) {
+    try {
+      // 尝试获取 iframe 的 contentWindow
+      const contentWindow = iframe.contentWindow
+
+      // 检查是否有跨域安全性限制
+      const isSameOrigin =
+        contentWindow.location.origin === window.location.origin
+
+      return isSameOrigin
+    } catch (error) {
+      // 处理可能的异常，比如跨域安全性限制
       return false
     }
-    return true
   },
 
   /**
@@ -395,6 +408,10 @@ export default {
         return false
       })
       .sort((a, b) => options[a].order - options[b].order)
+  },
+
+  isDOMElement(obj) {
+    return obj instanceof Element || obj instanceof Document
   },
 
   //实现类似jquery的prevAll

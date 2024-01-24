@@ -124,7 +124,7 @@ class Quicktab {
     })
     //这里要注意：实例化多个实例的时候，页面大小可能会改变，会触发该防抖函数
     this.#debounceCenterActive = Utils.debounce(() => {
-      this.scrollToTabByUrl(this.#getTabUrl(this.getActiveTab()))
+      this.scrollToTabByUrl(this.#getTabUrl(this.#getActiveTab()))
     }, 500)
 
     //初始化
@@ -132,6 +132,348 @@ class Quicktab {
 
     //初始化完毕调用init
     this.#options.onInit.call(this)
+  }
+
+  /**
+   * public API
+   * ====================================================
+   */
+
+  // 直接通过id可以得到实例
+  static get(id) {
+    return Quicktab.#instances.get(id)
+  }
+
+  /**
+   * 关闭所有的可关闭的tabs
+   */
+  closeAllTabs() {
+    this.#closeTabsByElements(this.#getTabs())
+  }
+
+  /**
+   * 添加tab
+   * @param {Object} option
+   * @returns
+   */
+  addTab(option) {
+    if (!Utils.isObject(option)) return 'tab选项必须是对象'
+
+    //参数合并
+    option = this.#tabOptionExtend(option)
+
+    const result = Struct.validateOptions(Constants.TABOPTIONSTRUCT, option)
+    if (result !== true) {
+      return Utils.notify(result)
+    }
+
+    const url = option.url
+
+    if (!this.#getTabByUrl(url)) {
+      //如果这个tab不存在
+
+      let maxNum = this.#options.tab.maxNum
+
+      if (maxNum > 0) {
+        let closableTabs = this.#getClosableTabs() //获取所有的可删除的tab
+
+        if (maxNum === 1) {
+          //如果只保留一个，那么就把所有的tab给删除掉,因为添加的当前tab将会作为最新的1个tab
+
+          for (let tab of closableTabs) {
+            this.#removeTabByUrl(this.#getTabUrl(tab))
+          }
+        } else {
+          if (closableTabs.length >= maxNum) {
+            //得到需要排除的tab
+            closableTabs.slice(0, -(maxNum - 1)).forEach((tab) => {
+              this.#removeTabByUrl(this.#getTabUrl(tab))
+            })
+          }
+        }
+      }
+
+      const tabEl = Utils.createNode(this.#generateTabHtml(option))
+      option.timestamp = Date.now()
+      tabEl[Constants.DATAKEYS.tabOptionDataKey] = option
+      this.#toolbarItemTabWrapperEl.appendChild(tabEl)
+
+      //添加进缓存
+      this.#addCacheTab(option)
+    }
+
+    //激活这个被添加的tab
+    this.#activeTabByUrl(url, true)
+
+    //滚动到tab所在位置
+    this.scrollToTabByUrl(url)
+  }
+
+  /**
+   * 根据url来关闭tab
+   * @param {String} url
+   */
+  closeTabByUrl(url) {
+    if (this.#isActiveTabByUrl(url)) {
+      //判断是否是激活的tab
+
+      //下一个即将激活的tab
+      let nextTab
+      let tab = this.#getTabByUrl(url)
+      if (tab?.nextElementSibling) {
+        //如果后面有就激活后面的
+        nextTab = tab.nextElementSibling
+      } else if (tab?.previousElementSibling) {
+        nextTab = tab.previousElementSibling
+      }
+
+      //删除tab
+      this.#removeTabByUrl(url)
+
+      //激活tab
+      this.#activeTabByUrl(this.#getTabUrl(nextTab))
+    } else {
+      this.#removeTabByUrl(url)
+    }
+  }
+
+  /**
+   * 根据url来激活tab
+   * @param {String} url
+   */
+  activeTabByUrl(url) {
+    this.#activeTabByUrl(url)
+  }
+
+  /**
+   * 滚动到指定url对应的tab的位置
+   * @param {String} url
+   */
+  scrollToTabByUrl(url) {
+    this.#scrollToTabByUrl(url)
+  }
+
+  /**
+   * 上滚动
+   */
+  prevScroll() {
+    this.#toolbarItemTabWrapperEl.scrollTo({
+      left:
+        this.#toolbarItemTabWrapperEl.scrollLeft -
+        this.#toolbarItemTabWrapperEl.offsetWidth,
+      behavior: 'smooth',
+    })
+  }
+
+  /**
+   * 下滚动
+   */
+  nextScroll() {
+    this.#toolbarItemTabWrapperEl.scrollTo({
+      left:
+        this.#toolbarItemTabWrapperEl.scrollLeft +
+        this.#toolbarItemTabWrapperEl.offsetWidth,
+      behavior: 'smooth',
+    })
+  }
+
+  /**
+   * 根据url来刷新tab
+   * @param {String} url
+   */
+  refreshTabByUrl(url) {
+    //判断tab是否存在，不存在则不执行
+
+    if (!Utils.isDOMElement(this.#getTabByUrl(url))) {
+      return
+    }
+
+    if (!this.#getTabPaneByUrl(url)) {
+      this.#addTabPaneByUrl(url)
+    } else {
+      //首先必须尝试添加loading层
+      this.#addLoadingByUrl(url)
+
+      // 刷新逻辑
+      !this.#getIFrameByUrl(url)
+        ? this.#addIFrameByUrl(url)
+        : this.#refreshIFrameByUrl(url)
+    }
+  }
+
+  /**
+   * 根据url全屏显示tab
+   * @param {String} url
+   */
+  fullscreenTabByUrl(url) {
+    this.#activeTabByUrl(url)
+    this.#getTabPaneByUrl(url).requestFullscreen()
+  }
+
+  /**
+   * 刷新当前激活的tab
+   */
+  refreshActiveTab() {
+    this.refreshTabByUrl(this.#getTabUrl(this.#getActiveTab()))
+  }
+
+  /**
+   * 当前激活的tab全屏显示
+   */
+  fullscreenActiveTab() {
+    this.fullscreenTabByUrl(this.#getTabUrl(this.#getActiveTab()))
+  }
+
+  /**
+   * 滚动到当前激活的tab所在位置
+   */
+  scrollToActiveTab() {
+    this.scrollToTabByUrl(this.#getTabUrl(this.#getActiveTab()))
+  }
+
+  /**
+   * 在浏览器新选项卡打开指定url的tab
+   * @param {String} url
+   */
+  openNewTabByUrl(url) {
+    window.open(url, '_blank')
+  }
+
+  /**
+   * 关闭所有的除了指定url的选项卡
+   * @param {String} url
+   */
+  closeAllTabsExceptByUrl(url) {
+    this.#closeTabsByElements(
+      this.#getTabs().filter((tab) => this.#getTabUrl(tab) !== url),
+    )
+  }
+
+  /**
+   * 关闭除了指定url的tab前面所有的选项卡
+   * @param {String} url
+   */
+  closePrevAllTabsByUrl(url) {
+    this.#closeTabsByElements(Utils.prevAll(this.#getTabByUrl(url)))
+  }
+
+  /**
+   * 关闭除了指定url的tab后面所有的选项卡
+   * @param {String} url
+   */
+  closeNextAllTabsByUrl(url) {
+    this.#closeTabsByElements(Utils.nextAll(this.#getTabByUrl(url)))
+  }
+
+  /**
+   * 获取指定url的tab的contentWindow对象
+   * @param {String} url
+   */
+  getTabWindowByUrl(url) {
+    const iframe = this.#getIFrameByUrl(url)
+    if (this.#canAccessIFrame(iframe)) {
+      return iframe.contentWindow
+    }
+    return undefined
+  }
+
+  /**
+   * private API
+   * ====================================================
+   */
+
+  /**
+   * 根据传入的iframe的dom判断是否可以访问
+   * @param {Element|Document} iframeEl
+   * @returns
+   */
+  #canAccessIFrame(iframeEl) {
+    return (
+      Utils.isDOMElement(iframeEl) &&
+      iframeEl[Constants.DATAKEYS.iframeLoaded] === true &&
+      Utils.isSameOriginIframe(iframeEl)
+    )
+  }
+
+  /**
+   * 根据 DOM 元素数组关闭选项卡
+   * @param {Array} tabElements - 包含选项卡 DOM 元素的数组
+   */
+  #closeTabsByElements(tabElements) {
+    tabElements.forEach((tabEl) => {
+      const tabUrl = this.#getTabUrl(tabEl)
+      if (this.#isClosableTabByUrl(tabUrl)) {
+        this.closeTabByUrl(tabUrl)
+      }
+    })
+  }
+
+  #getActiveTab() {
+    return this.#getTabs().find((tabEl) =>
+      tabEl.classList.contains(Constants.CLASSES.tabActive),
+    )
+  }
+
+  #getTabs() {
+    return Array.from(
+      this.#toolbarItemTabWrapperEl.querySelectorAll(
+        `button[${Constants.DATAKEYS.tabUrl}]`,
+      ),
+    )
+  }
+
+  /**
+   * 判断是否是可关闭的tab
+   * @param {String} url
+   * @returns
+   */
+  #isClosableTabByUrl(url) {
+    return this.#getTabByUrl(url)?.querySelector('svg') ? true : false
+  }
+
+  // 获取所有可关闭的tab
+  #getClosableTabs() {
+    return this.#getTabs().filter((tabEl) =>
+      this.#isClosableTabByUrl(this.#getTabUrl(tabEl)),
+    )
+  }
+
+  #getTabByUrl(url) {
+    return this.#toolbarItemTabWrapperEl.querySelector(
+      `[${Constants.DATAKEYS.tabUrl}="${url}"]`,
+    )
+  }
+
+  #getTabPaneByUrl(url) {
+    return this.#tabBodyEl.querySelector(
+      `[${Constants.DATAKEYS.tabUrl}="${url}"]`,
+    )
+  }
+
+  #getActiveTabPane() {
+    return this.#tabBodyEl.querySelector(
+      `li.${Constants.CLASSES.tabPaneActive}`,
+    )
+  }
+
+  /**
+   * 根据url来判断tab是否已经激活
+   * @param {String} url
+   * @returns
+   */
+  #isActiveTabByUrl(url) {
+    return this.#getTabByUrl(url)?.classList.contains(
+      Constants.CLASSES.tabActive,
+    )
+      ? true
+      : false
+  }
+
+  // 关闭loading层
+  #clsoeLoadingByUrl(url) {
+    this.#getTabPaneByUrl(url)
+      ?.querySelector(`.${Constants.CLASSES.overlays}`)
+      ?.remove()
   }
 
   #init() {
@@ -309,7 +651,7 @@ class Quicktab {
 
     //用以处理tab右键菜单和下拉菜单的关闭处理
     event(document).on(
-      'click contextmenu touchstart scroll dragstart',
+      'click contextmenu scroll touchstart dragstart',
       function (event) {
         const clickedElement = event.target
         const eventType = event.type
@@ -351,30 +693,7 @@ class Quicktab {
     })
 
     //添加通过html属性添加tab的能力(这个非常方便)
-    event(document).on(
-      'click',
-      `[${Constants.DATAKEYS.singleTab}][${Constants.DATAKEYS.singleTabTarget}]`,
-      function (event) {
-        event.preventDefault()
-
-        const target =
-          this.getAttribute(Constants.DATAKEYS.singleTabTarget) || ''
-
-        if (target.trim() === `#${that.#id}`) {
-          try {
-            let option = JSON.parse(
-              this.getAttribute(Constants.DATAKEYS.singleTab),
-            )
-
-            that.addTab(option)
-          } catch (error) {
-            return Utils.notify(
-              `${Constants.DATAKEYS.singleTab}属性Json格式错误`,
-            )
-          }
-        }
-      },
-    )
+    that.#dataAttrAddTabEventRegister(document, Constants.DATAKEYS.addTabTarget)
 
     //事件委托监听loading过渡完毕
     event(this.#containerEl).on(
@@ -420,17 +739,18 @@ class Quicktab {
           dbclick: {
             stopPropagation: false,
             handle: function () {
-              let url = that.#getTabUrl(this)
+              const url = that.#getTabUrl(this)
 
+              if (that.#options.tab.doubleClick.refresh === true) {
+                that.refreshTabByUrl(url)
+              }
               //双击事件回调
               that.#options.onTabDoubleClick.call(that, url)
-
-              that.refreshTabByUrl(url)
             },
           },
         },
         {
-          enableDbClick: that.#options.tab.doubleClickRefresh === true,
+          enableDbClick: that.#options.tab.doubleClick.enable === true,
         },
       ),
     )
@@ -457,15 +777,13 @@ class Quicktab {
 
       switch (classItem) {
         case 'fullscreen':
-          that
-            .getTabPaneByUrl(that.#getTabUrl(that.getActiveTab()))
-            ?.requestFullscreen()
+          that.fullscreenActiveTab()
           break
         case 'prev':
           that.prevScroll()
           break
         case 'refresh':
-          that.refreshTabByUrl(that.#getTabUrl(that.getActiveTab()))
+          that.refreshActiveTab()
           break
         case 'next':
           that.nextScroll()
@@ -482,7 +800,7 @@ class Quicktab {
 
       let centerTabEl
       const withTabPaneDebounce = Utils.debounce(function (event) {
-        const activeTab = that.getActiveTab()
+        const activeTab = that.#getActiveTab()
         const prev = activeTab.previousElementSibling
         const next = activeTab.nextElementSibling
 
@@ -537,9 +855,10 @@ class Quicktab {
         },
       )
 
+      //touchstart 在chrome控制台的警告#https://github.com/jquery/jquery/issues/2871,如果还要用jquery的event那就没有办法修复，除非替换它
       event(this.#contextmenuEl).on(
         'click contextmenu touchstart',
-        `li[data-tab-url]`,
+        `li[${Constants.DATAKEYS.tabUrl}]`,
         function (event) {
           if (event.type === 'contextmenu') {
             event.preventDefault()
@@ -552,26 +871,25 @@ class Quicktab {
               that.refreshTabByUrl(url)
               break
             case 'other':
-              that.closeTabsExceptByUrl(that.getTabs(), url)
+              that.closeAllTabsExceptByUrl(url)
               break
             case 'prev':
-              that.closeTabsExceptByUrl(that.getTabPrevAllByUrl(url), url)
+              that.closePrevAllTabsByUrl(url)
               break
             case 'next':
-              that.closeTabsExceptByUrl(that.getTabNextAllByUrl(url), url)
+              that.closeNextAllTabsByUrl(url)
               break
             case 'all':
               that.closeAllTabs()
               break
             case 'new-blank':
-              window.open(url, '_blank')
+              that.openNewTabByUrl(url)
               break
             case 'fullscreen':
-              that.#activeTabByUrl(url)
-              that.getTabPaneByUrl(url).requestFullscreen()
+              that.fullscreenTabByUrl(url)
               break
             case 'center-active':
-              that.scrollToTabByUrl(that.#getTabUrl(that.getActiveTab()))
+              that.scrollToActiveTab()
               break
             case 'close':
               that.closeTabByUrl(url)
@@ -788,34 +1106,6 @@ class Quicktab {
     return hasResults
   }
 
-  //关闭所有的tabs
-  closeAllTabs() {
-    this.getTabs()?.forEach((tab) => {
-      const tabUrl = this.#getTabUrl(tab)
-      if (this.isTabClosableByUrl(tabUrl)) {
-        this.closeTabByUrl(tabUrl)
-      }
-    })
-  }
-
-  /**
-   * 除了指定的tab,其它的tab都关闭
-   * @param {Array|NodeList} tabs  纯数组、或者是nodelist可以被forEach的包含dom对象的数组
-   * @param {String} url
-   */
-  closeTabsExceptByUrl(tabs, url) {
-    tabs?.forEach((tab) => {
-      const tabUrl = this.#getTabUrl(tab)
-      if (
-        tabUrl !== url &&
-        this.isTabClosableByUrl(tabUrl) &&
-        this.isTabClosableByUrl(url)
-      ) {
-        this.closeTabByUrl(tabUrl)
-      }
-    })
-  }
-
   // 从元素的data属性上获取Url
   #getTabUrl(element) {
     return element?.getAttribute(Constants.DATAKEYS.tabUrl)
@@ -834,7 +1124,7 @@ class Quicktab {
   #prepareDropdownData() {
     const allOpenedTabs = []
 
-    this.getTabs()?.forEach((tabEl) => {
+    this.#getTabs()?.forEach((tabEl) => {
       allOpenedTabs.push(tabEl[Constants.DATAKEYS.tabOptionDataKey])
     })
 
@@ -972,7 +1262,8 @@ class Quicktab {
       )
       const enableSeparator =
         this.#options.tab.contextmenu.close.separator === true
-      if (this.isTabClosableByUrl(url)) {
+
+      if (this.#isClosableTabByUrl(url)) {
         listGroupCloseItemEl.style.setProperty('display', null) //是可关闭的，因此需要显示右键菜单的关闭当前
         enableSeparator &&
           listGroupCloseItemEl.nextElementSibling.style.setProperty(
@@ -989,7 +1280,7 @@ class Quicktab {
       }
     }
 
-    const tabEl = this.getTabByUrl(url)
+    const tabEl = this.#getTabByUrl(url)
 
     this.#contextmenuCleanup?.()
 
@@ -1250,10 +1541,11 @@ class Quicktab {
       JSON.stringify(defaultTabs) === JSON.stringify(cacheDefaultTabs)
     ) {
       //这里是缓存数据一切正常的情况下,直接回显就行
-
       this.#restoreTabs(cacheTabs, this.#getCacheActiveTab()?.url)
     } else {
-      this.#restoreTabs(defaultTabs, '', true)
+      //必须先设置一遍缓存
+      this.#cacheHandle.set(this.#cacheKey, defaultTabs)
+      this.#restoreTabs(defaultTabs)
       this.#cacheHandle.set(this.#cacheDefaultTabsKey, defaultTabs)
     }
   }
@@ -1275,10 +1567,9 @@ class Quicktab {
    * 恢复tab
    * @param {Array} options tab选项数组
    * @param {String} url 将要激活tab的url,不传将设置options中的最后一项
-   * @param {Boolean} cache 是否要添加进缓存 true:添加进缓存 false:不添加缓存
    * @returns
    */
-  #restoreTabs(options, url = '', cache = false) {
+  #restoreTabs(options, url = '') {
     if (!Array.isArray(options) || options.length === 0) {
       return
     }
@@ -1300,11 +1591,6 @@ class Quicktab {
 
       tabNode[Constants.DATAKEYS.tabOptionDataKey] = option
       tabFrag.appendChild(tabNode)
-
-      //是否存缓存
-      if (cache === true) {
-        this.#addCacheTab(option)
-      }
     })
 
     //添加虚拟节点到tab的容器里面
@@ -1320,93 +1606,37 @@ class Quicktab {
     this.#scrollToTabByUrl(url, 'auto')
   }
 
-  /**
-   * 验证通过返回合并后的tab选项,失败返回String类型的错误信息
-   * @param {Object} option  单个tab的选项参数
-   * @returns {Object|String}
-   */
-  #validateSingleTabOption(option) {
-    if (!Utils.isObject(option)) return 'tab选项必须是对象'
+  //通过data属性快速添加tab事件注册
+  #dataAttrAddTabEventRegister(doc, targetKey) {
+    const that = this
+    //同时给子页面绑定快速打开tab的事件
+    event(doc).on(
+      'click',
+      `[${Constants.DATAKEYS.addTabUrl}][${targetKey}]`,
+      function (event) {
+        event.preventDefault()
+        const target = this
+        const targetID = target.getAttribute(targetKey).replace(/^#/, '')
+        const url = target.getAttribute(Constants.DATAKEYS.addTabUrl)
+        const title = target.getAttribute(Constants.DATAKEYS.addTabTitle)
+        const closable = target.getAttribute(Constants.DATAKEYS.addTabClosable)
 
-    //参数合并
-    option = this.#tabOptionExtend(option)
-
-    const result = Struct.validateOptions(Constants.TABOPTIONSTRUCT, option)
-    if (result !== true) {
-      return result
-    }
-    return option
-  }
-
-  addTab(option) {
-    option = this.#validateSingleTabOption(option)
-
-    if (Utils.isStr(option)) return Utils.notify(option)
-
-    const url = option.url
-
-    if (!this.getTabByUrl(url)) {
-      //如果这个tab不存在
-
-      let maxNum = this.#options.tab.maxNum
-
-      if (maxNum > 0) {
-        let closableTabs = this.getClosableTabs() //获取所有的可删除的tab
-
-        if (maxNum === 1) {
-          //如果只保留一个，那么就把所有的tab给删除掉,因为添加的当前tab将会作为最新的1个tab
-
-          for (let tab of closableTabs) {
-            this.#removeTabByUrl(this.#getTabUrl(tab))
+        if (Quicktab.#instances.has(targetID)) {
+          let option = {
+            ...(url !== null && { url }),
+            ...(title !== null && { title }),
+            ...(closable !== null &&
+              (closable === 'true' || closable === 'false') && {
+                closable: closable === 'true',
+              }),
           }
-        } else {
-          if (closableTabs.length >= maxNum) {
-            //得到需要排除的tab
-            closableTabs.slice(0, -(maxNum - 1)).forEach((tab) => {
-              this.#removeTabByUrl(this.#getTabUrl(tab))
-            })
-          }
+
+          option = that.#tabOptionExtend(option)
+
+          Quicktab.#instances.get(targetID).addTab(option)
         }
-      }
-
-      const tabEl = Utils.createNode(this.#generateTabHtml(option))
-      option.timestamp = Date.now()
-      tabEl[Constants.DATAKEYS.tabOptionDataKey] = option
-      this.#toolbarItemTabWrapperEl.appendChild(tabEl)
-
-      //添加进缓存
-      this.#addCacheTab(option)
-    }
-
-    //激活这个被添加的tab
-    this.#activeTabByUrl(url, true)
-
-    //滚动到tab所在位置
-    this.scrollToTabByUrl(url)
-  }
-
-  closeTabByUrl(url) {
-    if (this.isTabActiveByUrl(url)) {
-      //判断是否是激活的tab
-
-      //下一个即将激活的tab
-      let nextTab
-      let tab = this.getTabByUrl(url)
-      if (tab?.nextElementSibling) {
-        //如果后面有就激活后面的
-        nextTab = tab.nextElementSibling
-      } else if (tab?.previousElementSibling) {
-        nextTab = tab.previousElementSibling
-      }
-
-      //删除tab
-      this.#removeTabByUrl(url)
-
-      //激活tab
-      this.#activeTabByUrl(this.#getTabUrl(nextTab))
-    } else {
-      this.#removeTabByUrl(url)
-    }
+      },
+    )
   }
 
   //单纯的只做删除的工作
@@ -1415,7 +1645,7 @@ class Quicktab {
     this.#cacheRecentlyClosedByUrl(url)
 
     //删除tab
-    this.getTabByUrl(url)?.remove()
+    this.#getTabByUrl(url)?.remove()
 
     //删除面板
     this.#removeTabPaneByUrl(url)
@@ -1429,7 +1659,7 @@ class Quicktab {
 
   #cacheRecentlyClosedByUrl(url) {
     //添加最近删除的缓存,从tab的dom中拿到选项进行缓存
-    let tabEl = this.getTabByUrl(url)
+    let tabEl = this.#getTabByUrl(url)
 
     let tabOption = tabEl[Constants.DATAKEYS.tabOptionDataKey]
 
@@ -1455,7 +1685,7 @@ class Quicktab {
     //先删除iframe
     this.#removeIFrameByUrl(url)
     //删除tab面板最外层的容器
-    this.getTabPaneByUrl(url)?.remove()
+    this.#getTabPaneByUrl(url)?.remove()
   }
 
   //根据url删除缓存里的tab
@@ -1472,10 +1702,6 @@ class Quicktab {
     this.#cacheHandle.set(this.#cacheKey, tabs)
   }
 
-  // activeTabByUrl(url) {
-  //   this.#activeTabByUrl(url)
-  // }
-
   /**
    * 私有的激活tab的方法
    * @param {String} url
@@ -1484,15 +1710,15 @@ class Quicktab {
    * @returns
    */
   #activeTabByUrl(url, fromAddTabMethod = false, timestamp = true) {
-    //过滤掉不存在的tab,或者已经激活的tab
-    if (!this.getTabByUrl(url) || this.isTabActiveByUrl(url)) {
+    const tabEl = this.#getTabByUrl(url)
+
+    if (!tabEl || this.#isActiveTabByUrl(url)) {
+      //过滤掉不存在的tab,或者已经激活的tab
       return
     }
 
-    const tabEl = this.getTabByUrl(url)
-    const activeTabEl = this.getActiveTab()
-    //把之前激活的tab的激活状态类给删掉
-    activeTabEl?.classList.remove(Constants.CLASSES.tabActive)
+    const activeTabEl = this.#getActiveTab()
+    activeTabEl?.classList.remove(Constants.CLASSES.tabActive) //把之前激活的tab的激活状态类给删掉
     if (activeTabEl && activeTabEl[Constants.DATAKEYS.tabOptionDataKey]) {
       activeTabEl[Constants.DATAKEYS.tabOptionDataKey].active = false
     }
@@ -1512,15 +1738,15 @@ class Quicktab {
       this.#updateCacheTabByUrl(url, 'timestamp', Date.now())
 
     //判断tab面板是否已经存在,不存在则添加
-    if (!this.getTabPaneByUrl(url)) {
+    if (!this.#getTabPaneByUrl(url)) {
       this.#addTabPaneByUrl(url)
     }
 
     //激活面板
     //把之前激活的面板给移除掉
-    this.getActiveTabPane()?.classList.remove(Constants.CLASSES.tabPaneActive)
+    this.#getActiveTabPane()?.classList.remove(Constants.CLASSES.tabPaneActive)
     //把当前的tab面板给添加激活类
-    this.getTabPaneByUrl(url)?.classList.add(Constants.CLASSES.tabPaneActive)
+    this.#getTabPaneByUrl(url)?.classList.add(Constants.CLASSES.tabPaneActive)
 
     //激活逻辑完成调用激活事件
     if (fromAddTabMethod) {
@@ -1547,6 +1773,8 @@ class Quicktab {
 
   //往tab容器里插入iframe
   #addIFrameByUrl(url) {
+    const that = this
+
     //创建iframe
     const iframe = document.createElement('iframe')
 
@@ -1558,23 +1786,6 @@ class Quicktab {
     iframe.onload = () => {
       //销毁定时器
       this.#clearIFrameTimeout(iframe)
-
-      const canAccessIFrame = Utils.canAccessIFrame(iframe)
-
-      //当右键菜单点击重新加载此框架的情况
-      if (canAccessIFrame) {
-        //如果不是跨域的iframe才给刷新,因为跨域的iframe访问contentWindow属性会报错
-        // localStorage.setItem('ff',Math.random())
-        iframe.contentWindow.onbeforeunload = () => {
-          //遮罩
-          this.#addLoadingByUrl(url)
-          //清理掉iframe的状态
-          delete iframe[Constants.DATAKEYS.iframeLoaded]
-          //超时处理
-          this.#iFrameTimeoutHandle(url, iframe)
-        }
-      }
-
       //设置iframe状态完毕
       iframe[Constants.DATAKEYS.iframeLoaded] = true
 
@@ -1585,14 +1796,31 @@ class Quicktab {
 
       this.#tabFinallyAndAll(url)
 
-      if (!canAccessIFrame) {
+      if (this.#canAccessIFrame(iframe)) {
+        //如果是非跨域的iframe
+
+        iframe.contentWindow.onbeforeunload = () => {
+          //遮罩
+          this.#addLoadingByUrl(url)
+          //清理掉iframe的状态
+          delete iframe[Constants.DATAKEYS.iframeLoaded]
+          //超时处理
+          this.#iFrameTimeoutHandle(url, iframe)
+        }
+
+        //给子页面绑定通过属性快速注册tab的事件
+        that.#dataAttrAddTabEventRegister(
+          iframe.contentDocument,
+          Constants.DATAKEYS.addTabParentTarget,
+        )
+      } else {
         //如果是跨域的iframe,所有的逻辑执行完毕后清空onload,因为跨域的iframe,被用户点击重新加载此框架时,无法控制它
         iframe.onload = null
       }
     }
 
     //插入iframe
-    this.getTabPaneByUrl(url)?.appendChild(iframe)
+    this.#getTabPaneByUrl(url)?.appendChild(iframe)
   }
 
   //iframe的超时处理逻辑
@@ -1628,7 +1856,7 @@ class Quicktab {
         timeoutHtml = this.#options.tab.timeout.template
       }
 
-      this.getTabPaneByUrl(url)?.insertAdjacentHTML('beforeEnd', timeoutHtml)
+      this.#getTabPaneByUrl(url)?.insertAdjacentHTML('beforeEnd', timeoutHtml)
 
       this.#options.onTabTimeout.call(this, url)
 
@@ -1641,10 +1869,7 @@ class Quicktab {
     //先找到iframe
     const iframe = this.#getIFrameByUrl(url)
 
-    if (
-      Utils.canAccessIFrame(iframe) &&
-      iframe[Constants.DATAKEYS.iframeLoaded] === true
-    ) {
+    if (this.#canAccessIFrame(iframe)) {
       //iframe加载完毕时且非跨域的情况
 
       //超时逻辑
@@ -1724,12 +1949,8 @@ class Quicktab {
     this.#cacheHandle.set(this.#cacheKey, tabs)
   }
 
-  scrollToTabByUrl(url) {
-    this.#scrollToTabByUrl(url)
-  }
-
   #scrollToTabByUrl(url, behavior = 'smooth') {
-    const tab = this.getTabByUrl(url)
+    const tab = this.#getTabByUrl(url)
 
     if (!tab) return
 
@@ -1764,7 +1985,7 @@ class Quicktab {
   }
 
   #getTabLoadingByUrl(url) {
-    return this.getTabPaneByUrl(url)?.querySelector(
+    return this.#getTabPaneByUrl(url)?.querySelector(
       `.${Constants.CLASSES.overlays}`,
     )
   }
@@ -1774,7 +1995,7 @@ class Quicktab {
     if (this.#options.tab.loading.enable === false) return
 
     //关闭遮罩层
-    this.clsoeLoadingByUrl(url)
+    this.#clsoeLoadingByUrl(url)
 
     let filter = this.#options.tab.loading.filter.call(this, url)
 
@@ -1786,56 +2007,9 @@ class Quicktab {
         : Constants.HTML.loading
 
     //插入面板
-    this.getTabPaneByUrl(url)?.insertAdjacentHTML(
+    this.#getTabPaneByUrl(url)?.insertAdjacentHTML(
       'beforeEnd',
       Utils.sprintf(Constants.HTML.maskWrapper, url, template),
-    )
-  }
-
-  // 关闭loading层
-  clsoeLoadingByUrl(url) {
-    this.getTabPaneByUrl(url)
-      ?.querySelector(`.${Constants.CLASSES.overlays}`)
-      ?.remove()
-  }
-
-  getTabPaneByUrl(url) {
-    return this.#tabBodyEl.querySelector(
-      `[${Constants.DATAKEYS.tabUrl}="${url}"]`,
-    )
-  }
-
-  //获取tab的左边的所有的tabs
-  getTabPrevAllByUrl(url) {
-    return Utils.prevAll(this.getTabByUrl(url))
-  }
-
-  //获取tab的右边的所有的tabs
-  getTabNextAllByUrl(url) {
-    return Utils.nextAll(this.getTabByUrl(url))
-  }
-
-  getActiveTab() {
-    return this.#toolbarItemTabWrapperEl.querySelector(
-      `button.${Constants.CLASSES.tabActive}`,
-    )
-  }
-
-  getActiveTabPane() {
-    return this.#tabBodyEl.querySelector(
-      `li.${Constants.CLASSES.tabPaneActive}`,
-    )
-  }
-
-  getTabByUrl(url) {
-    return this.#toolbarItemTabWrapperEl.querySelector(
-      `[${Constants.DATAKEYS.tabUrl}="${url}"]`,
-    )
-  }
-
-  getTabs() {
-    return this.#toolbarItemTabWrapperEl.querySelectorAll(
-      `button[${Constants.DATAKEYS.tabUrl}]`,
     )
   }
 
@@ -1847,85 +2021,7 @@ class Quicktab {
   }
 
   #getIFrameByUrl(url) {
-    return this.getTabPaneByUrl(url)?.querySelector('iframe')
-  }
-
-  // 获取所有的可以删除的tab
-  getClosableTabs() {
-    return Array.from(
-      this.#toolbarItemTabWrapperEl.querySelectorAll('button'),
-    ).filter((button) => button.querySelector('svg'))
-  }
-
-  //判断tab是否可以被关闭
-  isTabClosableByUrl(url) {
-    return this.getTabByUrl(url)?.querySelector('svg') ? true : false
-  }
-
-  //判断tab是否已激活
-  isTabActiveByUrl(url) {
-    return this.getTabByUrl(url)?.classList.contains(
-      Constants.CLASSES.tabActive,
-    )
-      ? true
-      : false
-  }
-
-  // 上滑动
-  prevScroll() {
-    this.#toolbarItemTabWrapperEl.scrollTo({
-      left:
-        this.#toolbarItemTabWrapperEl.scrollLeft -
-        this.#toolbarItemTabWrapperEl.offsetWidth,
-      behavior: 'smooth',
-    })
-  }
-
-  //下滑动
-  nextScroll() {
-    this.#toolbarItemTabWrapperEl.scrollTo({
-      left:
-        this.#toolbarItemTabWrapperEl.scrollLeft +
-        this.#toolbarItemTabWrapperEl.offsetWidth,
-      behavior: 'smooth',
-    })
-  }
-
-  // 通过url刷新tab
-  refreshTabByUrl(url) {
-    //判断tab是否存在，不存在则不执行
-    if (!(this.getTabByUrl(url) instanceof Element)) {
-      return
-    }
-
-    if (!this.getTabPaneByUrl(url)) {
-      this.#addTabPaneByUrl(url)
-    } else {
-      //首先必须尝试添加loading层
-      this.#addLoadingByUrl(url)
-
-      // 刷新逻辑
-      !this.#getIFrameByUrl(url)
-        ? this.#addIFrameByUrl(url)
-        : this.#refreshIFrameByUrl(url)
-    }
-  }
-
-  // 获取tab的所有数量
-  getTabsCount() {}
-
-  // 获取tab的标题
-  getTitle(url) {}
-
-  setTitle(url, title) {}
-
-  getDisableByUrl(url) {}
-
-  // 设置禁用状态
-  setDisableByUrl(url, status = true) {}
-
-  static get(selector) {
-    return Quicktab.#instances[selector]
+    return this.#getTabPaneByUrl(url)?.querySelector('iframe')
   }
 }
 

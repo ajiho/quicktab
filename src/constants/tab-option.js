@@ -5,6 +5,4 @@ export default {
   url: '',
   //可否关闭
   closable: true,
-  //禁用状态
-  disabled: false,
 }

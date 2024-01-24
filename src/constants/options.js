@@ -36,14 +36,14 @@ export default {
     // 左滚动
     prev: {
       enable: true,
-      icon: Icons.caretLeft,
+      icon: Icons.prev,
       order: 10,
     },
 
     // 刷新
     refresh: {
       enable: false,
-      icon: Icons.arrowClockwise,
+      icon: Icons.refresh,
       order: 20,
     },
 
@@ -55,14 +55,14 @@ export default {
     // 右滚动
     next: {
       enable: true,
-      icon: Icons.caretRight,
+      icon: Icons.next,
       order: 40,
     },
 
     // 搜索tab、打开的标签、最近关闭的标签
     dropdown: {
       enable: false,
-      icon: Icons.caretDown,
+      icon: Icons.menuDown,
       order: 50,
       // 搜索框部分的配置
       searchInput: {
@@ -73,13 +73,13 @@ export default {
       openedTabs: {
         text: '',
         //每个tab条目右边的关闭按钮图标
-        closeIcon: Icons.x,
+        closeIcon: Icons.close,
       },
       // 最近关闭的tab部分的配置
       recentlyClosedTabs: {
         text: '',
-        showIcon: Icons.caretDownFill,
-        hideIcon: Icons.caretUpFill,
+        showIcon: Icons.menuDown,
+        hideIcon: Icons.menutUp,
       },
       //每个tab条目时间格式化
       timeFormat: {
@@ -197,14 +197,20 @@ export default {
       enable: true,
       //关闭按钮是否鼠标移入时才显示 true:启用 false:始终显示
       showOnHover: false,
-      icon: Icons.x,
+      icon: Icons.close,
     },
     //当插件宽高改变时,当前激活的tab是否居中 false:不启用 true:启用
     resizeCenterActive: false,
     //tab单击时自动居中 false:不启用 true:启用
     clickCenterActive: false,
-    //双击刷新 false:不启用 true:启用
-    doubleClickRefresh: false,
+
+    //双击功能
+    doubleClick: {
+      enable: false,
+      //默认tab双击是刷新功能,您也可以关闭刷新,在onTabDoubleClick事件中执行自己的逻辑
+      refresh: true,
+    },
+
     //tab是否可以拖动排序  false:不启用 true:启用
     dragSort: false,
     //超时设置

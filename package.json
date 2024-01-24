@@ -2,7 +2,7 @@
   "name": "quicktab",
   "version": "0.0.1",
   "description": "multi iframe tab plugin",
-  "main": "index.js",
+  "main": "dist/js/quicktab.min.js",
   "scripts": {
     "css:lint": "stylelint --config stylelint.config.mjs src/**/*.scss --cache --cache-location .cache/.stylelintcache",
     "css:lint:fix": "stylelint --config stylelint.config.mjs src/**/*.scss --fix",
@@ -34,6 +34,10 @@
     "clean": "rimraf dist",
     "build": "run-s lint clean css js",
     "prepare": "husky install",
+    "docs:dev": "vitepress dev docs",
+    "docs:build": "vitepress build docs",
+    "docs:preview": "vitepress preview docs",
+    "demo": "shx cp -r dist/ demo/ docs/public/",
     "commitlint": "commitlint --config commitlint.config.mjs -e -V"
   },
   "repository": {
@@ -52,6 +56,7 @@
     "@commitlint/cli": "^18.4.3",
     "@commitlint/config-conventional": "^18.4.3",
     "@eslint/js": "^8.56.0",
+    "@floating-ui/dom": "^1.5.4",
     "@rollup/plugin-babel": "^6.0.4",
     "@rollup/plugin-commonjs": "^25.0.7",
     "@rollup/plugin-json": "^6.1.0",
@@ -81,13 +86,13 @@
     "rollup": "^4.9.6",
     "rollup-plugin-strip-banner": "^3.1.0",
     "sass": "^1.69.7",
+    "shx": "^0.3.4",
+    "simplebar": "^6.2.5",
     "stylelint": "^16.2.0",
     "stylelint-config-recess-order": "^4.4.0",
-    "stylelint-config-standard-scss": "^12.0.0"
-  },
-  "dependencies": {
-    "@floating-ui/dom": "^1.5.4",
-    "simplebar": "^6.2.5",
-    "superstruct": "^1.0.3"
+    "stylelint-config-standard-scss": "^12.0.0",
+    "superstruct": "^1.0.3",
+    "vitepress": "^1.0.0-rc.40",
+    "vitepress-plugin-tabs": "^0.5.0"
   }
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../dist/css/quicktab.css">
+    <style>
+        .parent-container {
+            width: 400px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="parent-container">
+        <div id="qtab"></div>
+    </div>
+
+    <script src="../dist/js/quicktab.js"></script>
+    <script>
+        new Quicktab('qtab', {
+            defaultTabs: [
+                { url: 'welcome.html' },
+                { url: 'welcome.html?page=1', title: '欢迎页面' },
+            ],
+            toolbar: {
+                prev: {
+                    enable: true,
+                },
+                refresh: {
+                    enable: true,
+                },
+                next: {
+                    enable: true,
+                },
+                fullscreen: {
+                    enable: true,
+                },
+                dropdown: {
+                    enable: true,
+                }
+            },
+            responsive: {//该配置只针对父元素，而不是整个浏览器窗口(相对于bootstrap-quicktab更细化可控)
+                breakpoint: 576,
+                // 注意:你想在quicktab在父元素宽度小于576视口隐藏，前提是你toolbar中的工具按钮你启用了
+                hide: ['prev', 'refresh', 'next', 'fullscreen'],
+            },
+        })
+    </script>
+</body>
+
+</html>

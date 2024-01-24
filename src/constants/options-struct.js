@@ -94,7 +94,10 @@ export default Struct.object({
     }),
     resizeCenterActive: boolean(),
     clickCenterActive: boolean(),
-    doubleClickRefresh: boolean(),
+    doubleClick: Struct.object({
+      enable: boolean(),
+      refresh: boolean(),
+    }),
     dragSort: boolean(),
     timeout: Struct.object({
       enable: boolean(),
