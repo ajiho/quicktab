@@ -31,4 +31,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="关闭按钮配置" src="demo/tab-closeBtn.html"/>
+<ShowCase text="Run" title="关闭按钮配置" src="Quicktab/demo/tab-closeBtn.html"/>

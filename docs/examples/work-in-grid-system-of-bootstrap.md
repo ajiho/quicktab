@@ -45,4 +45,4 @@
 </html>
 ```
 
-<ShowCase text="Run"  src="demo/work-in-grid-system-of-bootstrap.html"/>
+<ShowCase text="Run"  src="Quicktab/demo/work-in-grid-system-of-bootstrap.html"/>

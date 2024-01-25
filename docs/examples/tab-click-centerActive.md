@@ -41,4 +41,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="支持通过data属性api初始化" src="demo/tab-click-centerActive.html"/>
+<ShowCase text="Run" title="支持通过data属性api初始化" src="Quicktab/demo/tab-click-centerActive.html"/>

@@ -29,4 +29,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="默认首页" src="demo/default-page.html"/>
+<ShowCase text="Run" title="默认首页" src="Quicktab/demo/default-page.html"/>

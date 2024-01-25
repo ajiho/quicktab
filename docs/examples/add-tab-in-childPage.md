@@ -79,5 +79,5 @@
 
 ## 运行示例
 
-<ShowCase text="Run"  src="demo/add-tab-in-childPage.html"/>
+<ShowCase text="Run"  src="Quicktab/demo/add-tab-in-childPage.html"/>
 

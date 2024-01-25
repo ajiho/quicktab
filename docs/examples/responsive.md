@@ -55,4 +55,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="响应式设置" src="demo/responsive.html"/>
+<ShowCase text="Run" title="响应式设置" src="Quicktab/demo/responsive.html"/>

@@ -44,4 +44,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="tab的加载层" src="demo/tab-loading.html"/>
+<ShowCase text="Run" title="tab的加载层" src="Quicktab/demo/tab-loading.html"/>

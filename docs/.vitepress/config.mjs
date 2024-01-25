@@ -103,7 +103,8 @@ export default defineConfig({
                     text: '介绍',
                     items: [
                         { text: '是什么？', link: '/guide/what-is-quicktab' },
-                        { text: '入门', link: '/guide/getting-started' }
+                        { text: '入门', link: '/guide/getting-started' },
+                        { text: '常见问题', link: '/guide/faq' },
                     ],
                 }
             ],
@@ -193,44 +194,6 @@ export default defineConfig({
             { rel: 'icon', href: 'favicon.svg', type: 'image/svg+xml' }
         ]
     ],
-    //多语言切换
-    locales: {
-        root: {
-            label: '简体中文',
-            lang: 'zh',
-
-
-        },
-        en: {
-            label: '英文',
-            lang: 'en',
-            link: '/en/',
-            //在不同的语言下可以设置主题
-            themeConfig: {
-
-                notFound: {
-                    title: 'yemianweizhaodao',
-                    quote: 'qqweq',
-                    linkLabel: 'dsadsa',
-                    linkText: 'eewqewq'
-                },
-                //主题切换到黑暗模式的提示文本
-                darkModeSwitchLabel: 'darkmode',
-
-                sidebar: {
-                    '/en/guide/': [
-                        {
-                            text: 'quick-start',
-                            items: [
-                                { text: 'introduce', link: '/en/guide/' },
-                                { text: 'quick-start', link: '/en/guide/quick-start' },
-                            ],
-                        }
-                    ]
-                },
-            }
-        }
-    },
 
     markdown: {
         lineNumbers: true,

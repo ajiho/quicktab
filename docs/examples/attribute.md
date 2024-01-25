@@ -32,4 +32,4 @@ Quicktab所有选项都支持data属性绑定,示例中只提供了部分参数,
 </html>
 ```
 
-<ShowCase text="Run"  src="demo/attribute.html"/>
+<ShowCase text="Run"  src="Quicktab/demo/attribute.html"/>

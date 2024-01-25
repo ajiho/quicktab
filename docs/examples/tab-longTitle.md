@@ -28,4 +28,4 @@
 </html>
 ```
 
-<ShowCase text="Run" src="demo/tab-longTitle.html"/>
+<ShowCase text="Run" src="Quicktab/demo/tab-longTitle.html"/>

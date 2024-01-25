@@ -31,4 +31,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="tab可以拖动排序" src="demo/tab-dragSort.html"/>
+<ShowCase text="Run" title="tab可以拖动排序" src="Quicktab/demo/tab-dragSort.html"/>

@@ -35,4 +35,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="启用tab的右键菜单" src="demo/tab-contextmenu.html"/>
+<ShowCase text="Run" title="启用tab的右键菜单" src="Quicktab/demo/tab-contextmenu.html"/>

@@ -76,4 +76,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="右键菜单定制" src="demo/tab-contextmenu-custom.html"/>
+<ShowCase text="Run" title="右键菜单定制" src="Quicktab/demo/tab-contextmenu-custom.html"/>

@@ -53,4 +53,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="工具栏功能按钮可以排序" src="demo/toolbar-sort.html"/>
+<ShowCase text="Run" title="工具栏功能按钮可以排序" src="Quicktab/demo/toolbar-sort.html"/>

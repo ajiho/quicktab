@@ -43,4 +43,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="工具栏的位置和隐藏设置" src="demo/toolbar-position-hide.html"/>
+<ShowCase text="Run" title="工具栏的位置和隐藏设置" src="Quicktab/demo/toolbar-position-hide.html"/>

@@ -44,4 +44,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="tab可通过鼠标滚轮切换" src="demo/tab-mouseWheelSwitch.html"/>
+<ShowCase text="Run" title="tab可通过鼠标滚轮切换" src="Quicktab/demo/tab-mouseWheelSwitch.html"/>

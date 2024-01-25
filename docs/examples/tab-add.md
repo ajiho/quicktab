@@ -53,4 +53,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="添加tab" src="demo/tab-add.html"/>
+<ShowCase text="Run" title="添加tab" src="Quicktab/demo/tab-add.html"/>

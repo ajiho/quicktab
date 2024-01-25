@@ -40,4 +40,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="本土化" src="demo/localization.html"/>
+<ShowCase text="Run" title="本土化" src="Quicktab/demo/localization.html"/>

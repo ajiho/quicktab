@@ -34,4 +34,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="同一页面可共存多个实例" src="demo/multiple-instances.html"/>
+<ShowCase text="Run" title="同一页面可共存多个实例" src="Quicktab/demo/multiple-instances.html"/>

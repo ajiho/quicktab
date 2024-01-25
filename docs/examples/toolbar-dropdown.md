@@ -37,4 +37,4 @@
 </html>
 ```
 
-<ShowCase text="Run"  src="demo/toolbar-dropdown.html"/>
+<ShowCase text="Run"  src="Quicktab/demo/toolbar-dropdown.html"/>

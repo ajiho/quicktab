@@ -45,4 +45,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="启用tab双击刷新" src="demo/tab-dbclick.html"/>
+<ShowCase text="Run" title="启用tab双击刷新" src="Quicktab/demo/tab-dbclick.html"/>

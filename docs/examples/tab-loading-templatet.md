@@ -59,5 +59,5 @@
 
 </html>
 ```
-<ShowCase text="Run"  src="demo/tab-loading-templatet.html"/>
+<ShowCase text="Run"  src="Quicktab/demo/tab-loading-templatet.html"/>
 

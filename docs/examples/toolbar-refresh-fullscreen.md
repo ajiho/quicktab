@@ -35,4 +35,4 @@
 </html>
 ```
 
-<ShowCase text="Run"  src="demo/toolbar-refresh-fullscreen.html"/>
+<ShowCase text="Run"  src="Quicktab/demo/toolbar-refresh-fullscreen.html"/>

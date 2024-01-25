@@ -41,4 +41,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="控制tab的最大数量" src="demo/tab-maxNum.html"/>
+<ShowCase text="Run" title="控制tab的最大数量" src="Quicktab/demo/tab-maxNum.html"/>

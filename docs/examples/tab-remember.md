@@ -42,4 +42,4 @@
 </html>
 ```
 
-<ShowCase text="Run" title="tab记忆" src="demo/tab-remember.html"/>
+<ShowCase text="Run" title="tab记忆" src="Quicktab/demo/tab-remember.html"/>

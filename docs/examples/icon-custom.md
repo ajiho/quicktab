@@ -66,4 +66,4 @@
 </html>
 ```
 
-<ShowCase text="Run"  src="demo/icon-custom.html"/>
+<ShowCase text="Run"  src="Quicktab/demo/icon-custom.html"/>

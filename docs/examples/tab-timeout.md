@@ -80,5 +80,5 @@
 
 </html>
 ```
-<ShowCase text="Run"  src="demo/tab-timeout.html"/>
+<ShowCase text="Run"  src="Quicktab/demo/tab-timeout.html"/>
 

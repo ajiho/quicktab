@@ -22,4 +22,4 @@
 ```
 
 
-<ShowCase text="Run"  src="demo/base.html"/>
+<ShowCase text="Run"  src="Quicktab/demo/base.html"/>
