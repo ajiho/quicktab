@@ -16,6 +16,7 @@ export default {
           'chore',
           'revert',
           'build',
+          'release'
         ],
       ],
       'type-case': [0],
