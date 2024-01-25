@@ -1,6 +1,6 @@
 {
   "name": "quicktab",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "multi iframe tab plugin",
   "main": "dist/js/quicktab.min.js",
   "scripts": {
@@ -45,7 +45,9 @@
     "url": "https://gitee.com/ajiho/quicktab.git"
   },
   "keywords": [
-    "tab"
+    "tab",
+    "iframe",
+    "Multiple tabs"
   ],
   "homepage": "https://gitee.com/ajiho/quicktab",
   "author": "ajiho",

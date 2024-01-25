@@ -1,5 +1,5 @@
 /*!
- * quicktab v0.0.1 (https://gitee.com/ajiho/quicktab)
+ * quicktab v0.0.2 (https://gitee.com/ajiho/quicktab)
  * Copyright 2023-2024 ajiho
  * license MIT (https://gitee.com/ajiho/quicktab/blob/master/LICENSE)
  */
@@ -11637,6 +11637,7 @@
   var _restoreBodyElement = /*#__PURE__*/new WeakSet();
   var _highlightKeyword = /*#__PURE__*/new WeakSet();
   var _matchKeyword = /*#__PURE__*/new WeakSet();
+  var _search = /*#__PURE__*/new WeakSet();
   var _getTabUrl = /*#__PURE__*/new WeakSet();
   var _toggleDropdown = /*#__PURE__*/new WeakSet();
   var _prepareDropdownData = /*#__PURE__*/new WeakSet();
@@ -11746,6 +11747,7 @@
       _classPrivateMethodInitSpec(this, _toggleDropdown);
       // 从元素的data属性上获取Url
       _classPrivateMethodInitSpec(this, _getTabUrl);
+      _classPrivateMethodInitSpec(this, _search);
       // 匹配关键词高亮
       _classPrivateMethodInitSpec(this, _matchKeyword);
       _classPrivateMethodInitSpec(this, _highlightKeyword);
@@ -12591,6 +12593,9 @@
 
     //下拉菜单的相关事件
     if (_classPrivateFieldGet(this, _options).toolbar.dropdown.enable !== false) {
+      //是否进行正在合成
+      let isComposing = false;
+
       //点击最近关闭折叠
       jQuery(_classPrivateFieldGet(this, _dropdownEl)).on('click', '.has-icon', function (event) {
         const ul = this.nextElementSibling;
@@ -12604,31 +12609,18 @@
           ul.style.display = 'none';
         }
       });
-
+      const inputElementSelector = '.header input';
       //input框的事件
-      jQuery(_classPrivateFieldGet(this, _dropdownEl)).on('input', '.header input', function (event) {
-        const keyword = this.value.toLowerCase();
-
-        //先清空
-        _classPrivateFieldGet(that, _openTabsearchResultsEl).innerHTML = '';
-        _classPrivateFieldGet(that, _recentlyClosedTabssearchResultsEl).innerHTML = '';
-        if (keyword.trim() !== '') {
-          let results1 = false;
-          let results2 = false;
-          results1 = _classPrivateMethodGet(that, _matchKeyword, _matchKeyword2).call(that, keyword, _classPrivateFieldGet(that, _openTabsOriginalListEl), _classPrivateFieldGet(that, _openTabsearchResultsEl), _classPrivateFieldGet(that, _openTabsSubtitleEl));
-          results2 = _classPrivateMethodGet(that, _matchKeyword, _matchKeyword2).call(that, keyword, _classPrivateFieldGet(that, _recentlyClosedTabsOriginalListEl), _classPrivateFieldGet(that, _recentlyClosedTabssearchResultsEl), _classPrivateFieldGet(that, _recentlyClosedTabsSubtitleEl));
-          if (results1 === false && results2 === false) {
-            //说明两个都没找到结果
-            _classPrivateFieldGet(that, _noResultsMessageEl).style.display = 'block';
-          } else {
-            _classPrivateFieldGet(that, _noResultsMessageEl).style.display = 'none';
-          }
-        } else {
-          //隐藏结果
-          _classPrivateFieldGet(that, _noResultsMessageEl).style.display = 'none';
-          _classPrivateMethodGet(that, _restoreBodyElement, _restoreBodyElement2).call(that, _classPrivateFieldGet(that, _openTabsOriginalListEl), _classPrivateFieldGet(that, _openTabsearchResultsEl), _classPrivateFieldGet(that, _openTabsSubtitleEl));
-          _classPrivateMethodGet(that, _restoreBodyElement, _restoreBodyElement2).call(that, _classPrivateFieldGet(that, _recentlyClosedTabsOriginalListEl), _classPrivateFieldGet(that, _recentlyClosedTabssearchResultsEl), _classPrivateFieldGet(that, _recentlyClosedTabsSubtitleEl));
-        }
+      jQuery(_classPrivateFieldGet(this, _dropdownEl)).on('input', inputElementSelector, function () {
+        if (isComposing) return;
+        _classPrivateMethodGet(that, _search, _search2).call(that, this.value);
+      });
+      jQuery(_classPrivateFieldGet(this, _dropdownEl)).on('compositionstart', inputElementSelector, function () {
+        isComposing = true;
+      });
+      jQuery(_classPrivateFieldGet(this, _dropdownEl)).on('compositionend', inputElementSelector, function () {
+        isComposing = false;
+        _classPrivateMethodGet(that, _search, _search2).call(that, this.value);
       });
 
       //每个tab的点击事件
@@ -12692,6 +12684,30 @@
       subtitleEl.style.display = 'none';
     }
     return hasResults;
+  }
+  function _search2(keyword) {
+    keyword = keyword.toLowerCase();
+
+    //先清空
+    _classPrivateFieldGet(this, _openTabsearchResultsEl).innerHTML = '';
+    _classPrivateFieldGet(this, _recentlyClosedTabssearchResultsEl).innerHTML = '';
+    if (keyword.trim() !== '') {
+      let results1 = false;
+      let results2 = false;
+      results1 = _classPrivateMethodGet(this, _matchKeyword, _matchKeyword2).call(this, keyword, _classPrivateFieldGet(this, _openTabsOriginalListEl), _classPrivateFieldGet(this, _openTabsearchResultsEl), _classPrivateFieldGet(this, _openTabsSubtitleEl));
+      results2 = _classPrivateMethodGet(this, _matchKeyword, _matchKeyword2).call(this, keyword, _classPrivateFieldGet(this, _recentlyClosedTabsOriginalListEl), _classPrivateFieldGet(this, _recentlyClosedTabssearchResultsEl), _classPrivateFieldGet(this, _recentlyClosedTabsSubtitleEl));
+      if (results1 === false && results2 === false) {
+        //说明两个都没找到结果
+        _classPrivateFieldGet(this, _noResultsMessageEl).style.display = 'block';
+      } else {
+        _classPrivateFieldGet(this, _noResultsMessageEl).style.display = 'none';
+      }
+    } else {
+      //隐藏结果
+      _classPrivateFieldGet(this, _noResultsMessageEl).style.display = 'none';
+      _classPrivateMethodGet(this, _restoreBodyElement, _restoreBodyElement2).call(this, _classPrivateFieldGet(this, _openTabsOriginalListEl), _classPrivateFieldGet(this, _openTabsearchResultsEl), _classPrivateFieldGet(this, _openTabsSubtitleEl));
+      _classPrivateMethodGet(this, _restoreBodyElement, _restoreBodyElement2).call(this, _classPrivateFieldGet(this, _recentlyClosedTabsOriginalListEl), _classPrivateFieldGet(this, _recentlyClosedTabssearchResultsEl), _classPrivateFieldGet(this, _recentlyClosedTabsSubtitleEl));
+    }
   }
   function _getTabUrl2(element) {
     return element === null || element === void 0 ? void 0 : element.getAttribute(Constants.DATAKEYS.tabUrl);

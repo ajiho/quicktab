@@ -1,5 +1,5 @@
 /*!
- * quicktab v0.0.1 (https://gitee.com/ajiho/quicktab)
+ * quicktab v0.0.2 (https://gitee.com/ajiho/quicktab)
  * Copyright 2023-2024 ajiho
  * license MIT (https://gitee.com/ajiho/quicktab/blob/master/LICENSE)
  */
@@ -234,6 +234,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-width: 320px;
   height: 222px;
   background-color: #fff;
 }

@@ -949,6 +949,9 @@ class Quicktab {
 
     //下拉菜单的相关事件
     if (this.#options.toolbar.dropdown.enable !== false) {
+      //是否进行正在合成
+      let isComposing = false
+
       //点击最近关闭折叠
       event(this.#dropdownEl).on('click', '.has-icon', function (event) {
         const ul = this.nextElementSibling
@@ -966,53 +969,29 @@ class Quicktab {
         }
       })
 
+      const inputElementSelector = '.header input'
       //input框的事件
-      event(this.#dropdownEl).on('input', '.header input', function (event) {
-        const keyword = this.value.toLowerCase()
-
-        //先清空
-        that.#openTabsearchResultsEl.innerHTML = ''
-        that.#recentlyClosedTabssearchResultsEl.innerHTML = ''
-
-        if (keyword.trim() !== '') {
-          let results1 = false
-          let results2 = false
-
-          results1 = that.#matchKeyword(
-            keyword,
-            that.#openTabsOriginalListEl,
-            that.#openTabsearchResultsEl,
-            that.#openTabsSubtitleEl,
-          )
-          results2 = that.#matchKeyword(
-            keyword,
-            that.#recentlyClosedTabsOriginalListEl,
-            that.#recentlyClosedTabssearchResultsEl,
-            that.#recentlyClosedTabsSubtitleEl,
-          )
-
-          if (results1 === false && results2 === false) {
-            //说明两个都没找到结果
-            that.#noResultsMessageEl.style.display = 'block'
-          } else {
-            that.#noResultsMessageEl.style.display = 'none'
-          }
-        } else {
-          //隐藏结果
-          that.#noResultsMessageEl.style.display = 'none'
-
-          that.#restoreBodyElement(
-            that.#openTabsOriginalListEl,
-            that.#openTabsearchResultsEl,
-            that.#openTabsSubtitleEl,
-          )
-          that.#restoreBodyElement(
-            that.#recentlyClosedTabsOriginalListEl,
-            that.#recentlyClosedTabssearchResultsEl,
-            that.#recentlyClosedTabsSubtitleEl,
-          )
-        }
+      event(this.#dropdownEl).on('input', inputElementSelector, function () {
+        if (isComposing) return
+        that.#search(this.value)
       })
+
+      event(this.#dropdownEl).on(
+        'compositionstart',
+        inputElementSelector,
+        function () {
+          isComposing = true
+        },
+      )
+
+      event(this.#dropdownEl).on(
+        'compositionend',
+        inputElementSelector,
+        function () {
+          isComposing = false
+          that.#search(this.value)
+        },
+      )
 
       //每个tab的点击事件
       event(this.#dropdownEl).on('click', '.section li', function (event) {
@@ -1104,6 +1083,53 @@ class Quicktab {
     }
 
     return hasResults
+  }
+
+  #search(keyword) {
+    keyword = keyword.toLowerCase()
+
+    //先清空
+    this.#openTabsearchResultsEl.innerHTML = ''
+    this.#recentlyClosedTabssearchResultsEl.innerHTML = ''
+
+    if (keyword.trim() !== '') {
+      let results1 = false
+      let results2 = false
+
+      results1 = this.#matchKeyword(
+        keyword,
+        this.#openTabsOriginalListEl,
+        this.#openTabsearchResultsEl,
+        this.#openTabsSubtitleEl,
+      )
+      results2 = this.#matchKeyword(
+        keyword,
+        this.#recentlyClosedTabsOriginalListEl,
+        this.#recentlyClosedTabssearchResultsEl,
+        this.#recentlyClosedTabsSubtitleEl,
+      )
+
+      if (results1 === false && results2 === false) {
+        //说明两个都没找到结果
+        this.#noResultsMessageEl.style.display = 'block'
+      } else {
+        this.#noResultsMessageEl.style.display = 'none'
+      }
+    } else {
+      //隐藏结果
+      this.#noResultsMessageEl.style.display = 'none'
+
+      this.#restoreBodyElement(
+        this.#openTabsOriginalListEl,
+        this.#openTabsearchResultsEl,
+        this.#openTabsSubtitleEl,
+      )
+      this.#restoreBodyElement(
+        this.#recentlyClosedTabsOriginalListEl,
+        this.#recentlyClosedTabssearchResultsEl,
+        this.#recentlyClosedTabsSubtitleEl,
+      )
+    }
   }
 
   // 从元素的data属性上获取Url
