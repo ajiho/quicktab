@@ -151,7 +151,7 @@
 
 
             //如果单纯的想调用bootstrap-table数据表格插件的刷新方法
-            userListTabWindow && userListTabWindow.$('#table').bootstrapTable('refresh')
+            // userListTabWindow && userListTabWindow.$('#table').bootstrapTable('refresh')
 
         })
 

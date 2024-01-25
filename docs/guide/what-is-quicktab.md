@@ -27,4 +27,15 @@ Quicktab是一个可以快速搭建符合国情的IFrame多tab的响应式选项
 Quicktab识别是不是同一个tab的方法就是看`url`是否相同
 
 
+## 浏览器兼容
 
+不支持IE浏览器,具体可以在源码文件中查阅[.browserslistrc](https://gitee.com/ajiho/quicktab/blob/master/.browserslistrc)
+
+## 请我喝杯咖啡
+
+我并不喜欢喝咖啡,只不过觉得这种说法很酷，因为很多开源项目作者都说请我喝杯咖啡
+
+<div style="display: flex;flex-wrap: wrap">
+    <img src="/ali_pay.png">
+    <img src="/wechat_pay.png">
+</div>

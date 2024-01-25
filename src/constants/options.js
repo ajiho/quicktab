@@ -242,7 +242,7 @@ export default {
   onTabActivated(url) {
     return false
   },
-  //通过tab的add方法添加时产生的tab激活事件(比如左侧菜单需要通过添加tab的方法产生的激活事件)
+  //通过addTab方法添加时产生的tab激活事件(比如左侧菜单需要通过添加tab的方法产生的激活事件)
   onTabAddActivated(url) {
     return false
   },

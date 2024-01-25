@@ -90,9 +90,9 @@ export default defineConfig({
         nav: [
             { text: '指南', link: '/guide/what-is-quicktab', activeMatch: '/guide/' },
             { text: '例子', link: '/examples/base', activeMatch: '/examples/' },
-            { text: '选项', link: '/options' },
             { text: '方法', link: '/methods' },
             { text: '事件', link: '/events' },
+            { text: '选项', link: '/options' },
         ],
 
 
