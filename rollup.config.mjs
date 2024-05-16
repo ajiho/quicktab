@@ -5,12 +5,10 @@ import json from '@rollup/plugin-json';
 import multiEntry from '@rollup/plugin-multi-entry'
 import babel from '@rollup/plugin-babel';
 import stripBanner from 'rollup-plugin-strip-banner';
-import { globSync } from 'glob'
+import {globSync} from 'glob'
+import {getBanner} from "./build/banner.mjs"
 
-import { getBanner } from "./build/banner.mjs"
-
-const files = globSync('src/langs/*.js')
-
+const files = globSync('src/js/langs/*.js')
 
 
 const plugins = [
@@ -22,8 +20,7 @@ const plugins = [
         exclude: 'node_modules/**'
     }),
     babel({
-        babelHelpers: 'bundled',
-        exclude: ['node_modules/**', 'src/utils/event.js']
+        babelHelpers: 'bundled'
     })
 ]
 
@@ -42,8 +39,9 @@ let file = 'dist/js/quicktab.js'
 if (process.env.NODE_ENV === 'production') {
     file = file.replace(/\.js$/, '.min.js')
 }
+
 const config = [{
-    input: 'src/quicktab.js',
+    input: 'src/js/quicktab.js',
     output: {
         banner: getBanner(),
         format: 'umd',
@@ -55,13 +53,14 @@ const config = [{
 }]
 
 
-
+// 所有的js文件合并成一个js文件
 file = 'dist/js/langs/all.js'
 if (process.env.NODE_ENV === 'production') {
     file = file.replace(/\.js$/, '.min.js')
 }
+
 config.push({
-    input: 'src/langs/**/*.js',
+    input: 'src/js/langs/**/*.js',
     output: {
         name: 'Quicktab',
         file,
@@ -74,33 +73,24 @@ config.push({
 })
 
 
-for (const file of files) {
+for (const input of files) {
 
-    let out = file.replace(/\\/g, '/')
-    out = `dist/js/${out.replace('src/', '')}`
+    let file = `dist/${input.replace(/\\/g, '/').replace('src/', '')}`;
 
     if (process.env.NODE_ENV === 'production') {
-        out = out.replace(/\.js$/, '.min.js')
+        file = file.replace(/\.js$/, '.min.js')
     }
 
     config.push({
-        input: file,
+        input,
         output: {
             name: 'Quicktab',
-            file: out,
+            file,
             format: 'umd',
         },
         plugins
     })
 }
-
-
-
-
-
-
-
-
 
 
 export default config;

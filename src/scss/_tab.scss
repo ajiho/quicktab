@@ -10,8 +10,7 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-width: 320px;
-  height: 222px;
+  min-height: 222px;
   background-color: #fff;
 
   // pen开头的类名可以让鼠标事件不穿透
@@ -24,9 +23,7 @@
   .tab-bar {
     display: flex;
     flex-shrink: 0;
-
-    // 加高度是避免那些操作按钮都不启用的情况没有高度只有一条线的问题
-    min-height: 38px;
+    height: 38px;
     padding-left: 0;
     margin: 0;
     list-style: none;
@@ -185,6 +182,7 @@
   // 面板容器
   .tab-body {
     position: relative;
+    display: flex;
     flex-grow: 1;
     padding-left: 0;
     margin: 0;
@@ -195,8 +193,8 @@
     li {
       position: absolute;
       top: -200%;
+      flex: 1;
       width: 100%;
-      height: 100%;
       background-color: inherit;
 
       &.active {

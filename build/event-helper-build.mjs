@@ -48,11 +48,8 @@ try {
     })
 
 
-
     //先复制
     fs.copySync(copyForm, copyTo);
-
-
 
 } catch (error) {
     console.log(chalk.red(error));
