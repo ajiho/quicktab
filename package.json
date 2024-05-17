@@ -1,6 +1,6 @@
 {
   "name": "quicktab",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Multi IFrame tab plugin. operate IFrame like operating browser tabs",
   "main": "dist/js/quicktab.min.js",
   "style": "dist/css/quicktab.min.css",
