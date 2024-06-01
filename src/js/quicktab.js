@@ -16,7 +16,6 @@ import {
   shift,
 } from '@floating-ui/dom'
 
-import SimpleBar from 'simplebar'
 
 class Quicktab {
   // 选项
@@ -93,7 +92,6 @@ class Quicktab {
 
     //参数额外处理
     this.#optionsProcess(options)
-
 
     //参数验证
     const result = Utils.validate(OptionsSchema, this.#options)
@@ -613,11 +611,6 @@ class Quicktab {
     this.#recentlyClosedTabsOriginalListEl = allSection[2]
     this.#recentlyClosedTabssearchResultsEl = allSection[3]
     this.#noResultsMessageEl = this.#dropdownEl.querySelector('.empty')
-
-    //初始化滚动条插件
-    new SimpleBar(this.#dropdownEl.querySelector('.body'), {
-      autoHide: true,
-    })
   }
 
   #initLocale() {
@@ -973,21 +966,15 @@ class Quicktab {
         dragging = null
 
         //判断是否启用了tab缓存
-        if(that.#options.tab.remember === true){
-
+        if (that.#options.tab.remember === true) {
           that.#cacheHandle.delete(that.#cacheKey)
 
-          
-
-          that.#getTabs().forEach(item=>{
-            const option = item[Constants.DATAKEYS.tabOptionDataKey];
+          that.#getTabs().forEach((item) => {
+            const option = extend(true,{},item[Constants.DATAKEYS.tabOptionDataKey])
             delete option.timestamp
             that.#addCacheTab(option)
           })
-
         }
-
-
       })
     }
 
@@ -1575,13 +1562,6 @@ class Quicktab {
     this.#contextmenuEl = document.querySelector(
       `[${Constants.DATAKEYS.contextmenu}="${this.#options.id}"]`,
     )
-
-    //滚动条初始化
-    new SimpleBar(this.#contextmenuEl, {
-      autoHide: true,
-      // scrollbarMinSize:6,
-      scrollbarMaxSize: 200,
-    })
   }
 
   #initTabs() {

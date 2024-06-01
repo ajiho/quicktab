@@ -99,7 +99,6 @@
     "rollup": "^4.17.2",
     "rollup-plugin-strip-banner": "^3.1.0",
     "sass": "^1.77.2",
-    "simplebar": "^6.2.6",
     "size-limit": "^11.1.4",
     "storagetify": "^1.0.0",
     "stylelint": "^16.5.0",
