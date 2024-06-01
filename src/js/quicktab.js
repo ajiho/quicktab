@@ -94,8 +94,6 @@ class Quicktab {
     //参数额外处理
     this.#optionsProcess(options)
 
-    console.log(this.#options)
-
     //参数验证
     const result = Utils.validate(OptionsSchema, this.#options)
     if (result !== true) {
@@ -692,10 +690,11 @@ class Quicktab {
     )
 
     //响应式处理
-    Utils.onResize(this.#element.parentNode, function (rect) {
+    Utils.onResize(this.#element.parentNode, function (entry) {
       //关闭tab右键菜单和下拉菜单
       that.#closeContextmenu()
       that.#closeDropdown()
+
 
       if (that.#options.responsive.enable !== false) {
         //如果启用了响应式就动态设置显示和隐藏
@@ -703,13 +702,15 @@ class Quicktab {
           that.#containerEl,
           that.#hideItemSelector,
           'display',
-          rect.width < that.#options.responsive.breakpoint ? 'none' : null,
+          entry.contentRect.width < that.#options.responsive.breakpoint ? 'none' : null,
         )
       }
 
       if (that.#options.tab.resizeCenterActive === true) {
         that.#debounceCenterActive()
       }
+    },{
+      type:'width'
     })
 
     //添加通过html属性添加tab的能力(这个非常方便)

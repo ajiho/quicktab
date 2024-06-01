@@ -251,20 +251,59 @@ export default {
     return false
   },
 
-  onResize(element, callback) {
+  onResize(element, callback, options) {
+
+    const Default = {
+      //是否立即执行
+      immediate: false,
+      //监听变化类型 width height both
+      type: 'both',
+    }
+
+    options = Object.assign(Default, typeof options === 'object' && options)
+
+
+
     const resizeObserver = new ResizeObserver((entries) => {
       // 处理大小变化的回调函数
       entries.forEach((entry) => {
-        // entry.target 是发生大小变化的元素 entry.contentRect 包含元素的新大小信息
-        if (!entry.target.firstResize) {
-          //优化:第一次不执行
-          entry.target.firstResize = true
-          return
+        if (options.immediate === false) {
+          // entry.target 是发生大小变化的元素 entry.contentRect 包含元素的新大小信息
+          if (!entry.target.firstResize) {
+            //优化:第一次不执行
+            entry.target.firstResize = true
+            return
+          }
         }
-        callback.call(element, entry.contentRect)
+
+        console.log(options);
+
+        // 获取当前元素的宽度和高度
+        const newWidth = entry.contentRect.width
+        const newHeight = entry.contentRect.height
+
+        // 获取之前保存的宽度和高度，如果没有保存过则设置为初始值0
+        const oldWidth = entry.target.__resizeObserverLastWidth || 0
+        const oldHeight = entry.target.__resizeObserverLastHeight || 0
+
+        // 保存当前宽度和高度以备下次比较
+        entry.target.__resizeObserverLastWidth = newWidth
+        entry.target.__resizeObserverLastHeight = newHeight
+
+        // 只在宽度变化时触发处理逻辑
+        if (newWidth !== oldWidth && newHeight === oldHeight) {
+          options.type === 'width' && callback.call(element, entry)
+        }
+
+        if (newHeight !== oldHeight && newWidth === oldWidth) {
+          options.type === 'height' && callback.call(element, entry)
+        }
+
+        options.type === 'both' && callback.call(element, entry)
       })
     })
     resizeObserver.observe(element)
+    return resizeObserver;
   },
 
   // 获取开启和激活的选项
