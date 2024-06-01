@@ -1,8 +1,12 @@
+import extend from 'just-extend'
 import Constants from './constants'
 import Utils from './utils'
-import Cache from './utils/cache'
 import event from './utils/event'
-import Struct from './utils/struct'
+import OptionsSchema from './schema/options'
+import TabSchema from './schema/tab'
+import get from 'just-safe-get'
+import set from 'just-safe-set'
+import Storagetify from 'storagetify'
 
 import {
   autoUpdate,
@@ -15,8 +19,6 @@ import {
 import SimpleBar from 'simplebar'
 
 class Quicktab {
-  // 唯一的id
-  #id
   // 选项
   #options
   // 传入的id查找对应的元素
@@ -66,76 +68,61 @@ class Quicktab {
   // 实例集合
   static #instances = new Map()
 
-  constructor(id, options) {
-    if (id instanceof Element) {
-      //如果传递进来的是元素
+  constructor(element, options) {
+    options = (typeof options === 'object' && options) || {}
 
-      this.#element = id
-      //直接取id属性
-
-      id = this.#element.getAttribute('id')
-
-      if (!id) {
-        return Utils.notify(`Invalid ID selector`)
+    if (typeof element === 'string') {
+      //如果是字符串则当作是选择器
+      this.#element = document.querySelector(element)
+      if (!this.#element) {
+        return Utils.notify(`Invalid element`)
       }
     } else {
-      //则当作id
-      this.#element = document.getElementById(id)
-
-      if (!this.#element) {
-        return Utils.notify(`ID '${id}' is invalid`)
-      }
+      //直接是元素
+      this.#element = element
     }
 
-    if (Quicktab.#instances.has(id)) {
-      return Utils.notify(`The ID ${id} has already been used`)
+    //合并默认参数
+    this.#options = extend(
+      true,
+      {},
+      Constants.DEFAULTS,
+      this.#parseDataOptions(),
+      options,
+    )
+
+    //参数额外处理
+    this.#optionsProcess(options)
+
+    console.log(this.#options)
+
+    //参数验证
+    const result = Utils.validate(OptionsSchema, this.#options)
+    if (result !== true) {
+      return Utils.notify(result)
+    }
+
+    if (Quicktab.#instances.has(this.#options.id)) {
+      return Utils.notify(`The ID ${this.#options.id} has already been used`)
     }
 
     //立马隐藏挂载元素
     this.#element.style.setProperty('display', 'none')
 
-    Quicktab.#instances.set(id, this)
+    Quicktab.#instances.set(this.#options.id, this)
 
-    //接收用户参数
-    const userOptions = Utils.extend(
-      true,
-      {},
-      Utils.parseDataOptions(this.#element, Constants.OPTIONS, 'data-qt-'),
-      Utils.isObject(options) && options,
-    )
-
-    // 处理hideItem参数
-    const hideItemKey = 'responsive.hide'
-    const hideItemVal = Utils.getObjDataByKey(userOptions, hideItemKey)
-    if (hideItemVal !== undefined) {
-      Utils.updateObjDataByKey(Constants.DEFAULTS, hideItemKey, hideItemVal)
-    }
-
-    //合并默认参数
-    this.#options = Utils.extend(true, {}, Constants.DEFAULTS, userOptions)
-
-    //验证参数
-    const result = Struct.validateOptions(
-      Constants.OPTIONSSTRUCT,
-      this.#options,
-    )
-
-    if (result !== true) {
-      return Utils.notify(result)
-    }
-
-    //合并一下单个tab的选项
+    //合并一下单个tab的选项,因为默认单个Tab选项可以只传递url,那么此时需要合并别的选项
     this.#options.defaultTabs = this.#options.defaultTabs.map((option) =>
       this.#tabOptionExtend(option),
     )
 
-    this.#id = id
-    this.#cacheKey = `${Constants.NAMESPACE}-${this.#id}`
+    this.#cacheKey = `${Constants.NAMESPACE}-${this.#options.id}`
     this.#cacheDefaultTabsKey = `${this.#cacheKey}-defaultTabs`
     this.#cacheRecentlyClosedTabsKey = `${this.#cacheKey}-recentlyClosed`
     this.#hideItemSelector = this.#options.responsive.hide?.map((item) => {
       return `.${Constants.CLASSES.toolbar} li.${item}`
     })
+
     //这里要注意：实例化多个实例的时候，页面大小可能会改变，会触发该防抖函数
     this.#debounceCenterActive = Utils.debounce(() => {
       this.scrollToTabByUrl(this.#getTabUrl(this.#getActiveTab()))
@@ -146,6 +133,25 @@ class Quicktab {
 
     //初始化完毕调用init
     this.#options.onInit.call(this)
+  }
+
+  // 选项的二次加处理
+  #optionsProcess(options) {
+    //处理responsive.hide,如果用户传递了该参数,那么直接替换整个数据而不是extend会从索引为0开始逐个替换,这是符合正常的人类逻辑
+    const hideItemKey = 'responsive.hide'
+    const hideVal = get(options, hideItemKey)
+    if (hideVal !== undefined) {
+      set(this.#options, hideItemKey, get(options, hideItemKey))
+    }
+  }
+
+  // 获取选项参数
+  #parseDataOptions() {
+    return Utils.parseDataOptions(
+      this.#element,
+      Constants.OPTIONS.Default,
+      'data-qt-',
+    )
   }
 
   /**
@@ -171,12 +177,10 @@ class Quicktab {
    * @returns
    */
   addTab(option) {
-    if (!Utils.isObject(option)) return 'tab选项必须是对象'
-
     //参数合并
     option = this.#tabOptionExtend(option)
 
-    const result = Struct.validateOptions(Constants.TABOPTIONSTRUCT, option)
+    const result = Utils.validate(TabSchema, option)
     if (result !== true) {
       return Utils.notify(result)
     }
@@ -506,7 +510,7 @@ class Quicktab {
     const dropdownOptions = this.#options.toolbar.dropdown
 
     //组织html
-    const html = [Utils.sprintf(Constants.HTML.dropdown[0], this.#id)]
+    const html = [Utils.sprintf(Constants.HTML.dropdown[0], this.#options.id)]
 
     const placeholderText =
       dropdownOptions.searchInput.placeholder.trim() !== ''
@@ -595,7 +599,7 @@ class Quicktab {
 
     //查找右键菜单
     this.#dropdownEl = document.querySelector(
-      `[${Constants.DATAKEYS.dropdown}="${this.#id}"]`,
+      `[${Constants.DATAKEYS.dropdown}="${this.#options.id}"]`,
     )
 
     //查找一些必须的元素
@@ -649,13 +653,15 @@ class Quicktab {
 
   //合并单个tab的选项
   #tabOptionExtend(option) {
-    return Utils.extend(true, {}, Constants.TABDEFAULTS, option, {
-      [Constants.CLASSES.tabActive]: false,
-    })
+    return Object.assign(
+      { [Constants.CLASSES.tabActive]: false },
+      Constants.OPTIONS.TabDefault,
+      option,
+    )
   }
 
   #initCache() {
-    this.#cacheHandle = new Cache({
+    this.#cacheHandle = new Storagetify({
       type: this.#options.cacheType,
     })
   }
@@ -1382,7 +1388,7 @@ class Quicktab {
       fullscreen: Constants.CLASSES.toolbarFullscreenItem,
     }
 
-    let html = [Utils.sprintf(Constants.HTML.container[0], this.#id)]
+    let html = [Utils.sprintf(Constants.HTML.container[0], this.#options.id)]
 
     const toolbarHtml = [
       Utils.sprintf(
@@ -1437,7 +1443,7 @@ class Quicktab {
     //设置容器的尺寸
     const { height, width, minHeight } = this.#options
 
-    const containerSelector = `[${Constants.DATAKEYS.container}="${this.#id}"]`
+    const containerSelector = `[${Constants.DATAKEYS.container}="${this.#options.id}"]`
 
     html = Utils.setProperty(html, [containerSelector], 'height', height)
     html = Utils.setProperty(html, [containerSelector], 'width', width)
@@ -1512,7 +1518,7 @@ class Quicktab {
       },
     }
 
-    const html = [Utils.sprintf(Constants.HTML.listGroup[0], this.#id)]
+    const html = [Utils.sprintf(Constants.HTML.listGroup[0], this.#options.id)]
 
     Utils.getEnabledAndSortedOpsKey(
       this.#options.tab.contextmenu,
@@ -1543,7 +1549,7 @@ class Quicktab {
 
     //查找右键菜单
     this.#contextmenuEl = document.querySelector(
-      `[${Constants.DATAKEYS.contextmenu}="${this.#id}"]`,
+      `[${Constants.DATAKEYS.contextmenu}="${this.#options.id}"]`,
     )
 
     //滚动条初始化
@@ -1620,7 +1626,7 @@ class Quicktab {
     //这里只添加所有的tab，不添加iframe,否则全部加载iframe将会卡爆(重点优化)
     options.forEach((option, index) => {
       //克隆
-      option = Utils.extend(true, {}, option)
+      option = extend(true, {}, option)
 
       const tabNode = Utils.createNode(this.#generateTabHtml(option))
 
@@ -1697,10 +1703,10 @@ class Quicktab {
     this.#options.onTabClose.call(this, url)
   }
 
+  //从缓存中删除最近关闭的tab
   #cacheRecentlyClosedByUrl(url) {
     //添加最近删除的缓存,从tab的dom中拿到选项进行缓存
     let tabEl = this.#getTabByUrl(url)
-
     let tabOption = tabEl[Constants.DATAKEYS.tabOptionDataKey]
 
     //更新时间戳为关闭时的时间戳

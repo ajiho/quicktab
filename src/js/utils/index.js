@@ -1,3 +1,5 @@
+import * as v from 'valibot'
+
 export default {
   /**
    * 通过字符串创建节点
@@ -36,10 +38,7 @@ export default {
       const contentWindow = iframe.contentWindow
 
       // 检查是否有跨域安全性限制
-      const isSameOrigin =
-        contentWindow.location.origin === window.location.origin
-
-      return isSameOrigin
+      return contentWindow.location.origin === window.location.origin
     } catch (error) {
       // 处理可能的异常，比如跨域安全性限制
       return false
@@ -48,8 +47,6 @@ export default {
 
   /**
    * 给一个元素的某些特定后代元素设置属性
-   * @param {Element|String} element  需要设置样式的元素,可以是dom对象也可以是dom字符串
-   * @param {Array} selectorArr
    */
   setProperty(element, selectorArr, name, value) {
     if (!Array.isArray(selectorArr)) {
@@ -162,99 +159,6 @@ export default {
     }
   },
 
-  extend() {
-    let options,
-      name,
-      src,
-      copy,
-      copyIsArray,
-      clone,
-      target = arguments[0] || {}, //第一个参数
-      i = 1,
-      length = arguments.length,
-      deep = false
-
-    // 处理深度复制情况
-    if (typeof target === 'boolean') {
-      deep = target
-
-      // 跳过布尔值和目标
-      target = arguments[i] || {}
-      i++
-    }
-
-    // 当目标是字符串或其他东西时处理大小写（可能在深度复制中）
-    if (typeof target !== 'object' && typeof target !== 'function') {
-      target = {}
-    }
-
-    // 如果只传递一个参数，则扩展jQuery本身
-    if (i === length) {
-      target = this
-      i--
-    }
-
-    for (; i < length; i++) {
-      // 仅处理非null/未定义的值
-      if ((options = arguments[i]) != null) {
-        // 延伸基础对象
-        for (name in options) {
-          copy = options[name]
-
-          // 防止Object.prototype污染
-          // 防止无休止的循环
-          if (name === '__proto__' || target === copy) {
-            continue
-          }
-
-          // 如果我们正在合并普通对象或数组，则重复出现
-          if (
-            deep &&
-            copy &&
-            (this.isPlainObject(copy) || (copyIsArray = Array.isArray(copy)))
-          ) {
-            src = target[name]
-
-            // 确保源值的类型正确
-            if (copyIsArray && !Array.isArray(src)) {
-              clone = []
-            } else if (!copyIsArray && !this.isPlainObject(src)) {
-              clone = {}
-            } else {
-              clone = src
-            }
-            copyIsArray = false
-
-            // 从不移动原始对象，而是克隆它们
-            target[name] = this.extend(deep, clone, copy)
-
-            // 不要引入未定义的值
-            // } else if (copy !== undefined) {
-          } else {
-            target[name] = copy
-          }
-        }
-      }
-    }
-
-    // 返回修改后的对象
-    return target
-  },
-
-  //用于判断一个对象是否是纯粹的 JavaScript 对象（即不是 DOM 对象、函数、数组等）。具体作用是检查对象是否通过对象字面量或 new Object() 创建，且其原型链上只包含标准的 Object 原型
-  isPlainObject(obj) {
-    if (typeof obj !== 'object' || obj === null || obj instanceof Array) {
-      return false
-    }
-
-    const prototype = Object.getPrototypeOf(obj)
-    return prototype === Object.prototype || prototype === null
-  },
-
-  isObject(value) {
-    return Object.prototype.toString.call(value) === '[object Object]'
-  },
-
   isJSON(str) {
     try {
       JSON.parse(str)
@@ -275,27 +179,6 @@ export default {
       }
       return value
     }
-  },
-
-  updateObjDataByKey(obj, objKey, newValue) {
-    const keyList = objKey.split('.')
-    const lastKey = keyList[keyList.length - 1]
-    keyList.reduce((pre, item) => {
-      if (item === lastKey) pre[item] = newValue
-      return pre[item]
-    }, obj)
-    return obj
-  },
-
-  getObjDataByKey(obj, objKey) {
-    const keyList = objKey.split('.')
-    return keyList.reduce((currentObj, key) => {
-      if (currentObj && typeof currentObj === 'object' && key in currentObj) {
-        return currentObj[key]
-      } else {
-        return undefined // 返回 undefined 表示未找到相应的值
-      }
-    }, obj)
   },
 
   //对几个需要转换成字符串属性进行处理
@@ -319,9 +202,7 @@ export default {
       let attrVal = element.getAttribute(attrKey)
       let parseVal = this.parseAttributeValue(attrVal)
 
-      if (!this.isObject(defaultOption[key])) {
-        //如果选项原来的值是一个对象
-
+      if (typeof defaultOption[key] !== 'object') {
         if (attrVal !== null) {
           //如果获取到值了
           options[key] = parseVal
@@ -349,15 +230,6 @@ export default {
       }
     }
     return true
-  },
-
-  hasDuplicates(array) {
-    for (let i = 0; i < array.length; i++) {
-      if (array.indexOf(array[i]) !== i) {
-        return true
-      }
-    }
-    return false
   },
 
   //判断数组的对象元素中的某个key是否具有唯一值
@@ -399,13 +271,10 @@ export default {
   getEnabledAndSortedOpsKey(options, keyClassMap) {
     return Object.keys(options)
       .filter((key) => {
-        if (
+        return (
           Object.keys(keyClassMap).includes(key) &&
           options[key].enable !== false
-        ) {
-          return true
-        }
-        return false
+        )
       })
       .sort((a, b) => options[a].order - options[b].order)
   },
@@ -484,11 +353,6 @@ export default {
     }
   },
 
-  /**
-   * 把时间戳转换成人类友好的时间
-   * @param {Number} timestamp 微妙时间戳
-   * @returns {String}
-   */
   timeAgo(
     timestamp,
     customText = {
@@ -535,5 +399,27 @@ export default {
   // 通知程序
   notify(msg, type = 'error') {
     console[type](`Quicktab:${msg}`)
+  },
+
+  validate(Schema, input) {
+    // #https://valibot.dev/guides/parse-data/
+    const result = v.safeParse(Schema, input, {
+      abortEarly: true,
+      lang: 'zh-CN',
+    })
+
+    if (result.success) {
+      return true
+    } else {
+      const flatErrors = v.flatten(result.issues).nested
+
+      let error = ''
+
+      Object.keys(flatErrors).forEach((key) => {
+        error += `option: [${key}] ${flatErrors[key]}`
+      })
+
+      return error
+    }
   },
 }

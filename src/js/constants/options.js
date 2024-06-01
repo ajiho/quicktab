@@ -1,7 +1,8 @@
 import Icons from './icons'
 
-// 该配置项目是全部启用的列表
-export default {
+export const Default = {
+  //唯一id,这是必须传递的
+  id: '',
   //最小高度
   minHeight: undefined,
   //高度
@@ -282,4 +283,18 @@ export default {
   onInit() {
     return false
   },
+}
+
+export const TabDefault = {
+  //标题
+  title: '新标签页',
+  // 地址
+  url: '',
+  //可否关闭
+  closable: true,
+}
+
+export default {
+  Default,
+  TabDefault,
 }
