@@ -1707,6 +1707,9 @@ class Quicktab {
   #cacheRecentlyClosedByUrl(url) {
     //添加最近删除的缓存,从tab的dom中拿到选项进行缓存
     let tabEl = this.#getTabByUrl(url)
+    if (!tabEl) {
+      return
+    }
     let tabOption = tabEl[Constants.DATAKEYS.tabOptionDataKey]
 
     //更新时间戳为关闭时的时间戳
