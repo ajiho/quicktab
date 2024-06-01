@@ -94,6 +94,7 @@ class Quicktab {
     //参数额外处理
     this.#optionsProcess(options)
 
+
     //参数验证
     const result = Utils.validate(OptionsSchema, this.#options)
     if (result !== true) {
@@ -690,28 +691,33 @@ class Quicktab {
     )
 
     //响应式处理
-    Utils.onResize(this.#element.parentNode, function (entry) {
-      //关闭tab右键菜单和下拉菜单
-      that.#closeContextmenu()
-      that.#closeDropdown()
+    Utils.onResize(
+      this.#element.parentNode,
+      function (entry) {
+        //关闭tab右键菜单和下拉菜单
+        that.#closeContextmenu()
+        that.#closeDropdown()
 
+        if (that.#options.responsive.enable !== false) {
+          //如果启用了响应式就动态设置显示和隐藏
+          Utils.setProperty(
+            that.#containerEl,
+            that.#hideItemSelector,
+            'display',
+            entry.contentRect.width < that.#options.responsive.breakpoint
+              ? 'none'
+              : null,
+          )
+        }
 
-      if (that.#options.responsive.enable !== false) {
-        //如果启用了响应式就动态设置显示和隐藏
-        Utils.setProperty(
-          that.#containerEl,
-          that.#hideItemSelector,
-          'display',
-          entry.contentRect.width < that.#options.responsive.breakpoint ? 'none' : null,
-        )
-      }
-
-      if (that.#options.tab.resizeCenterActive === true) {
-        that.#debounceCenterActive()
-      }
-    },{
-      type:'width'
-    })
+        if (that.#options.tab.resizeCenterActive === true) {
+          that.#debounceCenterActive()
+        }
+      },
+      {
+        type: 'width',
+      },
+    )
 
     //添加通过html属性添加tab的能力(这个非常方便)
     that.#dataAttrAddTabEventRegister(document, Constants.DATAKEYS.addTabTarget)
@@ -965,6 +971,23 @@ class Quicktab {
       //拖拽结束
       event(this.#toolbarItemTabWrapperEl).on('dragend', function () {
         dragging = null
+
+        //判断是否启用了tab缓存
+        if(that.#options.tab.remember === true){
+
+          that.#cacheHandle.delete(that.#cacheKey)
+
+          
+
+          that.#getTabs().forEach(item=>{
+            const option = item[Constants.DATAKEYS.tabOptionDataKey];
+            delete option.timestamp
+            that.#addCacheTab(option)
+          })
+
+        }
+
+
       })
     }
 
@@ -1601,7 +1624,7 @@ class Quicktab {
   #cacheTabsCheck(tabs) {
     //要检查的键数组
     let targetKeys = [
-      ...Object.keys(Constants.TABDEFAULTS),
+      ...Object.keys(Constants.OPTIONS.TabDefault),
       Constants.CLASSES.tabActive,
     ]
 

@@ -19,7 +19,7 @@ const ContextmenuItemSchema = v.object({
 })
 
 const OptionsSchema = v.object({
-  id: v.string(),
+  id: v.pipe(v.string(), v.minLength(1)),
   minHeight: v.optional(v.string()),
   height: v.optional(v.string()),
   width: v.optional(v.string()),

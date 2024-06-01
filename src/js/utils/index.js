@@ -252,7 +252,6 @@ export default {
   },
 
   onResize(element, callback, options) {
-
     const Default = {
       //是否立即执行
       immediate: false,
@@ -261,8 +260,6 @@ export default {
     }
 
     options = Object.assign(Default, typeof options === 'object' && options)
-
-
 
     const resizeObserver = new ResizeObserver((entries) => {
       // 处理大小变化的回调函数
@@ -275,9 +272,6 @@ export default {
             return
           }
         }
-
-        console.log(options);
-
         // 获取当前元素的宽度和高度
         const newWidth = entry.contentRect.width
         const newHeight = entry.contentRect.height
@@ -303,7 +297,7 @@ export default {
       })
     })
     resizeObserver.observe(element)
-    return resizeObserver;
+    return resizeObserver
   },
 
   // 获取开启和激活的选项
