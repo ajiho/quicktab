@@ -69,6 +69,7 @@
     "@rollup/plugin-terser": "^0.4.4",
     "@size-limit/preset-big-lib": "^11.1.4",
     "autoprefixer": "^10.4.19",
+    "change-case": "^5.4.4",
     "clean-css-cli": "^5.6.3",
     "commit-and-tag-version": "^12.4.1",
     "concurrently": "^8.2.2",
@@ -108,5 +109,8 @@
     "valibot": "^0.31.0-rc.7",
     "vitepress": "^1.2.2",
     "vitepress-plugin-tabs": "^0.5.0"
+  },
+  "dependencies": {
+    "mitt": "^3.0.1"
   }
 }

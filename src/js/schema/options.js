@@ -140,6 +140,7 @@ const OptionsSchema = v.object({
   onTabClick: func,
   onTabDoubleClick: func,
   onTabClose: func,
+  onTabCloseAll: func,
   onInit: func,
 })
 

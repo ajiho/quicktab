@@ -8,6 +8,8 @@ import set from 'just-safe-set'
 import Storagetify from 'storagetify'
 import Delegateify from 'delegateify'
 import debounce from 'just-debounce-it'
+import mitt from 'mitt'
+import { kebabCase } from 'change-case'
 
 import {
   autoUpdate,
@@ -64,6 +66,8 @@ class Quicktab {
   // 用以存储最近关闭的缓存的key
   #cacheRecentlyClosedTabsKey
 
+  #emitter
+
   // 实例集合
   static #instances = new Map()
 
@@ -102,6 +106,11 @@ class Quicktab {
     if (Quicktab.#instances.has(this.#options.id)) {
       return Utils.notify(`The ID ${this.#options.id} has already been used`)
     }
+
+    //初始化事件调度
+    this.#emitter = mitt()
+
+    // this.on('onTabActivated', this.#options.onTabActivated);
 
     //立马隐藏挂载元素
     this.#element.style.setProperty('display', 'none')
@@ -756,7 +765,10 @@ class Quicktab {
         let url = that.#getTabUrl(this)
 
         //tab被单击的回调
-        that.#options.onTabClick.call(that, url)
+
+        that.#trigger('onTabClick', url)
+
+        // that.#options.onTabClick.call(that, url)
 
         //激活
         that.#activeTabByUrl(url)
@@ -1718,7 +1730,12 @@ class Quicktab {
     this.#removeCacheTabByUrl(url)
 
     //关闭tab的回调
-    this.#options.onTabClose.call(this, url)
+    this.#trigger('onTabClose', url)
+
+    //这里再增加一个事件，当所有的可关闭的tab都被关闭时会触发一个事件
+    if (this.#getClosableTabs().length === 0) {
+      this.#trigger('onTabCloseAll')
+    }
   }
 
   //从缓存中删除最近关闭的tab
@@ -1817,9 +1834,9 @@ class Quicktab {
 
     //激活逻辑完成调用激活事件
     if (fromAddTabMethod) {
-      this.#options.onTabAddActivated.call(this, url)
+      this.#trigger('onTabAddActivated', url)
     } else {
-      this.#options.onTabActivated.call(this, url)
+      this.#trigger('onTabActivated', url)
     }
   }
 
@@ -2089,6 +2106,37 @@ class Quicktab {
 
   #getIFrameByUrl(url) {
     return this.#getTabPaneByUrl(url)?.querySelector('iframe')
+  }
+
+  // 添加事件监听器
+  on(event, handler) {
+    this.#emitter.on(event, handler)
+  }
+
+  // 移除事件监听器
+  off(event, handler) {
+    this.#emitter.off(event, handler)
+  }
+
+  /**
+   * 内部的事件分发事件,它要同时包括多种方式的分发
+   * @param {string} name  直接从默认选项复制比如onTabClick,其它的触发方式则会自动转换格式
+   * @param {*} data
+   */
+  #trigger(name, ...args) {
+    //onTabClick -> tab-click
+    const caseName = kebabCase(name.replace(/^on/, ''))
+
+    this.#options[name].call(this, ...args)
+    this.#element.dispatchEvent(
+      new CustomEvent(caseName, {
+        detail: args,
+      }),
+    )
+    //对于某些特殊的事件不要触发,否则扰乱逻辑
+    if (!['onTabActivated'].includes(name)) {
+      this.#emitter.emit(caseName, ...args)
+    }
   }
 }
 

@@ -279,6 +279,10 @@ export const Default = {
   onTabClose(url) {
     return false
   },
+  //所有的tab都被关闭的事件
+  onTabCloseAll() {
+    return false
+  },
   //实例化完毕回调
   onInit() {
     return false
