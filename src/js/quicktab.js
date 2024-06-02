@@ -868,48 +868,51 @@ class Quicktab {
         },
       )
 
-      //touchstart 在chrome控制台的警告#https://github.com/jquery/jquery/issues/2871,如果还要用jquery的event那就没有办法修复，除非替换它
-      new Delegateify(this.#contextmenuEl).on(
-        'click contextmenu touchstart',
-        `li[${Constants.DATAKEYS.tabUrl}]`,
-        function (event) {
-          if (event.type === 'contextmenu') {
-            event.preventDefault()
-          }
-          const url = that.#getTabUrl(this)
-          const itemClass = this.getAttribute('class')
+      const v_contextmenu = new Delegateify(this.#contextmenuEl)
+      const contextmenuEvents = ['click', 'contextmenu', 'touchstart']
+      contextmenuEvents.forEach((event) => {
+        v_contextmenu.on(
+          event,
+          `li[${Constants.DATAKEYS.tabUrl}]`,
+          function (event) {
+            if (event.type === 'contextmenu') {
+              event.preventDefault()
+            }
+            const url = that.#getTabUrl(this)
+            const itemClass = this.getAttribute('class')
 
-          switch (itemClass) {
-            case 'refresh':
-              that.refreshTabByUrl(url)
-              break
-            case 'other':
-              that.closeAllTabsExceptByUrl(url)
-              break
-            case 'prev':
-              that.closePrevAllTabsByUrl(url)
-              break
-            case 'next':
-              that.closeNextAllTabsByUrl(url)
-              break
-            case 'all':
-              that.closeAllTabs()
-              break
-            case 'new-blank':
-              that.openNewTabByUrl(url)
-              break
-            case 'fullscreen':
-              that.fullscreenTabByUrl(url)
-              break
-            case 'center-active':
-              that.scrollToActiveTab()
-              break
-            case 'close':
-              that.closeTabByUrl(url)
-              break
-          }
-        },
-      )
+            switch (itemClass) {
+              case 'refresh':
+                that.refreshTabByUrl(url)
+                break
+              case 'other':
+                that.closeAllTabsExceptByUrl(url)
+                break
+              case 'prev':
+                that.closePrevAllTabsByUrl(url)
+                break
+              case 'next':
+                that.closeNextAllTabsByUrl(url)
+                break
+              case 'all':
+                that.closeAllTabs()
+                break
+              case 'new-blank':
+                that.openNewTabByUrl(url)
+                break
+              case 'fullscreen':
+                that.fullscreenTabByUrl(url)
+                break
+              case 'center-active':
+                that.scrollToActiveTab()
+                break
+              case 'close':
+                that.closeTabByUrl(url)
+                break
+            }
+          },
+        )
+      })
     }
 
     //如果启用拖动排序
