@@ -13,9 +13,6 @@
   border-radius: 0;
   box-shadow: 0 0.125rem 0.25rem rgb(0 0 0 / 7.5%);
 
-  // 滚动条的颜色美化
-  @include simplebar;
-
   &.active {
     display: flex;
   }

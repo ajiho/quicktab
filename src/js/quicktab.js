@@ -1,12 +1,13 @@
 import extend from 'just-extend'
 import Constants from './constants'
 import Utils from './utils'
-import event from './utils/event'
 import OptionsSchema from './schema/options'
 import TabSchema from './schema/tab'
 import get from 'just-safe-get'
 import set from 'just-safe-set'
 import Storagetify from 'storagetify'
+import Delegateify from 'delegateify'
+import debounce from 'just-debounce-it'
 
 import {
   autoUpdate,
@@ -15,7 +16,6 @@ import {
   offset,
   shift,
 } from '@floating-ui/dom'
-
 
 class Quicktab {
   // 选项
@@ -121,7 +121,7 @@ class Quicktab {
     })
 
     //这里要注意：实例化多个实例的时候，页面大小可能会改变，会触发该防抖函数
-    this.#debounceCenterActive = Utils.debounce(() => {
+    this.#debounceCenterActive = debounce(() => {
       this.scrollToTabByUrl(this.#getTabUrl(this.#getActiveTab()))
     }, 500)
 
@@ -661,10 +661,12 @@ class Quicktab {
   #initEvent() {
     let that = this
 
-    //用以处理tab右键菜单和下拉菜单的关闭处理
-    event(document).on(
-      'click contextmenu scroll touchstart dragstart',
-      function (event) {
+    const d_document = new Delegateify(document)
+
+    const events = ['click', 'contextmenu', 'scroll', 'touchstart', 'dragstart']
+
+    events.forEach((event) => {
+      d_document.on(event, function (event) {
         const clickedElement = event.target
         const eventType = event.type
 
@@ -680,8 +682,8 @@ class Quicktab {
             that.#closeDropdown()
           }
         }
-      },
-    )
+      })
+    })
 
     //响应式处理
     Utils.onResize(
@@ -716,11 +718,11 @@ class Quicktab {
     that.#dataAttrAddTabEventRegister(document, Constants.DATAKEYS.addTabTarget)
 
     //事件委托监听loading过渡完毕
-    event(this.#containerEl).on(
+    new Delegateify(this.#containerEl).on(
       'transitionend',
       `.${Constants.CLASSES.tabBody} .${Constants.CLASSES.overlays}`,
       function (event) {
-        if (event.target === event.currentTarget) {
+        if (event.target === event.matchedTarget) {
           const maskEl = event.target
 
           const url = that.#getTabUrl(maskEl)
@@ -733,51 +735,42 @@ class Quicktab {
       },
     )
 
-    //tab的单击事件
-    event(this.#toolbarItemTabWrapperEl).on(
+    //双击事件处理函数
+    let tabDoubleClickHandle = null
+    if (that.#options.tab.doubleClick.enable === true) {
+      tabDoubleClickHandle = function () {
+        const url = that.#getTabUrl(this)
+
+        if (that.#options.tab.doubleClick.refresh === true) {
+          that.refreshTabByUrl(url)
+        }
+        //双击事件回调
+        that.#options.onTabDoubleClick.call(that, url)
+      }
+    }
+
+    new Delegateify(this.#toolbarItemTabWrapperEl).on(
       'click',
       'button',
-      Utils.handleSingleAndDoubleClick(
-        {
-          click: {
-            stopPropagation: false,
-            handle: function () {
-              let url = that.#getTabUrl(this)
+      Utils.handleClickAndDoubleClick(function () {
+        let url = that.#getTabUrl(this)
 
-              //tab被单击的回调
-              that.#options.onTabClick.call(that, url)
+        //tab被单击的回调
+        that.#options.onTabClick.call(that, url)
 
-              //激活
-              that.#activeTabByUrl(url)
+        //激活
+        that.#activeTabByUrl(url)
 
-              //滚动到tab所在位置
-              if (that.#options.tab.clickCenterActive === true) {
-                that.scrollToTabByUrl(url)
-              }
-            },
-          },
-          dbclick: {
-            stopPropagation: false,
-            handle: function () {
-              const url = that.#getTabUrl(this)
-
-              if (that.#options.tab.doubleClick.refresh === true) {
-                that.refreshTabByUrl(url)
-              }
-              //双击事件回调
-              that.#options.onTabDoubleClick.call(that, url)
-            },
-          },
-        },
-        {
-          enableDbClick: that.#options.tab.doubleClick.enable === true,
-        },
-      ),
+        //滚动到tab所在位置
+        if (that.#options.tab.clickCenterActive === true) {
+          that.scrollToTabByUrl(url)
+        }
+      }, tabDoubleClickHandle),
     )
 
     //tab关闭事件
     if (this.#options.tab.closeBtn.enable !== false) {
-      event(this.#toolbarItemTabWrapperEl).on(
+      new Delegateify(this.#toolbarItemTabWrapperEl).on(
         'click',
         `button > svg`,
         function (event) {
@@ -792,7 +785,7 @@ class Quicktab {
     }
 
     //给工具栏绑定事件
-    event(this.#toolbarEl).on('click', `li > button`, function (event) {
+    new Delegateify(this.#toolbarEl).on('click', `li > button`, function () {
       let classItem = this.parentNode.getAttribute('class')
 
       switch (classItem) {
@@ -819,7 +812,7 @@ class Quicktab {
       //鼠标滚轮切换tab功能启用
 
       let centerTabEl
-      const withTabPaneDebounce = Utils.debounce(function (event) {
+      const withTabPaneDebounce = debounce(function (event) {
         const activeTab = that.#getActiveTab()
         const prev = activeTab.previousElementSibling
         const next = activeTab.nextElementSibling
@@ -861,7 +854,7 @@ class Quicktab {
     //是否启用右键菜单功能
     if (this.#options.tab.contextmenu.enable !== false) {
       //tab右键的事件委托
-      event(this.#toolbarItemTabWrapperEl).on(
+      new Delegateify(this.#toolbarItemTabWrapperEl).on(
         'contextmenu',
         'button',
         function (event) {
@@ -876,7 +869,7 @@ class Quicktab {
       )
 
       //touchstart 在chrome控制台的警告#https://github.com/jquery/jquery/issues/2871,如果还要用jquery的event那就没有办法修复，除非替换它
-      event(this.#contextmenuEl).on(
+      new Delegateify(this.#contextmenuEl).on(
         'click contextmenu touchstart',
         `li[${Constants.DATAKEYS.tabUrl}]`,
         function (event) {
@@ -924,45 +917,51 @@ class Quicktab {
       //当前拖动的元素
       let dragging = null
 
-      event(this.#toolbarItemTabWrapperEl).on('dragstart', function (event) {
-        dragging = event.target
-      })
+      new Delegateify(this.#toolbarItemTabWrapperEl).on(
+        'dragstart',
+        function (event) {
+          dragging = event.target
+        },
+      )
 
       //拖拽移动中
-      event(this.#toolbarItemTabWrapperEl).on('dragover', function (event) {
-        event.preventDefault()
-        // 默认无法将数据/元素放置到其他元素中。如果需要设置允许放置，必须阻止对元素的默认处理方式
+      new Delegateify(this.#toolbarItemTabWrapperEl).on(
+        'dragover',
+        function (event) {
+          event.preventDefault()
+          // 默认无法将数据/元素放置到其他元素中。如果需要设置允许放置，必须阻止对元素的默认处理方式
 
-        let target = event.target
+          let target = event.target
 
-        //当前拖动的元素是li 且不等于
-        if (target.nodeName === 'BUTTON' && target !== dragging) {
-          // 获取初始位置
-          let targetRect = target.getBoundingClientRect()
-          let draggingRect = dragging.getBoundingClientRect()
+          //当前拖动的元素是li 且不等于
+          if (target.nodeName === 'BUTTON' && target !== dragging) {
+            // 获取初始位置
+            let targetRect = target.getBoundingClientRect()
+            let draggingRect = dragging.getBoundingClientRect()
 
-          if (target) {
-            // 判断是否动画元素
-            if (target.animated) {
-              return
+            if (target) {
+              // 判断是否动画元素
+              if (target.animated) {
+                return
+              }
             }
-          }
 
-          if (Utils.index(dragging) < Utils.index(target)) {
-            // 目标比元素大，插到其后面
-            // extSibling下一个兄弟元素
-            target.parentNode.insertBefore(dragging, target.nextSibling)
-          } else {
-            // 目标比元素小，插到其前面
-            target.parentNode.insertBefore(dragging, target)
+            if (Utils.index(dragging) < Utils.index(target)) {
+              // 目标比元素大，插到其后面
+              // extSibling下一个兄弟元素
+              target.parentNode.insertBefore(dragging, target.nextSibling)
+            } else {
+              // 目标比元素小，插到其前面
+              target.parentNode.insertBefore(dragging, target)
+            }
+            Utils.animate(draggingRect, dragging)
+            Utils.animate(targetRect, target)
           }
-          Utils.animate(draggingRect, dragging)
-          Utils.animate(targetRect, target)
-        }
-      })
+        },
+      )
 
       //拖拽结束
-      event(this.#toolbarItemTabWrapperEl).on('dragend', function () {
+      new Delegateify(this.#toolbarItemTabWrapperEl).on('dragend', function () {
         dragging = null
 
         //判断是否启用了tab缓存
@@ -970,7 +969,11 @@ class Quicktab {
           that.#cacheHandle.delete(that.#cacheKey)
 
           that.#getTabs().forEach((item) => {
-            const option = extend(true,{},item[Constants.DATAKEYS.tabOptionDataKey])
+            const option = extend(
+              true,
+              {},
+              item[Constants.DATAKEYS.tabOptionDataKey],
+            )
             delete option.timestamp
             that.#addCacheTab(option)
           })
@@ -984,30 +987,38 @@ class Quicktab {
       let isComposing = false
 
       //点击最近关闭折叠
-      event(this.#dropdownEl).on('click', '.has-icon', function (event) {
-        const ul = this.nextElementSibling
-        const iconWrapper = this.querySelector('.icon-wrapper')
-        iconWrapper.focus()
+      new Delegateify(this.#dropdownEl).on(
+        'click',
+        '.has-icon',
+        function (event) {
+          const ul = this.nextElementSibling
+          const iconWrapper = this.querySelector('.icon-wrapper')
+          iconWrapper.focus()
 
-        if (ul.style.display === 'none') {
-          iconWrapper.innerHTML =
-            that.#options.toolbar.dropdown.recentlyClosedTabs.hideIcon
-          ul.style.display = 'block'
-        } else {
-          iconWrapper.innerHTML =
-            that.#options.toolbar.dropdown.recentlyClosedTabs.showIcon
-          ul.style.display = 'none'
-        }
-      })
+          if (ul.style.display === 'none') {
+            iconWrapper.innerHTML =
+              that.#options.toolbar.dropdown.recentlyClosedTabs.hideIcon
+            ul.style.display = 'block'
+          } else {
+            iconWrapper.innerHTML =
+              that.#options.toolbar.dropdown.recentlyClosedTabs.showIcon
+            ul.style.display = 'none'
+          }
+        },
+      )
 
       const inputElementSelector = '.header input'
       //input框的事件
-      event(this.#dropdownEl).on('input', inputElementSelector, function () {
-        if (isComposing) return
-        that.#search(this.value)
-      })
+      new Delegateify(this.#dropdownEl).on(
+        'input',
+        inputElementSelector,
+        function () {
+          if (isComposing) return
+          that.#search(this.value)
+        },
+      )
 
-      event(this.#dropdownEl).on(
+      new Delegateify(this.#dropdownEl).on(
         'compositionstart',
         inputElementSelector,
         function () {
@@ -1015,7 +1026,7 @@ class Quicktab {
         },
       )
 
-      event(this.#dropdownEl).on(
+      new Delegateify(this.#dropdownEl).on(
         'compositionend',
         inputElementSelector,
         function () {
@@ -1025,7 +1036,7 @@ class Quicktab {
       )
 
       //每个tab的点击事件
-      event(this.#dropdownEl).on('click', '.section li', function (event) {
+      new Delegateify(this.#dropdownEl).on('click', '.section li', function () {
         const option = this[Constants.DATAKEYS.tabOptionDataKey]
 
         that.addTab({
@@ -1039,7 +1050,7 @@ class Quicktab {
       })
 
       //tab的关闭按钮被单击
-      event(this.#dropdownEl).on(
+      new Delegateify(this.#dropdownEl).on(
         'click',
         '.section li .icon-wrapper',
         function (event) {
@@ -1660,7 +1671,7 @@ class Quicktab {
   #dataAttrAddTabEventRegister(doc, targetKey) {
     const that = this
     //同时给子页面绑定快速打开tab的事件
-    event(doc).on(
+    new Delegateify(doc).on(
       'click',
       `[${Constants.DATAKEYS.addTabUrl}][${targetKey}]`,
       function (event) {

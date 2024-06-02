@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+
+<body>
+
+    <div class="box" style="background: red; height: 100px;width: 100px;">
+        <div class="inner-box" style="background: blue; height: 50px;width: 50px;"></div>
+    </div>
+
+
+
+    <script src="https://unpkg.com/delegateify@latest/dist/delegateify.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
+
+    <script>
+
+
+
+        function handleSingleAndDoubleClick2(clickCallback, dbClickCallback, options) {
+
+            let clicks = 0
+            let timer = null
+
+            // 默认配置
+            const Default = {
+                //延时
+                delay: 200,
+                //单机事件是是否阻止默认事件
+                clickPreventDefault: false,
+                clickStopPropagation: false,
+                dbClickPreventDefault: false,
+                dbClickStopPropagation: false,
+            }
+
+            options = Object.assign(Default, typeof options === 'object' && options)
+
+
+
+            return function (event) {
+
+                if (typeof dbClickCallback !== "function") { //如果参数2没有传递，那么直接使用真实的单击
+                    options.clickPreventDefault && event.preventDefault()
+                    options.clickStopPropagation && event.stopPropagation()
+                    typeof clickCallback === "function" && clickCallback.call(this, event)
+
+                } else {
+
+                    clicks++
+                    if (clicks === 1) { //模拟单击
+
+                        options.clickPreventDefault && event.preventDefault()
+                        options.clickStopPropagation && event.stopPropagation()
+
+                        timer = setTimeout(() => {
+                            typeof clickCallback === "function" && clickCallback.call(this, event)
+                            clicks = 0
+                        }, options.delay)
+
+                    } else {//模拟双击
+
+                        options.dbClickPreventDefault && event.preventDefault()
+                        options.dbClickStopPropagation && event.stopPropagation()
+
+                        clearTimeout(timer)
+                        typeof dbClickCallback === "function" && dbClickCallback.call(this, event)
+                        clicks = 0
+                    }
+                }
+
+
+
+            }
+
+
+        }
+
+
+
+
+
+
+        const deletage = new Delegateify(document);
+
+
+
+        //外部大盒子的委托
+        deletage.on('click', '.box', function () {
+            console.log('.box');
+        });
+
+
+
+        deletage.on('click', '.inner-box', handleSingleAndDoubleClick2(
+            function (event) {
+                event.stopPropagation()
+                console.log(this, event);
+            }, function (event) {
+               
+            },
+            {
+                clickPreventDefault: false,
+                clickStopPropagation: true,
+            }));
+
+    </script>
+</body>
+
+</html>

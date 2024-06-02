@@ -12,21 +12,6 @@ export default {
     return node.firstElementChild
   },
 
-  //防抖
-  debounce(func, wait = 500) {
-    let timeout
-
-    return function () {
-      const context = this
-      const args = arguments
-
-      clearTimeout(timeout)
-      timeout = setTimeout(function () {
-        func.apply(context, args)
-      }, wait)
-    }
-  },
-
   /**
    * 判断是否是同源的、可以操作 contentWindow 对象的 iframe
    * @param {HTMLIFrameElement} iframe - 要检查的 iframe 元素
@@ -113,48 +98,53 @@ export default {
   },
 
   //可以让单击事件具备双击的能力
-  handleSingleAndDoubleClick(
-    callbacks,
-    { enableDbClick = true, delay = 200 } = {},
-  ) {
+  handleClickAndDoubleClick(clickCallback, dbClickCallback, options) {
     let clicks = 0
     let timer = null
-    const { click, dbclick } = callbacks
+
+    // 默认配置
+    const Default = {
+      //延时
+      delay: 200,
+      //单机事件是是否阻止默认事件
+      clickPreventDefault: false,
+      clickStopPropagation: false,
+      dbClickPreventDefault: false,
+      dbClickStopPropagation: false,
+    }
+
+    options = Object.assign(Default, typeof options === 'object' && options)
 
     return function (event) {
-      const preventAndstop = (type) => {
-        const { preventDefault = true, stopPropagation = true } = type
-        if (preventDefault) event.preventDefault()
-        if (stopPropagation) event.stopPropagation()
-      }
-
-      const callBack = (type) => {
-        const { handle } = type
-        if (typeof handle === 'function') {
-          handle.call(this, event)
-        }
-      }
-
-      if (enableDbClick === true) {
+      if (typeof dbClickCallback !== 'function') {
+        //如果参数2没有传递，那么直接使用真实的单击
+        options.clickPreventDefault && event.preventDefault()
+        options.clickStopPropagation && event.stopPropagation()
+        typeof clickCallback === 'function' && clickCallback.call(this, event)
+      } else {
         clicks++
         if (clicks === 1) {
-          //单击
+          //模拟单击
 
-          preventAndstop(click)
+          options.clickPreventDefault && event.preventDefault()
+          options.clickStopPropagation && event.stopPropagation()
 
           timer = setTimeout(() => {
-            callBack(click)
+            typeof clickCallback === 'function' &&
+              clickCallback.call(this, event)
             clicks = 0
-          }, delay)
+          }, options.delay)
         } else {
-          preventAndstop(dbclick)
+          //模拟双击
+
+          options.dbClickPreventDefault && event.preventDefault()
+          options.dbClickStopPropagation && event.stopPropagation()
+
           clearTimeout(timer)
-          callBack(dbclick)
+          typeof dbClickCallback === 'function' &&
+            dbClickCallback.call(this, event)
           clicks = 0
         }
-      } else {
-        preventAndstop(click)
-        callBack(click)
       }
     }
   },

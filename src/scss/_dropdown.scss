@@ -43,9 +43,6 @@
 
     $background: #ededed;
 
-    // 滚动条的颜色美化
-    @include simplebar;
-
     // 两个都没有结果的时候
     .empty {
       display: none;

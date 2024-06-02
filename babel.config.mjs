@@ -16,7 +16,6 @@ export default {
         ]
     ],
     ignore: [
-        "node_modules/**",
-        "src/js/utils/event.js"
+        "node_modules/**"
     ]
 }
