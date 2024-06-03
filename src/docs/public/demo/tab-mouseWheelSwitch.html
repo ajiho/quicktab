@@ -13,7 +13,8 @@
     <div id="qtab"></div>
     <script src="dist/js/quicktab.js"></script>
     <script>
-        new Quicktab('qtab', {
+        new Quicktab('#qtab', {
+            id:'qtab',
             width: '600px',
             defaultTabs: [
                 { url: 'welcome.html' },
@@ -33,7 +34,7 @@
                 mouseWheelSwitch: {
                     enable: true,
                     // true:只滚动tab的包裹区域,并不会同时切换tab面板
-                    onlyScroll: true
+                    onlyScroll: false
                 }
             }
         })

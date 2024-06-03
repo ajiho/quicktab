@@ -22,15 +22,7 @@
 </head>
 
 <body>
-    <p>
-        <button id="btn">添加测试tab</button>
-
-
-        <button data-qt-tab-url='https://www.google.com' data-qt-tab-title='欢迎页面' data-qt-tab-closable='true'
-        data-qt-target="#qtab">https://www.google.com</button>
-
-
-    </p>
+    <button id="btn">添加测试tab</button>
 
     <div class="container">
         <div id="qtab"></div>
@@ -40,7 +32,8 @@
     <script>
 
         const logTextarea = document.getElementById('log')
-        const qtab = new Quicktab('qtab', {
+        const qtab = new Quicktab('#qtab', {
+            id:'qtab',
             width: '50%',
             defaultTabs: [
                 { url: 'welcome.html' },
@@ -61,9 +54,6 @@
             //tab被激活时触发
             onTabActivated: function (url) {
                 log(`事件名称:onTabActivated----请求的url:${url}`)
-            },
-            onTabAddActivated: function (url) {
-                log(`事件名称:onTabAddActivated----请求的url:${url}`)
             },
             onTabLoaded: function (url) {
                 log(`事件名称:onTabLoaded----请求的url:${url}`)

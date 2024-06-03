@@ -216,7 +216,7 @@ export const Default = {
     dragSort: false,
     //超时设置
     timeout: {
-      enable: true,
+      enable: false,
       //过滤器 func 可以对于一些特定的tab不启用超时
       filter(url) {
         return true

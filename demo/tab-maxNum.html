@@ -11,12 +11,13 @@
 <body>
     <button id="btn">通过实例方法addTab()添加tab</button>
 
-    <hr>
+
     <div id="qtab"></div>
     <script src="dist/js/quicktab.js"></script>
     <script>
 
-        const qtab = new Quicktab('qtab', {
+        const qtab = new Quicktab('#qtab', {
+            id:'qtab',
             defaultTabs: [
                 { url: 'welcome.html', title: '首页' }
             ],

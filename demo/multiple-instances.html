@@ -13,13 +13,15 @@
     <div id="qtab2"></div>
     <script src="dist/js/quicktab.js"></script>
     <script>
-        new Quicktab('qtab', {
+        new Quicktab('#qtab', {
+            id:'qtab',
             width: "400px",
             defaultTabs: [
                 { title: '欢迎页面', url: 'welcome.html' }
             ]
         })
-        new Quicktab('qtab2', {
+        new Quicktab('#qtab2', {
+            id:'qtab2',
             width: "600px",
             defaultTabs: [
                 { title: '欢迎页面', url: 'welcome.html' }

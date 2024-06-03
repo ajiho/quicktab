@@ -7,13 +7,15 @@
     <title>Document</title>
     <link rel="stylesheet" href="dist/css/quicktab.css">
     <style>
-        .error-container {
+        .custom-error-container {
             padding: 20px;
             border-radius: 8px;
             background-color: #f9f9f9;
+            height: 100%;
+            width: 100%;
         }
 
-        .error-message {
+        .custom-error-message {
             color: #e74c3c;
             font-size: 18px;
             margin-bottom: 15px;
@@ -38,11 +40,12 @@
 <body>
 
     <button data-qt-tab-url="https://getbootstrap.com" data-qt-target="#qtab">添加Tab(https://getbootstrap.com)</button>
-    <hr>
+
     <div id="qtab"></div>
     <script src="dist/js/quicktab.js"></script>
     <script>
-        const qtab = new Quicktab('qtab', {
+        const qtab = new Quicktab('#qtab', {
+            id:'qtab',
             defaultTabs: [
                 { url: 'welcome.html?page=welcome', title: '欢迎页面' },
             ],
@@ -59,8 +62,8 @@
                     text: '请求时间太长了哦~',
 
                     //该选项是直接自定义整个超时显示的提示页面,会覆盖上面的text选项
-                    template: `<div class="error-container">
-    <p class="error-message">加载失败，请重试。</p>
+                    template: `<div class="custom-error-container">
+    <p class="custom-error-message">加载失败，请重试。</p>
     <button class="reload-button" onclick="reloadPage()">重新加载</button>
   </div>`
                 }
@@ -69,7 +72,8 @@
 
 
         function reloadPage() {
-            console.log('refresh');
+            //刷新当前激活的tab
+            qtab.refreshActiveTab()
         }
 
     </script>

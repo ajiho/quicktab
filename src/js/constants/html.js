@@ -17,10 +17,10 @@ export default {
   tabBodyItem: `<li ${DataKeys.tabUrl}=%s></li>`,
 
   //遮罩层包裹层
-  maskWrapper: `<div ${DataKeys.tabUrl}=%s  class="${Classes.overlays}"><div class="mask-inner">%s</div></div>`,
+  maskWrapper: `<div ${DataKeys.tabUrl}=%s  class="${Classes.overlays}">%s</div>`,
 
   //加载器
-  loading: `<div class="quicktab-loaders"><div></div><div></div><div></div></div>`,
+  loading: `<div class="mask-inner"><div class="quicktab-loaders"><div></div><div></div><div></div></div></div>`,
   //默认超时界面
   timeout: `<div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;background-color:#f8f9fa;"><span style="color: rgba(33, 37, 41, 0.75);">%s</span></div>`,
 

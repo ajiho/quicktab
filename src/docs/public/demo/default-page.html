@@ -9,13 +9,15 @@
 </head>
 
 <body>
-    <div id="qtab"></div>
+    <div class="qtab"></div>
     <script src="dist/js/quicktab.js"></script>
     <script>
-        new Quicktab('qtab', {
+
+        new Quicktab('.qtab', {
+            id:'qtab',
             defaultTabs: [
                 { url: 'welcome.html' },
-                { url: 'https://www.google.com/', title: '欢迎页面' },
+                { url: 'https://www.taobao.com/', title: '欢迎页面' },
             ]
         })
     </script>

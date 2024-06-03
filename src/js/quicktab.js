@@ -1922,7 +1922,9 @@ class Quicktab {
         timeoutHtml = this.#options.tab.timeout.template
       }
 
-      this.#getTabPaneByUrl(url)?.insertAdjacentHTML('beforeEnd', timeoutHtml)
+      let template = Utils.sprintf(Constants.HTML.maskWrapper, url, timeoutHtml)
+
+      this.#getTabPaneByUrl(url)?.insertAdjacentHTML('beforeEnd', template)
 
       this.#trigger('onTabTimeout', url)
 

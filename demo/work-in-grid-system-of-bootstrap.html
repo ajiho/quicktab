@@ -26,13 +26,15 @@
         crossorigin="anonymous"></script>
     <script src="dist/js/quicktab.js"></script>
     <script>
-        new Quicktab('qtab5', {
+        new Quicktab('#qtab5', {
+            id:'qtab5',
             defaultTabs: [
                 { url: 'welcome.html', title: 'TAB1' },
                 { url: 'welcome.html?page=1', title: 'TAB2' },
             ]
         })
-        new Quicktab('qtab6', {
+        new Quicktab('#qtab6', {
+            id:'qtab6',
             defaultTabs: [
                 { url: 'welcome.html', title: 'TAB3' },
                 { url: 'welcome.html?page=1', title: 'TAB4' },
