@@ -21,7 +21,7 @@
         const el = document.querySelector('#qtab')
 
         el.addEventListener('tab-activated', function (event) {
-            console.log(event.detail[0]);
+            console.log('tab-activated',event.detail[0]);
         })
 
         el.addEventListener('tab-close-all', function (event) {
@@ -61,15 +61,15 @@
                 }
             },
             onTabActivated: function (url) {
-                console.log(url);
+                // console.log(url);
             }
         })
 
 
 
-        tab.on('tab-activated', (url) => {
-            console.log(url);
-        })
+        // tab.on('tab-activated', (url) => {
+        //     console.log(url);
+        // })
 
 
         // tab.on('onTabAddActivated', (url) => {

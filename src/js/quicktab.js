@@ -138,7 +138,7 @@ class Quicktab {
     this.#init()
 
     //初始化完毕调用init
-    this.#options.onInit.call(this)
+    this.#trigger('onInit')
   }
 
   // 选项的二次加处理
@@ -227,7 +227,7 @@ class Quicktab {
     }
 
     //激活这个被添加的tab
-    this.#activeTabByUrl(url, true)
+    this.activeTabByUrl(url)
 
     //滚动到tab所在位置
     this.scrollToTabByUrl(url)
@@ -255,18 +255,10 @@ class Quicktab {
       this.#removeTabByUrl(url)
 
       //激活tab
-      this.#activeTabByUrl(this.#getTabUrl(nextTab))
+      this.activeTabByUrl(this.#getTabUrl(nextTab))
     } else {
       this.#removeTabByUrl(url)
     }
-  }
-
-  /**
-   * 根据url来激活tab
-   * @param {String} url
-   */
-  activeTabByUrl(url) {
-    this.#activeTabByUrl(url)
   }
 
   /**
@@ -330,7 +322,7 @@ class Quicktab {
    * @param {String} url
    */
   fullscreenTabByUrl(url) {
-    this.#activeTabByUrl(url)
+    this.activeTabByUrl(url)
     this.#getTabPaneByUrl(url).requestFullscreen()
   }
 
@@ -739,7 +731,7 @@ class Quicktab {
           maskEl.remove()
 
           //tab过渡完毕事件回调
-          that.#options.onTabLoadingTransitionend.call(that, url)
+          that.#trigger('onTabLoadingTransitionend', url)
         }
       },
     )
@@ -754,7 +746,7 @@ class Quicktab {
           that.refreshTabByUrl(url)
         }
         //双击事件回调
-        that.#options.onTabDoubleClick.call(that, url)
+        that.#trigger('onTabDoubleClick', url)
       }
     }
 
@@ -765,13 +757,10 @@ class Quicktab {
         let url = that.#getTabUrl(this)
 
         //tab被单击的回调
-
         that.#trigger('onTabClick', url)
 
-        // that.#options.onTabClick.call(that, url)
-
         //激活
-        that.#activeTabByUrl(url)
+        that.activeTabByUrl(url)
 
         //滚动到tab所在位置
         if (that.#options.tab.clickCenterActive === true) {
@@ -833,10 +822,10 @@ class Quicktab {
         const direction = Math.sign(event.deltaY)
 
         if (direction === -1 && prev) {
-          that.#activeTabByUrl(that.#getTabUrl(prev))
+          that.activeTabByUrl(that.#getTabUrl(prev))
           centerTabEl = prev
         } else if (direction === 1 && next) {
-          that.#activeTabByUrl(that.#getTabUrl(next))
+          that.activeTabByUrl(that.#getTabUrl(next))
           centerTabEl = next
         }
         that.scrollToTabByUrl(that.#getTabUrl(centerTabEl))
@@ -1676,7 +1665,7 @@ class Quicktab {
     url = url || options.slice(-1)?.[0]?.url
 
     //激活最后一个
-    this.#activeTabByUrl(url, false, false)
+    this.activeTabByUrl(url)
 
     //滚动到激活tab所在位置
     this.#scrollToTabByUrl(url, 'auto')
@@ -1787,13 +1776,10 @@ class Quicktab {
   }
 
   /**
-   * 私有的激活tab的方法
+   * 根据url来激活tab
    * @param {String} url
-   * @param {Boolean} fromAddTabMethod 激活tab的方法方法是否来自addTab()
-   * @param {Boolean} timestamp 是否需要更新自动时间戳
-   * @returns
    */
-  #activeTabByUrl(url, fromAddTabMethod = false, timestamp = true) {
+  activeTabByUrl(url) {
     const tabEl = this.#getTabByUrl(url)
 
     if (!tabEl || this.#isActiveTabByUrl(url)) {
@@ -1810,16 +1796,16 @@ class Quicktab {
     //添加上激活的类,激活当前tab的dom里存的选项,并更新时间戳
     tabEl?.classList.add(Constants.CLASSES.tabActive)
     if (tabEl && tabEl[Constants.DATAKEYS.tabOptionDataKey]) {
-      tabEl[Constants.DATAKEYS.tabOptionDataKey].active = true
-      if (timestamp === true)
-        tabEl[Constants.DATAKEYS.tabOptionDataKey].timestamp = Date.now()
+      tabEl[Constants.DATAKEYS.tabOptionDataKey].active = true //设置为true表示已经激活
+
+      tabEl[Constants.DATAKEYS.tabOptionDataKey].timestamp = Date.now() //增加一个时间戳
     }
 
     //激活缓存中的tab
     this.#activeCacheTabByUrl(url)
 
-    if (timestamp === true)
-      this.#updateCacheTabByUrl(url, 'timestamp', Date.now())
+    //并更新缓存里的时间戳
+    this.#updateCacheTabByUrl(url, 'timestamp', Date.now())
 
     //判断tab面板是否已经存在,不存在则添加
     if (!this.#getTabPaneByUrl(url)) {
@@ -1833,11 +1819,7 @@ class Quicktab {
     this.#getTabPaneByUrl(url)?.classList.add(Constants.CLASSES.tabPaneActive)
 
     //激活逻辑完成调用激活事件
-    if (fromAddTabMethod) {
-      this.#trigger('onTabAddActivated', url)
-    } else {
-      this.#trigger('onTabActivated', url)
-    }
+    this.#trigger('onTabActivated', url)
   }
 
   //根据url来添加面板
@@ -1876,7 +1858,7 @@ class Quicktab {
       //判断是否有loading 有的话就执行过渡
       this.#getTabLoadingByUrl(url)?.style.setProperty('opacity', 0)
 
-      this.#options.onTabLoaded.call(this, url)
+      this.#trigger('onTabLoaded', url)
 
       this.#tabFinallyAndAll(url)
 
@@ -1909,7 +1891,7 @@ class Quicktab {
 
   //iframe的超时处理逻辑
   #iFrameTimeoutHandle(url, iframeEl) {
-    if (this.#options.tab.timeout === false) return
+    if (this.#options.tab.timeout.enable === false) return
 
     //过滤掉某些需要超时的
     let filter = this.#options.tab.timeout.filter.call(this, url)
@@ -1942,7 +1924,7 @@ class Quicktab {
 
       this.#getTabPaneByUrl(url)?.insertAdjacentHTML('beforeEnd', timeoutHtml)
 
-      this.#options.onTabTimeout.call(this, url)
+      this.#trigger('onTabTimeout', url)
 
       this.#tabFinallyAndAll(url)
     }, this.#options.tab.timeout.second)
@@ -1982,7 +1964,7 @@ class Quicktab {
   }
 
   #tabFinallyAndAll(url) {
-    this.#options.onTabFinally.call(this, url)
+    this.#trigger('onTabFinally', url)
 
     // 判断所有的tab是否都完成
     const allCompleted = Array.from(this.#getIFrames()).every((iframe) => {
@@ -1990,7 +1972,7 @@ class Quicktab {
     })
 
     if (allCompleted) {
-      this.#options.onTabAll.call(this, this)
+      this.#trigger('onTabAll')
     }
   }
 
@@ -2130,12 +2112,12 @@ class Quicktab {
     this.#options[name].call(this, ...args)
     this.#element.dispatchEvent(
       new CustomEvent(caseName, {
-        detail: args,
+        detail: [this, ...args],
       }),
     )
     //对于某些特殊的事件不要触发,否则扰乱逻辑
-    if (!['onTabActivated'].includes(name)) {
-      this.#emitter.emit(caseName, ...args)
+    if (!['onTabActivated', 'onInit'].includes(name)) {
+      this.#emitter.emit(caseName, [this, ...args])
     }
   }
 }

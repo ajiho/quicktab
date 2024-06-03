@@ -3,7 +3,10 @@ import * as v from 'valibot'
 import Utils from '../utils'
 import TabSchema from './tab'
 
-const func = v.custom((value) => typeof value === 'function')
+const func = v.custom(
+  (value) => typeof value === 'function',
+  '选项必须是一个函数',
+)
 
 const ToolbarItemSchema = v.object({
   enable: v.boolean(),
@@ -131,7 +134,6 @@ const OptionsSchema = v.object({
     }),
   }),
   onTabActivated: func,
-  onTabAddActivated: func,
   onTabLoaded: func,
   onTabTimeout: func,
   onTabFinally: func,
