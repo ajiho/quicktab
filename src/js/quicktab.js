@@ -2110,7 +2110,6 @@ class Quicktab {
   #trigger(name, ...args) {
     //onTabClick -> tab-click
     const caseName = kebabCase(name.replace(/^on/, ''))
-
     this.#options[name].call(this, ...args)
     this.#element.dispatchEvent(
       new CustomEvent(caseName, {

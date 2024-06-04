@@ -45,13 +45,13 @@ $ bun add -D quicktab
 ## 使用
 
 ::: warning
-由于该插件的特殊性,因此使用了id选择器更简单易用,因此不管你使用那种方法初始化,都必须在元素上提供一个有效的id选择器
+由于该插件的特殊性,因此不管您使用那种方式初始化都必须在选项中提供`id`参数,
 :::
 
 ### 使用 data attributes
 
 ```html
-<div id="qtab" data-qt-toggle="quicktab"></div>
+<div data-qt-toggle="quicktab" data-qt-id="qtab"></div>
 ```
 
 ### 使用 JavaScript
@@ -61,14 +61,23 @@ $ bun add -D quicktab
 
 ```html
 
-<div id="qtab" class="myElement"></div>
+<div class="myElement"></div>
 
 <script>
-    //直接通过id选择器
-    new Quicktab('qtab', {});
+    //选择器或者dom都可以
+    new Quicktab(选择器|element, {
+        id:'qtab',
+        //...
+    });
     
-    //或者提供一个Element(注意:通过这种方式对应的元素上也需要提供id)
-    new Quicktab(document.querySelector('.myElement'), {});
+
+    //例子
+    new Quicktab(document.querySelector('.myElement'), {
+        id:'qtab',//唯一标志:必填项,重要参数,后期很多操作都是和这个有关联
+    });
+    new Quicktab('.myElement', {
+        id:'qtab'
+    });
 </script>
 ```
 
@@ -78,4 +87,4 @@ $ bun add -D quicktab
 
 ## 下一步
 
-接下来,查看具体用法和功能请导航至 [例子](/examples/base).
+接下来,查看具体用法和功能请导航至 [例子](/example).

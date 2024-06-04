@@ -22,14 +22,16 @@
     </div>
     <script src="dist/js/quicktab.js"></script>
     <script>
-        const qtab2 = new Quicktab('qtab2', {
+        const qtab2 = new Quicktab('#qtab2', {
+            id:'qtab2',
             defaultTabs: [
                 { url: 'welcome.html', title: '首页' },
                 { url: 'child.html?random=1', title: '我是#qtab2' },
             ]
         })
 
-        const qtab3 = new Quicktab('qtab3', {
+        const qtab3 = new Quicktab('#qtab3', {
+            id:'qtab3',
             defaultTabs: [
                 { url: 'welcome.html', title: '首页' },
                 { url: 'child.html?random=1', title: '我是#qtab3' },

@@ -96,3 +96,11 @@ html[lang="zh"] {
 html[lang="en"] {
     --vp-code-copy-copied-text-content: 'Copied!'
 }
+
+// 代码高亮
+
+
+.vp-doc .demo-preview [class*='language-'] code{
+    color:unset;
+    padding: 0;
+}

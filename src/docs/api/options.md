@@ -240,12 +240,8 @@ const DEFAULT = {
       template: '',
     },
   },
-  //tab被激活的事件(这里是比如关闭tab时，会自动激活别的tab时的事件回调)
+  //tab被激活的事件
   onTabActivated(url) {
-    return false
-  },
-  //通过tab的add方法添加时产生的tab激活事件(比如左侧菜单需要通过添加tab的方法产生的激活事件)
-  onTabAddActivated(url) {
     return false
   },
   //tab加载完毕事件
@@ -278,6 +274,10 @@ const DEFAULT = {
   },
   //tab被关闭的事件
   onTabClose(url) {
+    return false
+  },
+  //所有的tab都被关闭的事件
+  onTabCloseAll() {
     return false
   },
   //实例化完毕回调

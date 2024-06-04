@@ -38,7 +38,7 @@
     "watch": "run-p watch:*",
     "server:demo": "five-server --watch=demo demo",
     "server:designs": "five-server --watch=src/designs src/designs",
-    "dev": "concurrently \"npm run watch\" \"run-p server:*\"",
+    "dev": "concurrently \"npm run watch\" \"run-p server:*\" \"npm run docs:dev\"",
     "release": "commit-and-tag-version --header \"# 更新日志\" --releaseCommitMessageFormat \"release: {{currentTag}}\""
   },
   "repository": {
@@ -68,6 +68,7 @@
     "@rollup/plugin-node-resolve": "^15.2.3",
     "@rollup/plugin-terser": "^0.4.4",
     "@size-limit/preset-big-lib": "^11.1.4",
+    "@vueuse/core": "^10.10.0",
     "autoprefixer": "^10.4.19",
     "change-case": "^5.4.4",
     "clean-css-cli": "^5.6.3",
@@ -92,12 +93,13 @@
     "just-safe-set": "^4.2.1",
     "mitt": "^3.0.1",
     "node-css-mqpacker": "^9.0.0",
-    "nodemon": "^3.1.2",
+    "nodemon": "^3.1.3",
     "npm-run-all2": "^6.2.0",
     "postcss": "^8.4.38",
     "postcss-cli": "^11.0.0",
     "postcss-sort-media-queries": "^5.2.0",
     "prettier": "^3.3.0",
+    "prismjs": "^1.29.0",
     "rimraf": "^5.0.7",
     "rollup": "^4.18.0",
     "rollup-plugin-strip-banner": "^3.1.0",
@@ -107,8 +109,9 @@
     "stylelint": "^16.6.1",
     "stylelint-config-recess-order": "^5.0.1",
     "stylelint-config-standard-scss": "^13.1.0",
-    "valibot": "^0.31.0-rc.9",
-    "vitepress": "^1.2.2",
+    "tua-body-scroll-lock": "^1.5.0",
+    "valibot": "^0.31.0-rc.11",
+    "vitepress": "^1.2.3",
     "vitepress-plugin-tabs": "^0.5.0"
   }
 }

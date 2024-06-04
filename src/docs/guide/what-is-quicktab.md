@@ -4,7 +4,7 @@
 # 什么是Quicktab？
 
 
-Quicktab是一个可以快速搭建符合国情的IFrame多tab的响应式选项卡JavaScript插件,Quicktab是[bootstrap-quicktab](https://gitee.com/ajiho/bootstrap-quicktab)的继承者,相对于`bootstrap-quicktab`它不再需要bootstrap作为依赖了,且修复了所有遇到的问题以及强化了对一些新需求的支持。
+Quicktab是一个可以快速搭建符合国情的IFrame多tab的响应式选项卡JavaScript插件,Quicktab是[bootstrap-quicktab](https://gitee.com/ajiho/bootstrap-quicktab)的继承者,相对于`bootstrap-quicktab`它不再需要bootstrap作为依赖了,且修复了所有遇到的问题以及强化了对一些新需求的支持。强烈建议您把`Quicktab`集成进您的后台管理系统中
 
 
 ## Quicktab存在的原因？

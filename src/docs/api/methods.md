@@ -13,20 +13,20 @@
 
 ### get(id)
 
-可以根据id得到`Quicktab`的实例
+可以根据初始化时的id快速得到`Quicktab`的实例
 
 ```html
-<!-- 直接通过data属性初始化的 -->
-<div id="qtab4" data-qt-toggle="quicktab"></div>
+<div class="my-tab"></div>
 
-<!-- 下面通过js初始化 -->
-<div id="qtab3"></div>
+
 <script>
-    const qtab3 = new Quicktab('qtab3',{})
-    console.log(qtab3 === Quicktab.get('qtab3')) //true
-    
 
-    const qtab4 = Quicktab.get('qtab4')
+    const qtab1 = new Quicktab('.my-tab',{
+        id:'qtab1'//唯一标志
+    })
+
+    console.log(qtab1 === Quicktab.get('qtab1')) //true
+    
 </script>
 ```
 
@@ -41,7 +41,7 @@
 
 
 ```js
-const qtab = new Quicktab('qtab')
+const qtab = new Quicktab('#qtab')
 qtab.addTab({
     url:'xxx',
     title:'xxx'

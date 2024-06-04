@@ -1,10 +1,15 @@
-import {defineConfig} from 'vitepress'
-import {tabsMarkdownPlugin} from 'vitepress-plugin-tabs'
+import { defineConfig } from 'vitepress'
+import { tabsMarkdownPlugin } from 'vitepress-plugin-tabs'
 
 
 const year = new Date().getFullYear();
 
 export default defineConfig({
+    // vite: {
+    //     server: {
+    //         open: true // 这将会在启动开发服务器时自动打开浏览器,有bug，会导致每次都重新打开一个实例
+    //     }
+    // },
     // 整个网页的标题
     title: 'Quicktab-文档',
     //网页的语言,研究发现，如果配置了 locales: {root:{lang: 'zh',}}, 那么它会优先使用下面那个配置
@@ -85,11 +90,10 @@ export default defineConfig({
 
         //顶部导航配置
         nav: [
-            {text: '指南', link: '/guide/what-is-quicktab', activeMatch: '/guide/'},
-            {text: '例子', link: '/examples/base', activeMatch: '/examples/'},
-            {text: '方法', link: '/methods'},
-            {text: '事件', link: '/events'},
-            {text: '选项', link: '/options'},
+            { text: '指南', link: '/guide/what-is-quicktab', activeMatch: '/guide/' },
+            { text: 'API', link: '/api/methods' },
+            { text: '例子', link: '/example' },
+            { text: '迁移', link: '/migrate' },
         ],
 
 
@@ -99,45 +103,23 @@ export default defineConfig({
                 {
                     text: '介绍',
                     items: [
-                        {text: '是什么？', link: '/guide/what-is-quicktab'},
-                        {text: '入门', link: '/guide/getting-started'},
-                        {text: '常见问题', link: '/guide/faq'},
+                        { text: '是什么？', link: '/guide/what-is-quicktab' },
+                        { text: '入门', link: '/guide/getting-started' },
+                        { text: '常见问题', link: '/guide/faq' },
                     ],
                 }
             ],
-            '/examples/': [
-                {text: '入门示例', link: '/examples/base'},
-                {text: '支持通过data属性api初始化', link: '/examples/attribute'},
-                {text: '默认页面', link: '/examples/default-page'},
-                {text: '尺寸设置-高度全屏', link: '/examples/height'},
-                {text: '同一页面可共存多个实例', link: '/examples/multiple-instances'},
-                {text: '启用工具栏的刷新和全屏按钮', link: '/examples/toolbar-refresh-fullscreen'},
-                {text: '启用工具栏的下拉菜单', link: '/examples/toolbar-dropdown'},
-                {text: '工具栏的位置和隐藏设置', link: '/examples/toolbar-position-hide'},
-                {text: '工具栏功能按钮可以排序', link: '/examples/toolbar-sort'},
-                {text: '响应式设置', link: '/examples/responsive'},
-                {text: 'tab记忆', link: '/examples/tab-remember'},
-                {text: '启用tab的右键菜单', link: '/examples/tab-contextmenu'},
-                {text: '本土化', link: '/examples/localization'},
-                {text: '右键菜单定制', link: '/examples/tab-contextmenu-custom'},
-                {text: '关闭按钮配置', link: '/examples/tab-closeBtn'},
-                {text: '添加tab', link: '/examples/tab-add'},
-                {text: '控制tab的最大数量', link: '/examples/tab-maxNum'},
-                {text: 'tab可以拖动排序', link: '/examples/tab-dragSort'},
-                {text: 'tab可通过鼠标滚轮切换', link: '/examples/tab-mouseWheelSwitch'},
-                {text: 'tab点击自动滚动居中', link: '/examples/tab-click-centerActive'},
-                {text: '启用tab双击刷新', link: '/examples/tab-dbclick'},
-                {text: 'tab的loading加载层', link: '/examples/tab-loading'},
-                {text: '自定义tab加载层的模板', link: '/examples/tab-loading-templatet'},
-                {text: 'tab超时设置', link: '/examples/tab-timeout'},
-                {text: '在子页面内打开一个新的Tab', link: '/examples/add-tab-in-childPage'},
-                {text: '新的Tab添加数据的经典问题', link: '/examples/add-tab-in-childPage2'},
-                {text: '自定义图标', link: '/examples/icon-custom'},
-                {text: '超长标题不会破坏布局结构', link: '/examples/tab-longTitle'},
-                {text: '实现单TAB(IFrame)效果', link: '/examples/single-iframe'},
-                {text: '在bootstrap库栅格系统工作良好', link: '/examples/work-in-grid-system-of-bootstrap'},
+            '/api/': [
+                {
+                    text: 'API',
+                    items: [
+                        { text: '方法', link: '/api/methods' },
+                        { text: '事件', link: '/api/events' },
+                        { text: '选项', link: '/api/options' },
+                        { text: '本土化', link: '/api/localizations' },
+                    ],
+                }
             ],
-
         },
 
         // 封面底部的版权
@@ -186,11 +168,14 @@ export default defineConfig({
         // ],
         [
             'link',
-            {rel: 'icon', href: 'favicon.svg', type: 'image/svg+xml'}
+            { rel: 'icon', href: 'favicon.svg', type: 'image/svg+xml' }
         ]
     ],
 
     markdown: {
+        image: {
+            lazyLoading: true
+        },
         lineNumbers: true,
         // theme: 'material-theme-palenight',
         config(md) {
