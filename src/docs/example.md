@@ -18,7 +18,7 @@ layout: doc
 ## 通过data属性初始化
 
 Quicktab所有选项都支持data属性绑定，如果选项是数组使用json字符串表示,如果是函数则绑定全局函数字符串,如果是对象则使用`-`连接
-,示例中只提供了部分参数,具体需要选项可以查阅[选项](/options).
+,示例中只提供了部分参数,具体需要选项可以查阅[选项](/api/options).
 
 <ShowCase text="Run"  src="demo/attribute.html"/>
 

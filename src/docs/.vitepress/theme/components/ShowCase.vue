@@ -3,10 +3,8 @@
 import { ref, watch, onMounted } from "vue";
 import { withBase } from 'vitepress'
 import { lock, unlock } from 'tua-body-scroll-lock'
-
-
+import sdk from '@stackblitz/sdk';
 import Prism from 'prismjs'
-
 import 'prismjs/themes/prism-okaidia.css'
 
 
@@ -39,12 +37,27 @@ const props = defineProps({
 const isFullscreen = ref(false);
 const iframeRef = ref(null);
 const sourcewrapperRef = ref(null);
-
+const sourceHtml = ref('');
 // 默认是没展开
 const isSourceOpen = ref(false);
-
-
 const sourceRef = ref(null);
+
+
+
+// 请求源码
+const fetchSource = async () => {
+
+  if (sourceHtml.value === '') {
+    const url = withBase(`/${props.src}`);
+    const response = await fetch(url)
+    sourceHtml.value = await response.text();
+  }
+
+  sourceRef.value.innerHTML = Prism.highlight(sourceHtml.value, Prism.languages.html, 'html')
+
+  return sourceHtml.value;
+}
+
 
 const refresh = () => {
   iframeRef.value.contentWindow.location.reload();
@@ -54,29 +67,46 @@ const refresh = () => {
 
 
 
+const openProject = async () => {
+
+
+  const html = await fetchSource();
+
+  sdk.openProject(
+    // Payload
+    {
+      files: {
+        'index.html': html,
+      },
+      template: 'html',
+      // title: `My First Docs!`,
+      // description: `This is an example of my first doc!`,
+    },
+    // Options
+    {
+      openFile: 'index.html',
+      newWindow: true,
+    }
+  );
+}
+
+
+
+const copy = async () => {
+
+  const html = await fetchSource();
+
+  navigator.clipboard.writeText(html).then(function () {
+    console.log('内容已复制到剪贴板');
+  }).catch(function (err) {
+    console.error('无法复制内容: ', err);
+  });
+}
 
 
 const source = async () => {
 
-
-
-
-
-
-
-  const url = withBase(`/${props.src}`);
-
-
-
-  const response = await fetch(url)
-  const text = await response.text();
-
-
-
-  const html = Prism.highlight(text, Prism.languages.html, 'html');
-
-  sourceRef.value.innerHTML = html
-
+  await fetchSource();
 
 
 
@@ -141,6 +171,14 @@ watch(isFullscreen, (newVal, oldValue) => {
 
         </div>
 
+        <div class="action-wrapper" @click="copy">
+          <svg viewBox="0 0 24 24">
+            <title>复制源码</title>
+            <path fill="currentColor"
+              d="M19,21H8V7H19M19,5H8A2,2 0 0,0 6,7V21A2,2 0 0,0 8,23H19A2,2 0 0,0 21,21V7A2,2 0 0,0 19,5M16,1H4A2,2 0 0,0 2,3V17H4V3H16V1Z" />
+          </svg>
+        </div>
+
         <div class="action-wrapper" @click="isFullscreen = !isFullscreen">
 
           <svg viewBox="0 0 24 24" v-if="isFullscreen">
@@ -155,6 +193,13 @@ watch(isFullscreen, (newVal, oldValue) => {
               d="M5,5H10V7H7V10H5V5M14,5H19V10H17V7H14V5M17,14H19V19H14V17H17V14M10,17V19H5V14H7V17H10Z" />
           </svg>
 
+        </div>
+
+        <div class="action-wrapper" @click="openProject">
+          <svg viewBox="0 0 24 24">
+            <title>在stackblitz中打开</title>
+            <path fill="currentColor" d="M11 15H6L13 1V9H18L11 23V15Z" />
+          </svg>
         </div>
 
         <div class="action-wrapper" @click="source">

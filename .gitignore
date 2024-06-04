@@ -9,4 +9,5 @@ node_modules
 dist
 **/.vitepress/dist
 **/.vitepress/cache
+**/docs/public/demo
 

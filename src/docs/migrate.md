@@ -5,6 +5,8 @@
 
 ## 初始化
 
+### data属性
+
 ```html
 <div id="qtab" data-qt-toggle="quicktab"></div>
 ```
@@ -13,7 +15,7 @@
 ```html
 <div data-qt-toggle="quicktab" data-qt-id="qtab"></div>
 ```
-
+### javascript
 
 ```html
 <div id="qtab"></div>
