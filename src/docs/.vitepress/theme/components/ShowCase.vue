@@ -6,6 +6,14 @@ import { lock, unlock } from 'tua-body-scroll-lock'
 import sdk from '@stackblitz/sdk';
 import Prism from 'prismjs'
 import 'prismjs/themes/prism-okaidia.css'
+import {
+  autoUpdate,
+  computePosition,
+  flip,
+  offset,
+  shift,
+  arrow
+} from '@floating-ui/dom'
 
 
 const props = defineProps({
@@ -33,7 +41,7 @@ const props = defineProps({
 
 
 
-
+const timer = ref(null);
 const isFullscreen = ref(false);
 const iframeRef = ref(null);
 const sourcewrapperRef = ref(null);
@@ -41,6 +49,14 @@ const sourceHtml = ref('');
 // 默认是没展开
 const isSourceOpen = ref(false);
 const sourceRef = ref(null);
+
+
+
+const tooltipRef = ref(null);
+const copybtnRef = ref(null);
+const arrowRef = ref(null);
+
+
 
 
 
@@ -61,6 +77,61 @@ const fetchSource = async () => {
 
 const refresh = () => {
   iframeRef.value.contentWindow.location.reload();
+}
+
+
+
+function showTooltip(text) {
+  tooltipRef.value.style.display = 'block';
+  tooltipRef.value.querySelector('.content').innerHTML = text
+  update();
+}
+
+
+function hideTooltip() {
+  tooltipRef.value.style.display = '';
+}
+
+
+
+
+
+const update = () => {
+
+  computePosition(copybtnRef.value, tooltipRef.value, {
+    placement: 'top',
+    middleware: [
+      offset(6),
+      flip(),
+      shift({ padding: 5 }),
+      arrow({ element: arrowRef.value }),
+    ],
+  }).then(({ x, y, placement, middlewareData }) => {
+
+    Object.assign(tooltipRef.value.style, {
+      left: `${x}px`,
+      top: `${y}px`,
+    });
+
+    const { x: arrowX, y: arrowY } = middlewareData.arrow;
+
+
+    const staticSide = {
+      top: 'bottom',
+      right: 'left',
+      bottom: 'top',
+      left: 'right',
+    }[placement.split('-')[0]];
+
+    Object.assign(arrowRef.value.style, {
+      left: arrowX != null ? `${arrowX}px` : '',
+      top: arrowY != null ? `${arrowY}px` : '',
+      right: '',
+      bottom: '',
+      [staticSide]: '-4px',
+    });
+
+  });
 }
 
 
@@ -94,10 +165,30 @@ const openProject = async () => {
 
 const copy = async () => {
 
+
+
   const html = await fetchSource();
 
+
+
+
   navigator.clipboard.writeText(html).then(function () {
-    console.log('内容已复制到剪贴板');
+
+    showTooltip('已复制');
+
+    // 清除可能存在的定时器
+    if (timer.value) {
+      clearTimeout(timer.value);
+    }
+    // 设置一个新的定时器
+    timer.value = setTimeout(() => {
+      hideTooltip()
+    }, 1500);
+
+
+
+
+
   }).catch(function (err) {
     console.error('无法复制内容: ', err);
   });
@@ -107,6 +198,8 @@ const copy = async () => {
 const source = async () => {
 
   await fetchSource();
+
+  hideTooltip()
 
 
 
@@ -140,7 +233,6 @@ const source = async () => {
 //watch监听单个数据,注意：使用watch的时候响应式数据不需要.value
 watch(isFullscreen, (newVal, oldValue) => {
   if (newVal === true) {
-
     lock()
     // document.body.style.setProperty('overflow', 'hidden')
   } else {
@@ -154,6 +246,10 @@ watch(isFullscreen, (newVal, oldValue) => {
 
 <template>
 
+  <div ref="tooltipRef" role="tooltip" id="tooltip">
+    <div class="content">My tooltip</div>
+    <div ref="arrowRef" id="arrow"></div>
+  </div>
 
   <div :class="{ 'fullscreen': isFullscreen }" class="demo-preview">
 
@@ -171,7 +267,7 @@ watch(isFullscreen, (newVal, oldValue) => {
 
         </div>
 
-        <div class="action-wrapper" @click="copy">
+        <div class="action-wrapper" ref="copybtnRef" @click="copy">
           <svg viewBox="0 0 24 24">
             <title>复制源码</title>
             <path fill="currentColor"
@@ -238,6 +334,30 @@ watch(isFullscreen, (newVal, oldValue) => {
 </template>
 
 <style scoped lang="scss">
+#tooltip {
+  display: none;
+  background: #222;
+  color: white;
+  font-weight: bold;
+  padding: 5px;
+  border-radius: 4px;
+  font-size: 90%;
+  // 浮动
+  width: max-content;
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  #arrow {
+    position: absolute;
+    background: #222;
+    width: 8px;
+    height: 8px;
+    transform: rotate(45deg);
+  }
+
+}
+
 .demo-preview {
   border: 1px solid #e7e7e7;
   display: flex;
@@ -326,10 +446,5 @@ watch(isFullscreen, (newVal, oldValue) => {
       height: 500px;
     }
   }
-
-
-
-
-
 }
 </style>

@@ -23,7 +23,7 @@
     "lint": "run-p prettier stylelint eslint",
     "fix": "run-p *:fix",
     "clean": "rimraf dist",
-    "docs:dev": "vitepress dev src/docs",
+    "docs:dev": "npm run demo:copy && vitepress dev src/docs",
     "docs:build": "vitepress build src/docs",
     "docs:preview": "vitepress preview src/docs",
     "copy": "cpy dist demo && cpy dist src/designs",
