@@ -23,4 +23,4 @@ jobs:
         if: startsWith(github.ref, 'refs/tags/')
         with:
           body: |
-            Please refer to [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for details.
+            Please refer to [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/master/CHANGELOG.md) for details.
