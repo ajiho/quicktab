@@ -92,7 +92,7 @@ export default defineConfig({
         nav: [
             { text: '指南', link: '/guide/what-is-quicktab', activeMatch: '/guide/' },
             { text: 'API', link: '/api/methods' },
-            { text: '例子', link: '/example' },
+            { text: '例子', link: '/examples' },
             { text: '迁移', link: '/migrate' },
         ],
 

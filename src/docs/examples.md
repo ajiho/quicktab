@@ -4,9 +4,16 @@ layout: doc
 
 
 
+
+
 # 例子
 
 这里包含一些基本的示例以及一些常用场景的示例
+
+## 全特性演示
+
+<ShowCase text="Run"  src="demo/all-features.html"/>
+
 
 ## 入门实例
 

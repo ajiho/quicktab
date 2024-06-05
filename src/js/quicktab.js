@@ -218,7 +218,9 @@ class Quicktab {
       }
 
       const tabEl = Utils.createNode(this.#generateTabHtml(option))
-      option.timestamp = Date.now()
+
+      //给选项增加一个时间戳
+      option[Constants.DATAKEYS.tabOptionTimeKey] = Date.now()
       tabEl[Constants.DATAKEYS.tabOptionDataKey] = option
       this.#toolbarItemTabWrapperEl.appendChild(tabEl)
 
@@ -971,15 +973,8 @@ class Quicktab {
         //判断是否启用了tab缓存
         if (that.#options.tab.remember === true) {
           that.#cacheHandle.delete(that.#cacheKey)
-
           that.#getTabs().forEach((item) => {
-            const option = extend(
-              true,
-              {},
-              item[Constants.DATAKEYS.tabOptionDataKey],
-            )
-            delete option.timestamp
-            that.#addCacheTab(option)
+            that.#addCacheTab(item[Constants.DATAKEYS.tabOptionDataKey])
           })
         }
       })
@@ -1203,7 +1198,11 @@ class Quicktab {
     // 未激活的,按照timestamp从小到大排序
     const newOrderTabs = allOpenedTabs
       .filter((tab) => tab.active === false)
-      .sort((a, b) => b.timestamp - a.timestamp)
+      .sort(
+        (a, b) =>
+          b[Constants.DATAKEYS.tabOptionTimeKey] -
+          a[Constants.DATAKEYS.tabOptionTimeKey],
+      )
 
     const ativeTabs = allOpenedTabs.find((tab) => tab.active === true)
     if (ativeTabs) {
@@ -1256,7 +1255,7 @@ class Quicktab {
           index === 0 ? Constants.CLASSES.dropdownActive : '',
           item.title,
           item.url,
-          Utils.timeAgo(item.timestamp, customText),
+          Utils.timeAgo(item[Constants.DATAKEYS.tabOptionTimeKey], customText),
           item.closable === true ? closeBtnTpl : '',
         ),
       )
@@ -1272,7 +1271,11 @@ class Quicktab {
     //获取最近关闭的tabs
     this.#cacheHandle
       .get(this.#cacheRecentlyClosedTabsKey)
-      ?.sort((a, b) => b.timestamp - a.timestamp)
+      ?.sort(
+        (a, b) =>
+          b[Constants.DATAKEYS.tabOptionTimeKey] -
+          a[Constants.DATAKEYS.tabOptionTimeKey],
+      )
       .forEach((item) => {
         const recentlyClosedTabEl = Utils.createNode(
           Utils.sprintf(
@@ -1280,7 +1283,10 @@ class Quicktab {
             '',
             item.title,
             item.url,
-            Utils.timeAgo(item.timestamp, customText),
+            Utils.timeAgo(
+              item[Constants.DATAKEYS.tabOptionTimeKey],
+              customText,
+            ),
             '',
           ),
         )
@@ -1495,11 +1501,6 @@ class Quicktab {
     this.#toolbarItemDropdownEl = this.#toolbarEl.querySelector(
       `.${Constants.CLASSES.toolbarDropdownItem} button`,
     )
-
-    // console.log(this.#toolbarEl);
-    // console.log(this.#toolbarItemTabWrapperEl);
-    // console.log(this.#tabBodyEl);
-    // console.log(this.#toolbarItemDropdownEl);
   }
 
   #initContextmenu() {
@@ -1650,8 +1651,11 @@ class Quicktab {
       const tabNode = Utils.createNode(this.#generateTabHtml(option))
 
       //插入一个时间参数，并把整个对象再次存到这个dom节点对象上,是下拉菜单功能需要使用
-      if (!Object.hasOwnProperty.call(option, 'timestamp')) {
-        option.timestamp = +`${Date.now()}.${index + 1}`
+      if (
+        !Object.hasOwnProperty.call(option, Constants.DATAKEYS.tabOptionTimeKey)
+      ) {
+        option[Constants.DATAKEYS.tabOptionTimeKey] =
+          +`${Date.now()}.${index + 1}`
       }
 
       tabNode[Constants.DATAKEYS.tabOptionDataKey] = option
@@ -1737,7 +1741,7 @@ class Quicktab {
     let tabOption = tabEl[Constants.DATAKEYS.tabOptionDataKey]
 
     //更新时间戳为关闭时的时间戳
-    tabOption.timestamp = Date.now()
+    tabOption[Constants.DATAKEYS.tabOptionTimeKey] = Date.now()
     if (this.#cacheHandle.has(this.#cacheRecentlyClosedTabsKey)) {
       //先取所有的数组
       let all = this.#cacheHandle.get(this.#cacheRecentlyClosedTabsKey)
@@ -1798,14 +1802,20 @@ class Quicktab {
     if (tabEl && tabEl[Constants.DATAKEYS.tabOptionDataKey]) {
       tabEl[Constants.DATAKEYS.tabOptionDataKey].active = true //设置为true表示已经激活
 
-      tabEl[Constants.DATAKEYS.tabOptionDataKey].timestamp = Date.now() //增加一个时间戳
+      tabEl[Constants.DATAKEYS.tabOptionDataKey][
+        Constants.DATAKEYS.tabOptionTimeKey
+      ] = Date.now() //增加一个时间戳
     }
 
     //激活缓存中的tab
     this.#activeCacheTabByUrl(url)
 
     //并更新缓存里的时间戳
-    this.#updateCacheTabByUrl(url, 'timestamp', Date.now())
+    this.#updateCacheTabByUrl(
+      url,
+      Constants.DATAKEYS.tabOptionTimeKey,
+      Date.now(),
+    )
 
     //判断tab面板是否已经存在,不存在则添加
     if (!this.#getTabPaneByUrl(url)) {

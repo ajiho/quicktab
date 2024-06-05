@@ -7,7 +7,8 @@ on:
       - master
     paths:
       - src/docs/**
-
+    tags:
+      - 'v*'  
   #允许从页面手动运行此工作流
   workflow_dispatch:
 

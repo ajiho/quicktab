@@ -14,4 +14,6 @@ export default {
   iframeTimeoutTimer: 'timer',
   //每个tab的选项数据存储在dom上的key
   tabOptionDataKey: 'qtab',
+  //选项的时间戳的key
+  tabOptionTimeKey: 'timestamp',
 }
