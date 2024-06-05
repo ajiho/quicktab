@@ -9,26 +9,34 @@
 </head>
 
 <body>
+    <button onclick="call2()">关闭当前激活的tab</button>
     <div id="qtab"></div>
     <script src="dist/js/quicktab.js"></script>
     <script>
-        new Quicktab('#qtab', {
-            id:'qtab',
+        const tab = new Quicktab('#qtab', {
+            id: 'qtab',
             defaultTabs: [
                 { url: 'welcome.html' },
                 { url: 'welcome.html?page=1', title: '欢迎页面' },
             ],
-            toolbar:{
-                dropdown:{
-                    enable:true
+            toolbar: {
+                dropdown: {
+                    enable: true
                 }
             },
-            tab:{
-                contextmenu:{
-                    enable:true
+            tab: {
+                contextmenu: {
+                    enable: true,
+                    close: {
+                        enable: false
+                    }
                 }
             }
         })
+
+        function call2() {
+            tab.closeActiveTab()
+        }
     </script>
 </body>
 

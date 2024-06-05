@@ -1332,7 +1332,7 @@ class Quicktab {
   //显示右键菜单
   #showContextmenuByUrl(url) {
     //判断关闭当前菜单选项是否被启用
-    if (this.#options.tab.contextmenu.close !== false) {
+    if (this.#options.tab.contextmenu.close.enable !== false) {
       const listGroupCloseItemEl = this.#contextmenuEl.querySelector(
         `.${Constants.CLASSES.listGroupCloseItem}`,
       )
