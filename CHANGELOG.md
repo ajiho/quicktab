@@ -1,4 +1,16 @@
 # 更新日志
+## [0.0.7](https://github.com/ajiho/quicktab/compare/v0.0.6...v0.0.7) (2024-06-05)
+
+
+### Features
+
+* 新增一个实例方法closeActiveTab ([8eac3bf](https://github.com/ajiho/quicktab/commit/8eac3bfaecd83ea481ff03fbcdd6f0b7b167c8f8))
+
+
+### Bug Fixes
+
+* 右键菜单的关闭菜单项目启用时报错问题([#9](https://github.com/ajiho/quicktab/issues/9)) ([4e35c2c](https://github.com/ajiho/quicktab/commit/4e35c2c3feeff6445034712f13fc5152e402f596))
+
 ## [0.0.6](https://github.com/ajiho/quicktab/compare/v0.0.5...v0.0.6) (2024-06-05)
 
 
