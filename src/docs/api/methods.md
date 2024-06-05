@@ -49,6 +49,10 @@ qtab.addTab({
 ```
 
 
+### closeActiveTab()
+
+关闭当前激活的Tab,这个api特别有用
+
 
 ### closeTabByUrl(url)
 

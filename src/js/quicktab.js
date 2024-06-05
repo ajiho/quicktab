@@ -358,6 +358,13 @@ class Quicktab {
   }
 
   /**
+   * 关闭当前激活的Tab,这个api特别有用
+   */
+  closeActiveTab() {
+    this.closeTabByUrl(this.#getTabUrl(this.#getActiveTab()))
+  }
+
+  /**
    * 关闭所有的除了指定url的选项卡
    * @param {String} url
    */
