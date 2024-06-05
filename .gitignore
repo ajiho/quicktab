@@ -10,4 +10,5 @@ dist
 **/.vitepress/dist
 **/.vitepress/cache
 **/docs/public/demo
+.vscode
 
