@@ -1,4 +1,11 @@
 # 更新日志
+## [0.0.5](https://github.com/ajiho/quicktab/compare/v0.0.4...v0.0.5) (2024-06-05)
+
+
+### Bug Fixes
+
+* tab记忆和拖动排序刷新页面后下拉菜单的Tab时间丢失问题 ([#7](https://github.com/ajiho/quicktab/issues/7)) ([488281b](https://github.com/ajiho/quicktab/commit/488281b5e3ea9345daa2a166357a6920976a1cc8))
+
 ## [0.0.4](https://github.com/ajiho/quicktab/compare/v0.0.3...v0.0.4) (2024-06-05)
 
 
