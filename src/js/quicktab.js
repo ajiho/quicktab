@@ -1092,8 +1092,6 @@ class Quicktab {
       ) {
         hasResults = true
 
-        // console.log(li[Constants.DATAKEYS.tabOptionDataKey]);
-
         let matchLi = li.cloneNode(true)
 
         //bugfix:克隆会导致自定义属性丢失,重新赋值

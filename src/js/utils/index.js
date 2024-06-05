@@ -192,7 +192,9 @@ export default {
       let attrVal = element.getAttribute(attrKey)
       let parseVal = this.parseAttributeValue(attrVal)
 
-      if (typeof defaultOption[key] !== 'object') {
+      if (
+        Object.prototype.toString.call(defaultOption[key]) !== '[object Object]'
+      ) {
         if (attrVal !== null) {
           //如果获取到值了
           options[key] = parseVal
@@ -204,22 +206,13 @@ export default {
           attrKey + '-',
           (options[key] = {}),
         )
-
-        if (this.isEmptyObject(options[key])) {
+        if (Object.keys(options[key]).length === 0) {
+          //如果是空对象
           delete options[key]
         }
       }
     }
     return options
-  },
-
-  isEmptyObject(obj) {
-    for (let key in obj) {
-      if (Object.hasOwnProperty.call(obj, key)) {
-        return false
-      }
-    }
-    return true
   },
 
   //判断数组的对象元素中的某个key是否具有唯一值
