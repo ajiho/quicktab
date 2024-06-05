@@ -1,4 +1,11 @@
 # 更新日志
+## [0.0.6](https://github.com/ajiho/quicktab/compare/v0.0.5...v0.0.6) (2024-06-05)
+
+
+### Bug Fixes
+
+* 使用data属性初始化默认的Tab时失效([#8](https://github.com/ajiho/quicktab/issues/8)) ([3f2ea92](https://github.com/ajiho/quicktab/commit/3f2ea92796b91f1dc62e405992164acd77b6a84e))
+
 ## [0.0.5](https://github.com/ajiho/quicktab/compare/v0.0.4...v0.0.5) (2024-06-05)
 
 
