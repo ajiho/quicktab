@@ -1,6 +1,6 @@
 export default [
     {
-        "limit": "150 KB",
+        "limit": "106 KB",
         "path": "dist/js/quicktab.min.js"
     }
 ]
