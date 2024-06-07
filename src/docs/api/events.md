@@ -85,9 +85,9 @@ qtab.on('event-name',function(evt){
 
 ## onTabActivated
 
-- **DOM Event:** `tab-activated`
+- **DOM/on Event:** `tab-activated`
 
-- **Parameter:** `url`
+- **参数:** `url`
 
 - **详情:**
 
@@ -100,9 +100,9 @@ qtab.on('event-name',function(evt){
 
 ## onTabLoaded
 
-- **DOM Event:** `tab-loaded`
+- **DOM/on Event:** `tab-loaded`
 
-- **Parameter:** `url`
+- **参数:** `url`
 
 - **详情:**
 
@@ -117,9 +117,9 @@ qtab.on('event-name',function(evt){
 
 
 
-- **DOM Event:** `tab-timeout`
+- **DOM/on Event:** `tab-timeout`
 
-- **Parameter:** `url`
+- **参数:** `url`
 
 - **详情:**
 
@@ -131,9 +131,9 @@ qtab.on('event-name',function(evt){
 ## onTabFinally
 
 
-- **DOM Event:** `tab-finally`
+- **DOM/on Event:** `tab-finally`
 
-- **Parameter:** `url`
+- **参数:** `url`
 
 - **详情:**
 
@@ -147,9 +147,9 @@ qtab.on('event-name',function(evt){
 ## onTabAll
 
 
-- **DOM Event:** `tab-all`
+- **DOM/on Event:** `tab-all`
 
-- **Parameter:** `undefined`
+- **参数:** `undefined`
 
 - **详情:**
 
@@ -165,9 +165,9 @@ qtab.on('event-name',function(evt){
 
 
 
-- **DOM Event:** `tab-loading-transitionend`
+- **DOM/on Event:** `tab-loading-transitionend`
 
-- **Parameter:** `url`
+- **参数:** `url`
 
 - **详情:**
 
@@ -181,9 +181,9 @@ qtab.on('event-name',function(evt){
 
 ## onTabClick
 
-- **DOM Event:** `tab-click`
+- **DOM/on Event:** `tab-click`
 
-- **Parameter:** `url`
+- **参数:** `url`
 
 - **详情:**
 
@@ -196,9 +196,9 @@ qtab.on('event-name',function(evt){
 ## onTabDoubleClick
 
 
-- **DOM Event:** `tab-double-click`
+- **DOM/on Event:** `tab-double-click`
 
-- **Parameter:** `url`
+- **参数:** `url`
 
 - **详情:**
 
@@ -211,9 +211,9 @@ qtab.on('event-name',function(evt){
 ## onTabClose
 
 
-- **DOM Event:** `tab-close`
+- **DOM/on Event:** `tab-close`
 
-- **Parameter:** `url`
+- **参数:** `url`
 
 - **详情:**
 
@@ -226,9 +226,9 @@ qtab.on('event-name',function(evt){
 ## onTabCloseAll
 
 
-- **DOM Event:** `tab-close`
+- **DOM/on Event:** `tab-close`
 
-- **Parameter:** `undefined`
+- **参数:** `undefined`
 
 - **详情:**
 
@@ -238,9 +238,9 @@ qtab.on('event-name',function(evt){
 
 ## onInit
 
-- **DOM Event:** `init`
+- **DOM/on Event:** `init`
 
-- **Parameter:** `undefined`
+- **参数:** `undefined`
 
 - **详情:**
 

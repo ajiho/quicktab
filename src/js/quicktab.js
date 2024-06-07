@@ -229,10 +229,7 @@ class Quicktab {
     }
 
     //激活这个被添加的tab
-    this.activeTabByUrl(url)
-
-    //滚动到tab所在位置
-    this.scrollToTabByUrl(url)
+    this.activeTabByUrl(url, true)
   }
 
   /**
@@ -359,9 +356,11 @@ class Quicktab {
 
   /**
    * 关闭当前激活的Tab,这个api特别有用
+   * @returns Quicktab
    */
   closeActiveTab() {
     this.closeTabByUrl(this.#getTabUrl(this.#getActiveTab()))
+    return this
   }
 
   /**
@@ -1785,10 +1784,12 @@ class Quicktab {
   }
 
   /**
-   * 根据url来激活tab
+   * 激活指定url的Tab
    * @param {String} url
+   * @param {Boolean} scrollToTab 是否滚动到Tab所在位置
+   * @returns
    */
-  activeTabByUrl(url) {
+  activeTabByUrl(url, scrollToTab = false) {
     const tabEl = this.#getTabByUrl(url)
 
     if (!tabEl || this.#isActiveTabByUrl(url)) {
@@ -1835,6 +1836,10 @@ class Quicktab {
 
     //激活逻辑完成调用激活事件
     this.#trigger('onTabActivated', url)
+
+    if (scrollToTab === true) {
+      this.scrollToTabByUrl(url)
+    }
   }
 
   //根据url来添加面板

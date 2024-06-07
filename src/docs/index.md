@@ -5,7 +5,7 @@ layout: home
 hero:
   name: "Quicktab"
   text: "像操作浏览器选项卡一样操作IFrame"
-  tagline: 一秒构建后台模板常见的IFrame+多tab效果
+  tagline: 一秒构建后台模板常见的IFrame+多Tab效果
 
   actions:
     - theme: brand

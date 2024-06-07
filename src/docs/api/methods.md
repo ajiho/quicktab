@@ -11,9 +11,16 @@
 
 
 
-### get(id)
+### get
 
-可以根据初始化时的id快速得到`Quicktab`的实例
+- **参数:** `id`
+
+
+- **详情:**
+
+  可以根据初始化时的id快速得到`Quicktab`的实例
+
+- **示例:** 
 
 ```html
 <div class="my-tab"></div>
@@ -21,11 +28,11 @@
 
 <script>
 
-    const qtab1 = new Quicktab('.my-tab',{
+    const qtab = new Quicktab('.my-tab',{
         id:'qtab1'//唯一标志
     })
 
-    console.log(qtab1 === Quicktab.get('qtab1')) //true
+    console.log(qtab === Quicktab.get('qtab1')) //true
     
 </script>
 ```
@@ -33,65 +40,192 @@
 
 ## 实例方法
 
-### addTab(option)
+### addTab
 
+- **参数:** `option`
+
+
+- **详情:**
 
 
 这是最核心的方法,添加Tab,参数是一个[单tab对象](options.html#单tab默认选项)其中只有url是必填的，其它都走默认值
 
+- **示例:** 
+
+[添加Tab](/examples.html#添加tab)
 
 ```js
 const qtab = new Quicktab('#qtab')
 qtab.addTab({
-    url:'xxx',
-    title:'xxx'
+    url:'/user/add',
+    title:'添加用户'
 })
 ```
 
 
 ### closeActiveTab()
 
-关闭当前激活的Tab,这个api特别有用
+- **参数:** `undefined`
+
+- **返回:** `Quicktab`
+
+- **详情:**
+
+  关闭当前激活的Tab,这个api特别有用,使用的频率还算比较频繁
+
+### closeTabByUrl
 
 
-### closeTabByUrl(url)
+- **参数:** `url`
 
-根据url来关闭tab
 
-### activeTabByUrl(url)
+- **详情:**
 
-根据url来激活tab
+  根据url来关闭Tab
 
-### scrollToTabByUrl(url)
+### activeTabByUrl
 
-滚动到指定url对应的tab的位置
+- **参数:** 
+    - `url`
+    - `scrollToTab - 一个boolean值,是否滚动到Tab所在位置`
+    默认: `false`
 
-### prevScroll()
+- **详情:**
 
-向左滚动一个tab容器可视单位
+  根据url来激活Tab
 
-### nextScroll()
 
-向右滚动一个tab容器可视单位
 
-### refreshTabByUrl()
-根据url来刷新tab
-### fullscreenTabByUrl()
-根据url全屏显示tab
-### refreshActiveTab()
-刷新当前激活的tab
-### fullscreenActiveTab()
-当前激活的tab全屏显示
-### scrollToActiveTab()
-滚动到当前激活的tab所在位置
-### openNewTabByUrl()
-在浏览器新选项卡打开指定url的tab
-### closeAllTabsExceptByUrl()
-关闭所有的除了指定url的选项卡
-### closePrevAllTabsByUrl()
-关闭除了指定url的tab前面所有的选项卡
-### closeNextAllTabsByUrl()
-关闭除了指定url的tab后面所有的选项卡
-### getTabWindowByUrl()
-获取指定url的tab的contentWindow对象
+### scrollToTabByUrl
+
+- **参数:** `url`
+
+
+- **详情:**
+
+  滚动到指定url对应的Tab的位置
+
+
+
+### prevScroll
+
+- **参数:** `undefined`
+
+
+- **详情:**
+
+  向左滚动一个Tab容器可视单位
+
+
+
+### nextScroll
+
+- **参数:** `undefined`
+
+
+- **详情:**
+
+  向右滚动一个Tab容器可视单位
+
+
+
+### refreshTabByUrl
+
+- **参数:** `url`
+
+
+- **详情:**
+
+  根据url来刷新Tab
+
+
+### fullscreenTabByUrl
+
+- **参数:** `url`
+
+
+- **详情:**
+
+  根据url全屏显示Tab
+
+
+### refreshActiveTab
+
+- **参数:** `undefined`
+
+
+- **详情:**
+
+  刷新当前激活的Tab
+
+
+### fullscreenActiveTab
+
+- **参数:** `undefined`
+
+
+- **详情:**
+
+  全屏显示当前激活的Tab
+
+
+### scrollToActiveTab
+
+- **参数:** `undefined`
+
+
+- **详情:**
+
+  滚动到当前激活的Tab所在位置
+
+
+### openNewTabByUrl
+
+- **参数:** `url`
+
+
+- **详情:**
+
+  在浏览器新选项卡打开指定url的Tab
+
+
+### closeAllTabsExceptByUrl
+
+- **参数:** `url`
+
+
+- **详情:**
+
+  关闭所有的除了指定url的Tab
+
+
+### closePrevAllTabsByUrl
+
+- **参数:** `url`
+
+
+- **详情:**
+
+  关闭除了指定url的Tab前面所有的选项卡
+
+
+### closeNextAllTabsByUrl
+
+- **参数:** `url`
+
+
+- **详情:**
+
+  关闭除了指定url的Tab后面所有的选项卡
+
+
+### getTabWindowByUrl
+
+- **参数:** `url`
+
+- **详情:**
+
+  获取指定url的Tab的contentWindow对象
+
+
 
