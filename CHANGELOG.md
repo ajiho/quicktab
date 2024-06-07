@@ -1,4 +1,11 @@
 # 更新日志
+## [0.0.8](https://github.com/ajiho/quicktab/compare/v0.0.7...v0.0.8) (2024-06-07)
+
+
+### Features
+
+* activeTabByUrl方法增加一个参数快速滚动到指定Tab ([fa31d39](https://github.com/ajiho/quicktab/commit/fa31d39ff011ba1200072256dc8daab563446799))
+
 ## [0.0.7](https://github.com/ajiho/quicktab/compare/v0.0.6...v0.0.7) (2024-06-05)
 
 
